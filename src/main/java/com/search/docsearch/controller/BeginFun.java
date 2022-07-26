@@ -33,21 +33,21 @@ public class BeginFun implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws IOException {
 
-//        try {
-//            log.info("===============开始拉取仓库资源=================");
-//            ProcessBuilder pb = new ProcessBuilder(s.initDoc);
-//            Process p = pb.start();
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            String line = null;
-//            while ((line = reader.readLine()) != null)
-//            {
-//                log.info(line);
-//            }
-//
-//            log.info("===============仓库资源拉取成功=================");
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//        }
+        try {
+            log.info("===============开始拉取仓库资源=================");
+            ProcessBuilder pb = new ProcessBuilder(s.initDoc);
+            Process p = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = null;
+            while ((line = reader.readLine()) != null)
+            {
+                log.info(line);
+            }
+
+            log.info("===============仓库资源拉取成功=================");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
 
         searchService.refreshDoc();
     }
