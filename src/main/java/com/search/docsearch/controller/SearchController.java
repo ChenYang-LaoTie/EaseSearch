@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.Map;
 
 @RestController
 @Slf4j
+@RequestMapping("/search")
 public class SearchController {
 
     @Autowired
@@ -42,7 +44,7 @@ public class SearchController {
         if (!StringUtils.hasText(condition.getKeyword())) {
             return SysResult.fail("keyword must not null", null);
         }
-        condition.setKeyword(condition.getKeyword().replace("#", ""));
+//        condition.setKeyword(condition.getKeyword().replace("#", ""));
         try {
             Map<String, Object> result = searchService.searchByCondition(condition);
             if (result == null) {
@@ -53,6 +55,36 @@ public class SearchController {
             log.error(e.getMessage());
             e.printStackTrace();
         }
+        return SysResult.fail("查询失败", null);
+    }
+
+
+    @PostMapping("count")
+    public SysResult getCount(@RequestBody String keyword) {
+        System.out.println(keyword);
+        try {
+            Map<String, Object> result = searchService.getCount(keyword);
+            if (result == null) {
+                return SysResult.fail("内容不存在", null);
+            }
+            return SysResult.ok("查询成功", result);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return SysResult.fail("查询失败", null);
+    }
+
+
+
+    @PostMapping("sort")
+    public SysResult makeSort(@RequestBody Map<String, String> m) {
+
+        for (Map.Entry<String, String> entry : m.entrySet()) {
+            System.out.println(entry.getKey() + " --- " + entry.getValue());
+        }
+
+
         return SysResult.fail("查询失败", null);
     }
 

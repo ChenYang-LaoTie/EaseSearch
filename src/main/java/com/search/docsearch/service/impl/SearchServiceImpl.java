@@ -145,10 +145,10 @@ public class SearchServiceImpl implements SearchService {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         if (StringUtils.hasText(condition.getLang())) {
-            boolQueryBuilder.filter(QueryBuilders.termQuery("lang", condition.getLang()));
+            boolQueryBuilder.filter(QueryBuilders.termQuery("lang.keyword", condition.getLang()));
         }
         if (StringUtils.hasText(condition.getType())) {
-            boolQueryBuilder.filter(QueryBuilders.termQuery("type", condition.getType()));
+            boolQueryBuilder.filter(QueryBuilders.termQuery("type.keyword", condition.getType()));
         }
 
         MatchPhraseQueryBuilder ptitleMP = QueryBuilders.matchPhraseQuery("title", condition.getKeyword());
@@ -156,7 +156,7 @@ public class SearchServiceImpl implements SearchService {
         MatchPhraseQueryBuilder ptextContentMP = QueryBuilders.matchPhraseQuery("textContent", condition.getKeyword());
         ptitleMP.boost(100);
 
-        boolQueryBuilder.should(ptitleMP).should(ptitleMP);
+        boolQueryBuilder.should(ptitleMP).should(ptextContentMP);
 
         MatchQueryBuilder titleMP = QueryBuilders.matchQuery("title", condition.getKeyword());
         titleMP.boost(2);
@@ -177,7 +177,6 @@ public class SearchServiceImpl implements SearchService {
         sourceBuilder.highlighter(highlightBuilder);
         sourceBuilder.from(startIndex).size(condition.getPageSize());
         sourceBuilder.timeout(TimeValue.timeValueMinutes(1L));
-        sourceBuilder.aggregation(AggregationBuilders.terms("data").field("type"));
         request.source(sourceBuilder);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
         List<Article> data = new ArrayList<>();
@@ -207,6 +206,31 @@ public class SearchServiceImpl implements SearchService {
             return null;
         }
 
+        Map<String, Object> result = new HashMap<>();
+        result.put("page", condition.getPage());
+        result.put("pageSize", condition.getPageSize());
+        result.put("records", data);
+        return result;
+    }
+
+
+    public Map<String, Object> getCount(String keyword) throws IOException {
+        SearchRequest request = new SearchRequest(s.index);
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        MatchQueryBuilder titleMP = QueryBuilders.matchQuery("title", keyword);
+        titleMP.boost(2);
+        MatchQueryBuilder textContentMP = QueryBuilders.matchQuery("textContent", keyword);
+        textContentMP.boost(1);
+        boolQueryBuilder.should(titleMP).should(textContentMP);
+        boolQueryBuilder.minimumShouldMatch(1);
+
+        sourceBuilder.query(boolQueryBuilder);
+
+        sourceBuilder.aggregation(AggregationBuilders.terms("data").field("type.keyword"));
+        SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+
         List<Map<String, Object>> numberList = new ArrayList<>();
         Map<String, Object> numberMap = new HashMap<>();
         numberMap.put("doc_count", response.getHits().getTotalHits().value);
@@ -221,11 +245,9 @@ public class SearchServiceImpl implements SearchService {
             numberList.add(countMap);
         }
         Map<String, Object> result = new HashMap<>();
-        result.put("page", condition.getPage());
-        result.put("pageSize", condition.getPageSize());
-        result.put("records", data);
         result.put("total", numberList);
         return result;
     }
+
 
 }

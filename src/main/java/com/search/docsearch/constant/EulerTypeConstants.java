@@ -11,7 +11,7 @@ public class EulerTypeConstants {
     public static final String OTHER = "other";
     public static final String SHOWCASE = "showcase";
 
-    public static final String MAPPINGPATH = "/EaseSearch/target/classes/mapping/openEuler/mapping.json";
+    public static final String MAPPINGPATH = "/EaseSearch/target/classes/mapping/mapping.json";
 
     public static final String BASEPATH = "/usr/local/docs/target/";
     public static final String INITDOC = "/EaseSearch/target/classes/script/openEuler/initDoc.sh";

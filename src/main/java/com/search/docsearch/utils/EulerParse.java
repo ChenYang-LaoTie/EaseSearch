@@ -39,14 +39,8 @@ public class EulerParse {
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("lang", lang);
         jsonMap.put("deleteType", deleteType);
-
-
-
         jsonMap.put("type", type);
         jsonMap.put("articleName", fileName);
-
-
-
         jsonMap.put("path", path);
 
         String fileContent = FileUtils.readFileToString(mdFile, StandardCharsets.UTF_8);
@@ -86,16 +80,18 @@ public class EulerParse {
                 t.remove();
                 jsonMap.put("textContent", node.text());
             }
+            jsonMap.put("title", EulerGetValue(r, "title"));
+            jsonMap.put("date", EulerGetValue(r, "date"));
+            jsonMap.put("category", EulerGetValue(r, "category"));
+            jsonMap.put("tags", EulerGetValue(r, "tags"));
+            jsonMap.put("archives", EulerGetValue(r, "archives"));
+            jsonMap.put("author", EulerGetValue(r, "author"));
+            jsonMap.put("summary", EulerGetValue(r, "summary"));
 
-            if (EulerTypeConstants.SHOWCASE.equals(type)) {
-                jsonMap.put("title", EulerGetValue(r, "company"));
-                jsonMap.put("industry", EulerGetValue(r, "industry"));
-                jsonMap.put("company", EulerGetValue(r, "company"));
-                jsonMap.put("summary", EulerGetValue(r, "summary"));
-                jsonMap.put("img", EulerGetValue(r, "img"));
-            } else {
-                jsonMap.put("title", EulerGetValue(r, "title"));
-            }
+            jsonMap.put("industry", EulerGetValue(r, "industry"));
+            jsonMap.put("company", EulerGetValue(r, "company"));
+            jsonMap.put("banner", EulerGetValue(r, "banner"));
+            jsonMap.put("img", EulerGetValue(r, "img"));
         }
 
         return jsonMap;
@@ -120,5 +116,4 @@ public class EulerParse {
         r = r.replaceAll("\"", "");
         return r;
     }
-
 }
