@@ -5,18 +5,27 @@ mkdir -p /usr/local/docs/target/zh/
 mkdir -p /usr/local/docs/target/en/
 
 # shellcheck disable=SC2164
-cd /usr/local/docs/source/website-v2
-git pull
-mkdir -p /usr/local/docs/target/zh/
-cp -r /usr/local/docs/source/website-v2/web-ui/docs/zh/* /usr/local/docs/target/zh/
-
-mkdir -p /usr/local/docs/target/en/
-cp -r /usr/local/docs/source/website-v2/web-ui/docs/en/* /usr/local/docs/target/en/
-
-# shellcheck disable=SC2164
+#cd /usr/local/docs/source/website-v2
+#git pull
+#mkdir -p /usr/local/docs/target/zh/
+#cp -r /usr/local/docs/source/website-v2/web-ui/docs/zh/* /usr/local/docs/target/zh/
+#
+#mkdir -p /usr/local/docs/target/en/
+#cp -r /usr/local/docs/source/website-v2/web-ui/docs/en/* /usr/local/docs/target/en/
+#
+## shellcheck disable=SC2164
+#cd /usr/local/docs/source/openEuler-portal
+#git pull
+#cp -r /usr/local/docs/source/openEuler-portal/app/zh/showcase /usr/local/docs/target/zh/
 cd /usr/local/docs/source/openEuler-portal
 git pull
+cp -r /usr/local/docs/source/openEuler-portal/app/zh/blog /usr/local/docs/target/zh/
+cp -r /usr/local/docs/source/openEuler-portal/app/zh/news /usr/local/docs/target/zh/
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/showcase /usr/local/docs/target/zh/
+
+cp -r /usr/local/docs/source/openEuler-portal/app/en/blog /usr/local/docs/target/en/
+cp -r /usr/local/docs/source/openEuler-portal/app/en/news /usr/local/docs/target/en/
+cp -r /usr/local/docs/source/openEuler-portal/app/ens/showcase /usr/local/docs/target/zh/
 
 
 # shellcheck disable=SC2164

@@ -21,12 +21,10 @@ cd /usr/local/docs/source
 #cp -r /usr/local/docs/source/openEuler-portal/app/zh/showcase /usr/local/docs/target/zh/
 
 git clone https://gitee.com/openeuler/openEuler-portal.git
-mkdir -p /usr/local/docs/target/zh/
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/blog /usr/local/docs/target/zh/
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/news /usr/local/docs/target/zh/
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/showcase /usr/local/docs/target/zh/
 
-mkdir -p /usr/local/docs/target/en/
 cp -r /usr/local/docs/source/openEuler-portal/app/en/blog /usr/local/docs/target/en/
 cp -r /usr/local/docs/source/openEuler-portal/app/en/news /usr/local/docs/target/en/
 cp -r /usr/local/docs/source/openEuler-portal/app/ens/showcase /usr/local/docs/target/zh/
