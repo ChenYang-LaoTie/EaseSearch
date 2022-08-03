@@ -4,6 +4,7 @@ import com.search.docsearch.config.mySystem;
 import com.search.docsearch.constant.EulerTypeConstants;
 import com.search.docsearch.entity.Article;
 import com.search.docsearch.entity.vo.SearchCondition;
+import com.search.docsearch.entity.vo.SearchTags;
 import com.search.docsearch.service.SearchService;
 import com.search.docsearch.utils.EulerParse;
 import com.search.docsearch.utils.IdUtil;
@@ -12,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -105,6 +107,10 @@ public class SearchServiceImpl implements SearchService {
                                 Map<String, Object> map = EulerParse.parseMD(lang, deleteType, mdFile);
                                 if (map != null) {
                                     IndexRequest indexRequest = new IndexRequest(s.index).id(IdUtil.getId()).source(map);
+                                    if (deleteType.equals("blog")) {
+                                        IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+                                        System.out.println(indexResponse.toString());
+                                    }
                                     bulkRequest.add(indexRequest);
                                 }
                             } catch (Exception e) {
@@ -218,15 +224,6 @@ public class SearchServiceImpl implements SearchService {
 
 
 
-
-
-
-
-
-
-
-
-
     public Map<String, Object> getCount(String keyword) throws IOException {
         SearchRequest request = new SearchRequest(s.index);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
@@ -242,6 +239,7 @@ public class SearchServiceImpl implements SearchService {
         sourceBuilder.query(boolQueryBuilder);
 
         sourceBuilder.aggregation(AggregationBuilders.terms("data").field("type.keyword"));
+        request.source(sourceBuilder);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
 
         List<Map<String, Object>> numberList = new ArrayList<>();
@@ -284,6 +282,7 @@ public class SearchServiceImpl implements SearchService {
         }
 
         sourceBuilder.query(boolQueryBuilder);
+        request.source(sourceBuilder);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
 
         Map<String, Object> result = new HashMap<>();
@@ -295,6 +294,29 @@ public class SearchServiceImpl implements SearchService {
         }
 
         result.put("records", data);
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> getTags(SearchTags searchTags) throws Exception {
+        SearchRequest request = new SearchRequest(s.index);
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.filter(QueryBuilders.termQuery("type", searchTags.getCategory()));
+        sourceBuilder.aggregation(AggregationBuilders.terms("data").field(searchTags.getTags() + ".keyword")).size(100);
+
+        request.source(sourceBuilder);
+        SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+        ParsedTerms aggregation = response.getAggregations().get("data");
+        List<Map<String, Object>> numberList = new ArrayList<>();
+        List<? extends Terms.Bucket> buckets = aggregation.getBuckets();
+        for (Terms.Bucket bucket : buckets) {
+            Map<String, Object> countMap = new HashMap<>();
+            countMap.put("key", bucket.getKeyAsString());
+            numberList.add(countMap);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("totalNum", numberList);
         return result;
     }
 

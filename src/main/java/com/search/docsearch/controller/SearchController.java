@@ -4,6 +4,7 @@ package com.search.docsearch.controller;
 import com.search.docsearch.config.mySystem;
 import com.search.docsearch.constant.EulerTypeConstants;
 import com.search.docsearch.entity.vo.SearchCondition;
+import com.search.docsearch.entity.vo.SearchTags;
 import com.search.docsearch.entity.vo.SysResult;
 import com.search.docsearch.service.SearchService;
 import lombok.extern.slf4j.Slf4j;
@@ -92,6 +93,11 @@ public class SearchController {
 
 
         return SysResult.fail("查询失败", null);
+    }
+
+    @PostMapping("tags")
+    public SysResult getTags(@RequestBody SearchTags searchTags) {
+        return null;
     }
 
 

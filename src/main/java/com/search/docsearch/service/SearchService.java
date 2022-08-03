@@ -1,6 +1,7 @@
 package com.search.docsearch.service;
 
 import com.search.docsearch.entity.vo.SearchCondition;
+import com.search.docsearch.entity.vo.SearchTags;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,4 +32,6 @@ public interface SearchService {
 
 
     Map<String, Object> advancedSearch(Map<String, String> search) throws Exception;
+
+    Map<String, Object> getTags(SearchTags searchTags) throws Exception;
 }

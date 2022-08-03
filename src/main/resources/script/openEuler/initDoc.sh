@@ -27,7 +27,7 @@ cp -r /usr/local/docs/source/openEuler-portal/app/zh/showcase /usr/local/docs/ta
 
 cp -r /usr/local/docs/source/openEuler-portal/app/en/blog /usr/local/docs/target/en/
 cp -r /usr/local/docs/source/openEuler-portal/app/en/news /usr/local/docs/target/en/
-cp -r /usr/local/docs/source/openEuler-portal/app/ens/showcase /usr/local/docs/target/zh/
+cp -r /usr/local/docs/source/openEuler-portal/app/en/showcase /usr/local/docs/target/en/
 git clone https://gitee.com/openeuler/docs.git
 
 # shellcheck disable=SC2164
