@@ -28,4 +28,7 @@ public interface SearchService {
 
 
     Map<String, Object> getCount(String keyword) throws IOException;
+
+
+    Map<String, Object> advancedSearch(Map<String, String> search) throws Exception;
 }

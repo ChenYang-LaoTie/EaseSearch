@@ -98,6 +98,7 @@ public class SearchServiceImpl implements SearchService {
                     deleteType = typeFile.getName();
 
                     Collection<File> listFiles = FileUtils.listFiles(typeFile, new String[]{"md"}, true);
+
                     for (File mdFile : listFiles) {
                         if (!mdFile.getName().startsWith("_")) {
                             try {
@@ -113,16 +114,16 @@ public class SearchServiceImpl implements SearchService {
                         }
                     }
 
-
                     DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest(s.index);
                     BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-                    boolQueryBuilder.must(new TermQueryBuilder("lang", lang));
-                    boolQueryBuilder.must(new TermQueryBuilder("type", deleteType));
+                    boolQueryBuilder.must(new TermQueryBuilder("lang.keyword", lang));
+                    boolQueryBuilder.must(new TermQueryBuilder("deleteType.keyword", deleteType));
                     deleteByQueryRequest.setQuery(boolQueryBuilder);
-                    restHighLevelClient.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
-
+                    System.out.println(bulkRequest.requests().size());
+                    BulkByScrollResponse r =  restHighLevelClient.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
                     if (bulkRequest.requests().size() > 0) {
-                        restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+                        BulkResponse q = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+                        System.out.println(q.hasFailures());
                         log.info(lang + "/" + deleteType + "更新成功");
                     }
 
@@ -214,6 +215,18 @@ public class SearchServiceImpl implements SearchService {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     public Map<String, Object> getCount(String keyword) throws IOException {
         SearchRequest request = new SearchRequest(s.index);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
@@ -246,6 +259,42 @@ public class SearchServiceImpl implements SearchService {
         }
         Map<String, Object> result = new HashMap<>();
         result.put("total", numberList);
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> advancedSearch(Map<String, String> search) throws Exception {
+        SearchRequest request = new SearchRequest(s.index);
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        for (Map.Entry<String, String> entry : search.entrySet()) {
+            System.out.println(entry.getKey() + " --- " + entry.getValue());
+            if (entry.getKey().equals("page")) {
+                continue;
+            }
+            if (entry.getKey().equals("pageSize")) {
+                continue;
+            }
+            if (entry.getKey().equals("keyword")) {
+                continue;
+            }
+
+            boolQueryBuilder.filter(QueryBuilders.termQuery(entry.getKey() + ".keyword", entry.getValue()));
+        }
+
+        sourceBuilder.query(boolQueryBuilder);
+        SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+
+        Map<String, Object> result = new HashMap<>();
+        List<Map<String, Object>> data = new ArrayList<>();
+        for (SearchHit hit : response.getHits().getHits()) {
+            Map<String, Object> map = hit.getSourceAsMap();
+
+            data.add(map);
+        }
+
+        result.put("records", data);
         return result;
     }
 

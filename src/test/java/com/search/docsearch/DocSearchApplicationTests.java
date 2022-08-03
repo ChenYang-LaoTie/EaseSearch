@@ -1,6 +1,8 @@
 package com.search.docsearch;
 
+import com.search.docsearch.config.mySystem;
 import com.search.docsearch.constant.EulerTypeConstants;
+import com.search.docsearch.utils.EulerParse;
 import com.search.docsearch.utils.IdUtil;
 import org.apache.commons.io.FileUtils;
 import org.commonmark.node.Node;
@@ -8,6 +10,7 @@ import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
@@ -42,6 +45,12 @@ class DocSearchApplicationTests {
 	@Qualifier("restHighLevelClient")
 	private RestHighLevelClient restHighLevelClient;
 
+	@Autowired
+	@Qualifier("setConfig")
+	private mySystem s;
+
+
+
 	@Test
 	void contextLoads() throws IOException {
 
@@ -56,23 +65,19 @@ class DocSearchApplicationTests {
 
 
 
-//	@Test
-//	void testPa() throws IOException {
-//		File mdFile = FileUtils.getFile("");
-//		String fileContent = FileUtils.readFileToString(mdFile, StandardCharsets.UTF_8);
-//
-//		Parser parser = Parser.builder().build();
-//		HtmlRenderer renderer = HtmlRenderer.builder().build();
-//
-//		Node document = parser.parse(fileContent);
-//
-//		Document node = Jsoup.parse(renderer.render(document));
-//		System.out.println(node);
-//		Element tags = node.getElementsByTag("hr").first().nextElementSibling();
-//		String r = "";
-//		System.out.println(tags);
-//
-//	}
+	@Test
+	void testPa() throws Exception {
+		File mdFile = FileUtils.getFile("C:\\CYDev\\website-v2\\web-ui\\docs\\zh\\news\\20201225.md");
+		Map<String, Object> map = EulerParse.parseMD("zh", "news", mdFile);
+
+		System.out.println(map);
+
+
+		IndexRequest indexRequest = new IndexRequest(s.index).id(IdUtil.getId()).source(map);
+
+		IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+		System.out.println(indexResponse.toString());
+	}
 
 
 
@@ -101,24 +106,4 @@ class DocSearchApplicationTests {
 	}
 
 
-	public static String EuleGetValue(String r, String t) {
-		if (!r.contains(t)) {
-			return "";
-		}
-		String m = ":";
-
-		r = r.substring(r.indexOf(t) + t.length());
-		r = r.substring(r.indexOf(m) + m.length());
-
-		if (!r.contains(":")) {
-			return r.trim().replaceAll("\"", "");
-		}
-
-		r = r.substring(0, r.indexOf(":"));
-		r = r.substring(0, r.lastIndexOf(" ")).trim();
-		System.out.println(r);
-		r = r.replaceAll("\"", "");
-		System.out.println(r);
-		return r;
-	}
 }

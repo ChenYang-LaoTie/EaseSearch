@@ -49,10 +49,11 @@ public class EulerParse {
         Parser parser = Parser.builder().build();
         HtmlRenderer renderer = HtmlRenderer.builder().build();
 
-        Node document = parser.parse(fileContent);
 
-        Document node = Jsoup.parse(renderer.render(document));
         if (EulerTypeConstants.DOCS.equals(type)) {
+            Node document = parser.parse(fileContent);
+            Document node = Jsoup.parse(renderer.render(document));
+
             if (node.getElementsByTag("h1").size() > 0) {
                 jsonMap.put("title", node.getElementsByTag("h1").first().text());
             } else {
@@ -73,25 +74,37 @@ public class EulerParse {
             jsonMap.put("version", version);
         } else {
             String r = "";
-            Element tag = node.getElementsByTag("hr").first();
-            if (tag != null) {
-                Element t = tag.nextElementSibling();
-                r = t.text();
-                t.remove();
-                jsonMap.put("textContent", node.text());
+            if (fileContent.contains("---")) {
+                fileContent = fileContent.substring(fileContent.indexOf("---") + 3);
+                if (fileContent.contains("---")) {
+                    r = fileContent.substring(0, fileContent.indexOf("---"));
+                    fileContent = fileContent.substring(fileContent.indexOf("---") + 3);
+                }
             }
+
+
+            Node document = parser.parse(fileContent);
+            Document node = Jsoup.parse(renderer.render(document));
+
+            jsonMap.put("textContent", node.text());
             jsonMap.put("title", EulerGetValue(r, "title"));
-            jsonMap.put("date", EulerGetValue(r, "date"));
+
             jsonMap.put("category", EulerGetValue(r, "category"));
             jsonMap.put("tags", EulerGetValue(r, "tags"));
-            jsonMap.put("archives", EulerGetValue(r, "archives"));
             jsonMap.put("author", EulerGetValue(r, "author"));
             jsonMap.put("summary", EulerGetValue(r, "summary"));
-
             jsonMap.put("industry", EulerGetValue(r, "industry"));
             jsonMap.put("company", EulerGetValue(r, "company"));
             jsonMap.put("banner", EulerGetValue(r, "banner"));
             jsonMap.put("img", EulerGetValue(r, "img"));
+
+            if (r.contains("date")) {
+                jsonMap.put("date", EulerGetValue(r, "date").trim());
+            }
+            if (r.contains("archives")) {
+                jsonMap.put("archives", EulerGetValue(r, "archives").trim());
+            }
+
         }
 
         return jsonMap;
@@ -102,18 +115,17 @@ public class EulerParse {
         if (!r.contains(t)) {
             return "";
         }
-        String m = ":";
 
         r = r.substring(r.indexOf(t) + t.length());
-        r = r.substring(r.indexOf(m) + m.length());
+        r = r.substring(r.indexOf(":") + 1);
 
-        if (!r.contains(":")) {
-            return r.trim().replaceAll("\"", "");
+        if (r.contains("\r")) {
+            r = r.substring(0, r.indexOf("\r"));
+        } else if (r.contains("\n")){
+            r = r.substring(0, r.indexOf("\n"));
         }
 
-        r = r.substring(0, r.indexOf(":"));
-        r = r.substring(0, r.lastIndexOf(" ")).trim();
-        r = r.replaceAll("\"", "");
+        r = r.replaceAll("\"", "").replaceAll("'", "").trim();
         return r;
     }
 }

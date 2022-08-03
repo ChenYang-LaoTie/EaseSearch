@@ -80,8 +80,14 @@ public class SearchController {
     @PostMapping("sort")
     public SysResult makeSort(@RequestBody Map<String, String> m) {
 
-        for (Map.Entry<String, String> entry : m.entrySet()) {
-            System.out.println(entry.getKey() + " --- " + entry.getValue());
+        try {
+            Map<String, Object> result = searchService.advancedSearch(m);
+            if (result == null) {
+                return SysResult.fail("内容不存在", null);
+            }
+            return SysResult.ok("查询成功", result);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
