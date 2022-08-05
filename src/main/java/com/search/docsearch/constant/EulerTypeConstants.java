@@ -3,7 +3,7 @@ package com.search.docsearch.constant;
 public class EulerTypeConstants {
     public static final String SYSTEM = "openEuler";
 
-    public static final String INDEX = "euler_articles";
+    public static final String INDEX = "euler_articles_test";
 
     public static final String BLOGS = "blog";
     public static final String DOCS = "docs";
