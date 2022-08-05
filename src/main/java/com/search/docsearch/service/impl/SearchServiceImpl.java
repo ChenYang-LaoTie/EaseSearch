@@ -107,10 +107,6 @@ public class SearchServiceImpl implements SearchService {
                                 Map<String, Object> map = EulerParse.parseMD(lang, deleteType, mdFile);
                                 if (map != null) {
                                     IndexRequest indexRequest = new IndexRequest(s.index).id(IdUtil.getId()).source(map);
-                                    if (deleteType.equals("blog")) {
-                                        IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
-                                        System.out.println(indexResponse.toString());
-                                    }
                                     bulkRequest.add(indexRequest);
                                 }
                             } catch (Exception e) {
@@ -224,10 +220,12 @@ public class SearchServiceImpl implements SearchService {
 
 
 
-    public Map<String, Object> getCount(String keyword) throws IOException {
+    public Map<String, Object> getCount(String keyword, String lang) throws IOException {
         SearchRequest request = new SearchRequest(s.index);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        boolQueryBuilder.filter(QueryBuilders.termQuery("lang.keyword", lang));
 
         MatchQueryBuilder titleMP = QueryBuilders.matchQuery("title", keyword);
         titleMP.boost(2);
@@ -266,21 +264,39 @@ public class SearchServiceImpl implements SearchService {
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
+        int page = 1;
+        int pageSize = 10;
+        String keyword = "";
         for (Map.Entry<String, String> entry : search.entrySet()) {
             System.out.println(entry.getKey() + " --- " + entry.getValue());
             if (entry.getKey().equals("page")) {
+                page = Integer.parseInt(entry.getValue());
                 continue;
             }
             if (entry.getKey().equals("pageSize")) {
+                pageSize = Integer.parseInt(entry.getValue());
                 continue;
             }
             if (entry.getKey().equals("keyword")) {
+                keyword = entry.getValue();
                 continue;
             }
 
             boolQueryBuilder.filter(QueryBuilders.termQuery(entry.getKey() + ".keyword", entry.getValue()));
         }
 
+        int startIndex = (page - 1) * pageSize;
+
+        if (!keyword.equals("")) {
+            MatchQueryBuilder titleMP = QueryBuilders.matchQuery("title", keyword);
+            titleMP.boost(2);
+            MatchQueryBuilder textContentMP = QueryBuilders.matchQuery("textContent", keyword);
+            textContentMP.boost(1);
+            boolQueryBuilder.should(titleMP).should(textContentMP);
+
+            boolQueryBuilder.minimumShouldMatch(1);
+        }
+        sourceBuilder.from(startIndex).size(pageSize);
         sourceBuilder.query(boolQueryBuilder);
         request.source(sourceBuilder);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
@@ -292,7 +308,9 @@ public class SearchServiceImpl implements SearchService {
 
             data.add(map);
         }
-
+        result.put("page", page);
+        result.put("pageSize", pageSize);
+        result.put("count", response.getHits().getTotalHits().value);
         result.put("records", data);
         return result;
     }
@@ -302,17 +320,21 @@ public class SearchServiceImpl implements SearchService {
         SearchRequest request = new SearchRequest(s.index);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.filter(QueryBuilders.termQuery("type", searchTags.getCategory()));
-        sourceBuilder.aggregation(AggregationBuilders.terms("data").field(searchTags.getTags() + ".keyword")).size(100);
-
+        boolQueryBuilder.filter(QueryBuilders.termQuery("lang.keyword", searchTags.getLang()));
+        boolQueryBuilder.filter(QueryBuilders.termQuery("category.keyword", searchTags.getCategory()));
+        sourceBuilder.aggregation(AggregationBuilders.terms("data").field(searchTags.getTags() + ".keyword").size(10000));
+        sourceBuilder.query(boolQueryBuilder);
         request.source(sourceBuilder);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
         ParsedTerms aggregation = response.getAggregations().get("data");
         List<Map<String, Object>> numberList = new ArrayList<>();
         List<? extends Terms.Bucket> buckets = aggregation.getBuckets();
         for (Terms.Bucket bucket : buckets) {
+
             Map<String, Object> countMap = new HashMap<>();
+
             countMap.put("key", bucket.getKeyAsString());
+            countMap.put("count", bucket.getDocCount());
             numberList.add(countMap);
         }
         Map<String, Object> result = new HashMap<>();

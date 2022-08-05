@@ -61,10 +61,9 @@ public class SearchController {
 
 
     @PostMapping("count")
-    public SysResult getCount(@RequestBody String keyword) {
-        System.out.println(keyword);
+    public SysResult getCount(@RequestBody SearchCondition condition) {
         try {
-            Map<String, Object> result = searchService.getCount(keyword);
+            Map<String, Object> result = searchService.getCount(condition.getKeyword(), condition.getLang());
             if (result == null) {
                 return SysResult.fail("内容不存在", null);
             }
@@ -97,7 +96,18 @@ public class SearchController {
 
     @PostMapping("tags")
     public SysResult getTags(@RequestBody SearchTags searchTags) {
-        return null;
+        try {
+            Map<String, Object> result = searchService.getTags(searchTags);
+            if (result == null) {
+                return SysResult.fail("内容不存在", null);
+            }
+            return SysResult.ok("查询成功", result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return SysResult.fail("查询失败", null);
     }
 
 

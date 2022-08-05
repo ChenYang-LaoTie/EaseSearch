@@ -10,6 +10,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -85,26 +86,14 @@ public class EulerParse {
 
             Node document = parser.parse(fileContent);
             Document node = Jsoup.parse(renderer.render(document));
-
             jsonMap.put("textContent", node.text());
-            jsonMap.put("title", EulerGetValue(r, "title"));
 
-            jsonMap.put("category", EulerGetValue(r, "category"));
-            jsonMap.put("tags", EulerGetValue(r, "tags"));
-            jsonMap.put("author", EulerGetValue(r, "author"));
-            jsonMap.put("summary", EulerGetValue(r, "summary"));
-            jsonMap.put("industry", EulerGetValue(r, "industry"));
-            jsonMap.put("company", EulerGetValue(r, "company"));
-            jsonMap.put("banner", EulerGetValue(r, "banner"));
-            jsonMap.put("img", EulerGetValue(r, "img"));
 
-            if (r.contains("date")) {
-                jsonMap.put("date", EulerGetValue(r, "date").trim());
+            Yaml yaml = new Yaml();
+            Map<String, Object> ret = yaml.load(r);
+            for (Map.Entry<String, Object> entry : ret.entrySet()) {
+                jsonMap.put(entry.getKey(), entry.getValue());
             }
-            if (r.contains("archives")) {
-                jsonMap.put("archives", EulerGetValue(r, "archives").trim());
-            }
-
         }
 
         return jsonMap;
@@ -112,11 +101,12 @@ public class EulerParse {
 
 
     public static String EulerGetValue(String r, String t) {
-        if (!r.contains(t)) {
+
+        if (!r.contains("\n"+t)) {
             return "";
         }
 
-        r = r.substring(r.indexOf(t) + t.length());
+        r = r.substring(r.indexOf("\n"+t) + t.length() + 1);
         r = r.substring(r.indexOf(":") + 1);
 
         if (r.contains("\r")) {

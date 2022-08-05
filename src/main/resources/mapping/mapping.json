@@ -80,6 +80,15 @@
     },
     "date" : {
       "type" : "date"
+    },
+    "archives": {
+      "type" : "text",
+      "fields" : {
+        "keyword" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        }
+      }
     }
   }
 }

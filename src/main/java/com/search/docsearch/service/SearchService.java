@@ -28,7 +28,7 @@ public interface SearchService {
     Map<String, Object> searchByCondition(SearchCondition condition) throws IOException;
 
 
-    Map<String, Object> getCount(String keyword) throws IOException;
+    Map<String, Object> getCount(String keyword, String lang) throws IOException;
 
 
     Map<String, Object> advancedSearch(Map<String, String> search) throws Exception;

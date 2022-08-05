@@ -67,16 +67,16 @@ class DocSearchApplicationTests {
 
 	@Test
 	void testPa() throws Exception {
-		File mdFile = FileUtils.getFile("C:\\CYDev\\website-v2\\web-ui\\docs\\zh\\news\\20201225.md");
+		File mdFile = FileUtils.getFile("C:\\CYDev\\workspace\\eulerdoc\\openEuler-portal\\app\\zh\\blog\\Shinwell_Hu\\2020-03-16-A-Status-Update-of-Early-Spring.md");
 		Map<String, Object> map = EulerParse.parseMD("zh", "news", mdFile);
 
-		System.out.println(map);
-
-
-		IndexRequest indexRequest = new IndexRequest(s.index).id(IdUtil.getId()).source(map);
-
-		IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
-		System.out.println(indexResponse.toString());
+//		System.out.println(map);
+//
+//
+//		IndexRequest indexRequest = new IndexRequest(s.index).id(IdUtil.getId()).source(map);
+//
+//		IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+//		System.out.println(indexResponse.toString());
 	}
 
 
@@ -85,24 +85,9 @@ class DocSearchApplicationTests {
 
 	@Test
 	void ines() throws IOException {
-
-		BulkRequest bulkRequest = new BulkRequest();
-
-
-		for (int i=1; i < 10; i ++) {
-			Map<String, Object> jsonMap = new HashMap<>();
-			jsonMap.put("lang", "zh");
-			jsonMap.put("type", "tt");
-			jsonMap.put("in", i);
-			IndexRequest indexRequest = new IndexRequest("cytest").source(jsonMap);
-			bulkRequest.add(indexRequest);
-		}
-
-
-
-		if (bulkRequest.requests().size() > 0) {
-			restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
-		}
+		String d = "- ddd -aae -zzz";
+		String[] e = d.split("-");
+		System.out.println(e.toString());
 	}
 
 
