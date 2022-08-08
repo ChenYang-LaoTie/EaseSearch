@@ -14,4 +14,4 @@ system: ${searchsystem:openEuler}
 docsversion: 20
 
 #formal test
-dep: ${dep:test}
+dep: ${depp:test}
