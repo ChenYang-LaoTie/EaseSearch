@@ -1,31 +1,15 @@
 package com.search.docsearch;
 
-import com.search.docsearch.config.mySystem;
-import com.search.docsearch.constant.EulerTypeConstants;
+import com.search.docsearch.config.MySystem;
+import com.search.docsearch.constant.Constants;
 import com.search.docsearch.utils.EulerParse;
-import com.search.docsearch.utils.IdUtil;
 import org.apache.commons.io.FileUtils;
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
-import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.indices.CreateIndexRequest;
-import org.elasticsearch.client.indices.CreateIndexResponse;
-import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,11 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @SpringBootTest
 class DocSearchApplicationTests {
@@ -47,14 +27,14 @@ class DocSearchApplicationTests {
 
 	@Autowired
 	@Qualifier("setConfig")
-	private mySystem s;
+	private MySystem s;
 
 
 
 	@Test
 	void contextLoads() throws IOException {
 
-		DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest(EulerTypeConstants.INDEX);
+		DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest("");
 		BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
 		boolQueryBuilder.must(new TermQueryBuilder("lang", "zh"));
 		boolQueryBuilder.must(new TermQueryBuilder("type", "news"));

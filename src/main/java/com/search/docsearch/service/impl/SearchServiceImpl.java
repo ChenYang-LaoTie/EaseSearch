@@ -1,7 +1,6 @@
 package com.search.docsearch.service.impl;
 
-import com.search.docsearch.config.mySystem;
-import com.search.docsearch.constant.EulerTypeConstants;
+import com.search.docsearch.config.MySystem;
 import com.search.docsearch.entity.Article;
 import com.search.docsearch.entity.vo.SearchCondition;
 import com.search.docsearch.entity.vo.SearchTags;
@@ -13,7 +12,6 @@ import org.apache.commons.io.FileUtils;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -32,17 +30,17 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
+import org.elasticsearch.search.sort.ScoreSortBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.logging.Slf4JLoggingSystem;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.StreamSupport;
 
 
 @Service
@@ -55,7 +53,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Autowired
     @Qualifier("setConfig")
-    private mySystem s;
+    private MySystem s;
 
 
 
@@ -298,7 +296,12 @@ public class SearchServiceImpl implements SearchService {
         }
         sourceBuilder.from(startIndex).size(pageSize);
         sourceBuilder.query(boolQueryBuilder);
+
+        sourceBuilder.sort("date", SortOrder.DESC);
+
         request.source(sourceBuilder);
+
+
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
 
         Map<String, Object> result = new HashMap<>();

@@ -1,6 +1,6 @@
 package com.search.docsearch.utils;
 
-import com.search.docsearch.constant.EulerTypeConstants;
+import com.search.docsearch.constant.Constants;
 
 import org.apache.commons.io.FileUtils;
 import org.commonmark.node.Node;
@@ -9,7 +9,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.springframework.util.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -19,17 +19,23 @@ import java.util.Map;
 
 public class EulerParse {
 
+    public static final String BLOGS = "blog";
+    public static final String DOCS = "docs";
+    public static final String NEWS = "news";
+    public static final String OTHER = "other";
+    public static final String SHOWCASE = "showcase";
+
 
     public static Map<String, Object> parseMD(String lang, String deleteType, File mdFile) throws Exception {
         String type = deleteType;
         String fileName = mdFile.getName();
         String path = mdFile.getPath()
                 .replace("\\", "/")
-                .replace(EulerTypeConstants.BASEPATH + lang + "/", "")
+                .replace(Constants.BASEPATH + lang + "/", "")
                 .replace("\\\\", "/")
                 .replace(".md", "");
-        if (!EulerTypeConstants.DOCS.equals(deleteType) && !EulerTypeConstants.BLOGS.equals(deleteType) && !EulerTypeConstants.NEWS.equals(deleteType) && !EulerTypeConstants.SHOWCASE.equals(deleteType)) {
-            type = EulerTypeConstants.OTHER;
+        if (!DOCS.equals(deleteType) && !BLOGS.equals(deleteType) && !NEWS.equals(deleteType) && !SHOWCASE.equals(deleteType)) {
+            type = OTHER;
             if(!fileName.equals("README.md")) {
                 return null;
             }
@@ -51,7 +57,7 @@ public class EulerParse {
         HtmlRenderer renderer = HtmlRenderer.builder().build();
 
 
-        if (EulerTypeConstants.DOCS.equals(type)) {
+        if (DOCS.equals(type)) {
             Node document = parser.parse(fileContent);
             Document node = Jsoup.parse(renderer.render(document));
 
@@ -91,31 +97,19 @@ public class EulerParse {
 
             Yaml yaml = new Yaml();
             Map<String, Object> ret = yaml.load(r);
+
             for (Map.Entry<String, Object> entry : ret.entrySet()) {
+
+                //TODO 需要处理日期不标准导致的存入ES失败的问题。
+
                 jsonMap.put(entry.getKey(), entry.getValue());
             }
+        }
+        if (jsonMap.get("title") == "" || jsonMap.get("textContent") == "") {
+            return null;
         }
 
         return jsonMap;
     }
 
-
-    public static String EulerGetValue(String r, String t) {
-
-        if (!r.contains("\n"+t)) {
-            return "";
-        }
-
-        r = r.substring(r.indexOf("\n"+t) + t.length() + 1);
-        r = r.substring(r.indexOf(":") + 1);
-
-        if (r.contains("\r")) {
-            r = r.substring(0, r.indexOf("\r"));
-        } else if (r.contains("\n")){
-            r = r.substring(0, r.indexOf("\n"));
-        }
-
-        r = r.replaceAll("\"", "").replaceAll("'", "").trim();
-        return r;
-    }
 }

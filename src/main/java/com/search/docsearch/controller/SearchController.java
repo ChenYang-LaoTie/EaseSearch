@@ -1,8 +1,7 @@
 package com.search.docsearch.controller;
 
 
-import com.search.docsearch.config.mySystem;
-import com.search.docsearch.constant.EulerTypeConstants;
+import com.search.docsearch.config.MySystem;
 import com.search.docsearch.entity.vo.SearchCondition;
 import com.search.docsearch.entity.vo.SearchTags;
 import com.search.docsearch.entity.vo.SysResult;
@@ -32,7 +31,7 @@ public class SearchController {
     private SearchService searchService;
     @Autowired
     @Qualifier("setConfig")
-    private mySystem s;
+    private MySystem s;
 
     /**
      * 查询文档

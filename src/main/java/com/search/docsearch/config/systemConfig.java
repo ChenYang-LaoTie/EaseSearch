@@ -1,13 +1,14 @@
 package com.search.docsearch.config;
 
 
-import com.search.docsearch.constant.EulerTypeConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Locale;
 
 @Configuration
 @EnableConfigurationProperties(ElasticsearchProperties.class)
@@ -18,14 +19,34 @@ public class systemConfig {
     private String system;
     @Value("${docsversion}")
     private String docsVersion;
+    @Value("${dep}")
+    private String dep;
 
+
+    public static final String MAPPINGPATH = "/EaseSearch/target/classes/mapping/mapping.json";
+
+    public static final String BASEPATH = "/usr/local/docs/target/";
 
     @Bean
-    public mySystem setConfig() {
-        if (system.equalsIgnoreCase(EulerTypeConstants.SYSTEM)) {
-            return new mySystem(EulerTypeConstants.SYSTEM, docsVersion, EulerTypeConstants.INDEX, EulerTypeConstants.MAPPINGPATH, EulerTypeConstants.BASEPATH, EulerTypeConstants.INITDOC, EulerTypeConstants.UPDATEDOC);
-        }
-        return new mySystem(EulerTypeConstants.SYSTEM, docsVersion, EulerTypeConstants.INDEX, EulerTypeConstants.MAPPINGPATH, EulerTypeConstants.BASEPATH, EulerTypeConstants.INITDOC, EulerTypeConstants.UPDATEDOC);
+    public MySystem setConfig() {
+        system = system.toLowerCase(Locale.ROOT);
+        dep = dep.toLowerCase(Locale.ROOT);
+        MySystem mySystem = new MySystem();
 
+        mySystem.setSystem(system);
+
+        if (dep.equals("test")) {
+            mySystem.setIndex(system + "_articles_test");
+        } else {
+            mySystem.setIndex(system + "_articles");
+        }
+
+        mySystem.setDocsVersion(docsVersion);
+        mySystem.setMappingPath(MAPPINGPATH);
+        mySystem.setBasePath(BASEPATH);
+
+        mySystem.setSystem("/EaseSearch/target/classes/script/" + system + "/initDoc.sh");
+        mySystem.setSystem("/EaseSearch/target/classes/script/" + system + "/updateDoc.sh");
+        return mySystem;
     }
 }
