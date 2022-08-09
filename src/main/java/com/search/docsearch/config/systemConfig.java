@@ -45,8 +45,8 @@ public class systemConfig {
         mySystem.setMappingPath(MAPPINGPATH);
         mySystem.setBasePath(BASEPATH);
 
-        mySystem.setSystem("/EaseSearch/target/classes/script/" + system + "/initDoc.sh");
-        mySystem.setSystem("/EaseSearch/target/classes/script/" + system + "/updateDoc.sh");
+        mySystem.setInitDoc("/EaseSearch/target/classes/script/" + system + "/initDoc.sh");
+        mySystem.setUpdateDoc("/EaseSearch/target/classes/script/" + system + "/updateDoc.sh");
         return mySystem;
     }
 }
