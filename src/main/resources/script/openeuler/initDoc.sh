@@ -6,6 +6,7 @@ fi
 mkdir -p /usr/local/docs/source/
 mkdir -p /usr/local/docs/target/zh/
 mkdir -p /usr/local/docs/target/en/
+mkdir -p /usr/local/docs/target/ru/
 
 # shellcheck disable=SC2164
 cd /usr/local/docs/source
@@ -17,6 +18,11 @@ cp -r /usr/local/docs/source/openEuler-portal/app/zh/showcase /usr/local/docs/ta
 cp -r /usr/local/docs/source/openEuler-portal/app/en/blog /usr/local/docs/target/en/
 cp -r /usr/local/docs/source/openEuler-portal/app/en/news /usr/local/docs/target/en/
 cp -r /usr/local/docs/source/openEuler-portal/app/en/showcase /usr/local/docs/target/en/
+
+cp -r /usr/local/docs/source/openEuler-portal/app/ru/blog /usr/local/docs/target/ru/
+cp -r /usr/local/docs/source/openEuler-portal/app/ru/news /usr/local/docs/target/ru/
+cp -r /usr/local/docs/source/openEuler-portal/app/ru/showcase /usr/local/docs/target/ru/
+
 git clone https://gitee.com/openeuler/docs.git
 
 # shellcheck disable=SC2164
