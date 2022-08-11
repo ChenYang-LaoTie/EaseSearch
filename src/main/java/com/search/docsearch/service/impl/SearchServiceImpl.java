@@ -99,7 +99,7 @@ public class SearchServiceImpl implements SearchService {
                     BulkRequest bulkRequest = new BulkRequest();
                     deleteType = typeFile.getName();
 
-                    Collection<File> listFiles = FileUtils.listFiles(typeFile, new String[]{"md", "html"}, true);
+                    Collection<File> listFiles = FileUtils.listFiles(typeFile, new String[]{"md"}, true);
 
                     for (File mdFile : listFiles) {
                         if (!mdFile.getName().startsWith("_")) {
