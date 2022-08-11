@@ -1,4 +1,4 @@
-FROM node
+FROM ubuntu
 RUN mkdir -p /EaseSearch \
     && apt update \
     && apt-get install -y openjdk-17-jdk
