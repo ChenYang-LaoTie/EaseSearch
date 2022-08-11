@@ -113,7 +113,7 @@ public class SearchController {
     /**
      * 定时任务
      */
-    @Scheduled(cron = "${scheduled.cron}")
+//    @Scheduled(cron = "${scheduled.cron}")
     public String scheduledTask() throws IOException {
         Process process;
         try {
