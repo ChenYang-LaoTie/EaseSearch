@@ -4,7 +4,7 @@ if [ -d "/usr/local/docs" ]; then
   rm -rf /usr/local/docs/target/*
 fi
 
-npm i pnpm -g
+#npm i pnpm -g
 
 mkdir -p /usr/local/docs/source/
 mkdir -p /usr/local/docs/target/zh/
@@ -14,8 +14,8 @@ mkdir -p /usr/local/docs/target/ru/
 # shellcheck disable=SC2164
 cd /usr/local/docs/source
 git clone https://gitee.com/openeuler/openEuler-portal.git
-pnpm install
-pnpm build
+#pnpm install
+#pnpm build
 
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/blog /usr/local/docs/target/zh/
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/news /usr/local/docs/target/zh/
