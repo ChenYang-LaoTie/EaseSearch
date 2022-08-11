@@ -121,11 +121,9 @@ public class SearchServiceImpl implements SearchService {
                     boolQueryBuilder.must(new TermQueryBuilder("lang.keyword", lang));
                     boolQueryBuilder.must(new TermQueryBuilder("deleteType.keyword", deleteType));
                     deleteByQueryRequest.setQuery(boolQueryBuilder);
-                    System.out.println(bulkRequest.requests().size());
                     BulkByScrollResponse r =  restHighLevelClient.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
                     if (bulkRequest.requests().size() > 0) {
                         BulkResponse q = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
-                        System.out.println(q.hasFailures());
                         log.info(lang + "/" + deleteType + "更新成功");
                     }
 
@@ -268,7 +266,6 @@ public class SearchServiceImpl implements SearchService {
         int pageSize = 10;
         String keyword = "";
         for (Map.Entry<String, String> entry : search.entrySet()) {
-            System.out.println(entry.getKey() + " --- " + entry.getValue());
             if (entry.getKey().equals("page")) {
                 page = Integer.parseInt(entry.getValue());
                 continue;

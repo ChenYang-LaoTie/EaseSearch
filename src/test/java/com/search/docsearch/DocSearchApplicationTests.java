@@ -47,8 +47,8 @@ class DocSearchApplicationTests {
 
 	@Test
 	void testPa() throws Exception {
-		File mdFile = FileUtils.getFile("C:\\CYDev\\workspace\\eulerdoc\\openEuler-portal\\app\\zh\\blog\\Shinwell_Hu\\2020-03-16-A-Status-Update-of-Early-Spring.md");
-		Map<String, Object> map = EulerParse.parseMD("zh", "news", mdFile);
+//		File mdFile = FileUtils.getFile("");
+//		Map<String, Object> map = EulerParse.parseMD("zh", "news", mdFile);
 
 //		System.out.println(map);
 //

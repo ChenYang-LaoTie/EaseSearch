@@ -98,11 +98,16 @@ public class EulerParse {
             Yaml yaml = new Yaml();
             Map<String, Object> ret = yaml.load(r);
 
+            String key = "";
+            Object value = "";
             for (Map.Entry<String, Object> entry : ret.entrySet()) {
-
                 //TODO 需要处理日期不标准导致的存入ES失败的问题。
-
-                jsonMap.put(entry.getKey(), entry.getValue());
+                key = entry.getKey();
+                value = entry.getValue();
+                if (key.equals("archives")) {
+                    value = value.toString().substring(0, 7);
+                }
+                jsonMap.put(key, value);
             }
         }
         if (jsonMap.get("title") == "" || jsonMap.get("textContent") == "") {

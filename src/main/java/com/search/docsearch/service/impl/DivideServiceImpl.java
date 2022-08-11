@@ -47,7 +47,6 @@ public class DivideServiceImpl implements DivideService {
         String keyword = "";
 
         for (Map.Entry<String, String> entry : search.entrySet()) {
-            System.out.println(entry.getKey() + " --- " + entry.getValue());
             if (entry.getKey().equals("page")) {
                 page = Integer.parseInt(entry.getValue());
                 continue;
