@@ -13,7 +13,7 @@ import java.util.Locale;
 @Configuration
 @EnableConfigurationProperties(ElasticsearchProperties.class)
 @Slf4j
-public class systemConfig {
+public class SystemConfig {
 
     @Value("${system}")
     private String system;
