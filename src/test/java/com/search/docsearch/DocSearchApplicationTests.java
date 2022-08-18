@@ -57,6 +57,8 @@ class DocSearchApplicationTests {
 //
 //		IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
 //		System.out.println(indexResponse.toString());
+		String s = "012345";
+		System.out.println(s.substring(0, s.length() - 2));
 	}
 
 

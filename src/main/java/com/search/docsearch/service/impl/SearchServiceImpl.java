@@ -99,12 +99,12 @@ public class SearchServiceImpl implements SearchService {
                     BulkRequest bulkRequest = new BulkRequest();
                     deleteType = typeFile.getName();
 
-                    Collection<File> listFiles = FileUtils.listFiles(typeFile, new String[]{"md"}, true);
+                    Collection<File> listFiles = FileUtils.listFiles(typeFile, new String[]{"md", "html"}, true);
 
                     for (File mdFile : listFiles) {
                         if (!mdFile.getName().startsWith("_")) {
                             try {
-                                Map<String, Object> map = EulerParse.parseMD(lang, deleteType, mdFile);
+                                Map<String, Object> map = EulerParse.parse(lang, deleteType, mdFile);
                                 if (map != null) {
                                     IndexRequest indexRequest = new IndexRequest(s.index).id(IdUtil.getId()).source(map);
                                     bulkRequest.add(indexRequest);

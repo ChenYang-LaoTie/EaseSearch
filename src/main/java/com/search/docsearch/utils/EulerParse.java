@@ -9,6 +9,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.util.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
@@ -26,23 +27,22 @@ public class EulerParse {
     public static final String SHOWCASE = "showcase";
 
 
-    public static Map<String, Object> parseMD(String lang, String deleteType, File mdFile) throws Exception {
+    public static Map<String, Object> parse(String lang, String deleteType, File mdFile) throws Exception {
         String type = deleteType;
         String fileName = mdFile.getName();
         String path = mdFile.getPath()
                 .replace("\\", "/")
                 .replace(Constants.BASEPATH + lang + "/", "")
                 .replace("\\\\", "/")
-                .replace(".md", "");
+                .replace(".md", "")
+                .replace(".html", "");
         if (!DOCS.equals(deleteType) && !BLOGS.equals(deleteType) && !NEWS.equals(deleteType) && !SHOWCASE.equals(deleteType)) {
             type = OTHER;
-            if(!fileName.equals("README.md")) {
+            if(!fileName.equals("index.html")) {
                 return null;
             }
-            path = path.replace("README", "");
+            path = path.substring(0, path.length() - 5);
         }
-
-
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("lang", lang);
         jsonMap.put("deleteType", deleteType);
@@ -56,6 +56,24 @@ public class EulerParse {
         Parser parser = Parser.builder().build();
         HtmlRenderer renderer = HtmlRenderer.builder().build();
 
+        if (fileName.endsWith(".html")) {
+            Document node = Jsoup.parse(fileContent);
+
+            Elements elements = node.getElementsByTag("main");
+            if (elements.size() > 0) {
+                Element mainNode = elements.first();
+                Elements h1s = mainNode.getElementsByTag("h1");
+                if (h1s.size() > 0) {
+                    jsonMap.put("title", h1s.first().text());
+                } else {
+                    return null;
+                }
+                jsonMap.put("textContent", mainNode.text());
+                return jsonMap;
+            } else {
+                return null;
+            }
+        }
 
         if (DOCS.equals(type)) {
             Node document = parser.parse(fileContent);

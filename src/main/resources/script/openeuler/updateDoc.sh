@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 rm -rf /usr/local/docs/target/*
 mkdir -p /usr/local/docs/target/zh/
@@ -7,13 +7,35 @@ mkdir -p /usr/local/docs/target/en/
 # shellcheck disable=SC2164
 cd /usr/local/docs/source/openEuler-portal
 git pull
+pnpm install
+pnpm build
+
+
+cp -r /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/zh /usr/local/docs/target/
+cp -r /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/en /usr/local/docs/target/
+cp -r /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/ru /usr/local/docs/target/
+
+
+rm -rf /usr/local/docs/target/zh/blog
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/blog /usr/local/docs/target/zh/
+rm -rf /usr/local/docs/target/zh/news
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/news /usr/local/docs/target/zh/
+rm -rf /usr/local/docs/target/zh/showcase
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/showcase /usr/local/docs/target/zh/
 
+rm -rf /usr/local/docs/target/en/blog
 cp -r /usr/local/docs/source/openEuler-portal/app/en/blog /usr/local/docs/target/en/
+rm -rf /usr/local/docs/target/en/news
 cp -r /usr/local/docs/source/openEuler-portal/app/en/news /usr/local/docs/target/en/
+rm -rf /usr/local/docs/target/en/showcase
 cp -r /usr/local/docs/source/openEuler-portal/app/en/showcase /usr/local/docs/target/en/
+
+rm -rf /usr/local/docs/target/ru/blog
+cp -r /usr/local/docs/source/openEuler-portal/app/ru/blog /usr/local/docs/target/ru/
+rm -rf /usr/local/docs/target/ru/news
+cp -r /usr/local/docs/source/openEuler-portal/app/ru/news /usr/local/docs/target/ru/
+rm -rf /usr/local/docs/target/ru/showcase
+cp -r /usr/local/docs/source/openEuler-portal/app/ru/showcase /usr/local/docs/target/ru/
 
 
 # shellcheck disable=SC2164
