@@ -123,7 +123,7 @@ public class EulerParse {
                 key = entry.getKey();
                 value = entry.getValue();
                 if (key.equals("archives")) {
-                    value = value.toString().substring(0, 7);
+                    value = value.toString().substring(0, 6);
                 }
                 jsonMap.put(key, value);
             }

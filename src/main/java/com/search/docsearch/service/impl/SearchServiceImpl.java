@@ -115,7 +115,7 @@ public class SearchServiceImpl implements SearchService {
                             }
                         }
                     }
-
+                    System.out.println("size - " + bulkRequest.requests().size());
                     DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest(s.index);
                     BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
                     boolQueryBuilder.must(new TermQueryBuilder("lang.keyword", lang));
