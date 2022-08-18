@@ -58,76 +58,72 @@ public class EulerParse {
 
         if (fileName.endsWith(".html")) {
             Document node = Jsoup.parse(fileContent);
-
             Elements elements = node.getElementsByTag("main");
             if (elements.size() > 0) {
                 Element mainNode = elements.first();
                 Elements h1s = mainNode.getElementsByTag("h1");
                 if (h1s.size() > 0) {
                     jsonMap.put("title", h1s.first().text());
-                } else {
-                    return null;
                 }
                 jsonMap.put("textContent", mainNode.text());
                 return jsonMap;
-            } else {
-                return null;
             }
-        }
-
-        if (DOCS.equals(type)) {
-            Node document = parser.parse(fileContent);
-            Document node = Jsoup.parse(renderer.render(document));
-
-            if (node.getElementsByTag("h1").size() > 0) {
-                jsonMap.put("title", node.getElementsByTag("h1").first().text());
-            } else {
-                jsonMap.put("title", mdFile.getName());
-            }
-
-            if (node.getElementsByTag("a").size() > 0 && node.getElementsByTag("ul").size() > 0) {
-                Element a = node.getElementsByTag("a").first();
-                if (a.attr("href").startsWith("#")) {
-                    node.getElementsByTag("ul").first().remove();
-                }
-            }
-            jsonMap.put("textContent",node.text());
-
-            String version = path.replaceFirst(type + "/", "");
-            version = version.substring(0, version.indexOf("/"));
-
-            jsonMap.put("version", version);
         } else {
-            String r = "";
-            if (fileContent.contains("---")) {
-                fileContent = fileContent.substring(fileContent.indexOf("---") + 3);
+            if (DOCS.equals(type)) {
+                Node document = parser.parse(fileContent);
+                Document node = Jsoup.parse(renderer.render(document));
+
+                if (node.getElementsByTag("h1").size() > 0) {
+                    jsonMap.put("title", node.getElementsByTag("h1").first().text());
+                } else {
+                    jsonMap.put("title", mdFile.getName());
+                }
+
+                if (node.getElementsByTag("a").size() > 0 && node.getElementsByTag("ul").size() > 0) {
+                    Element a = node.getElementsByTag("a").first();
+                    if (a.attr("href").startsWith("#")) {
+                        node.getElementsByTag("ul").first().remove();
+                    }
+                }
+                jsonMap.put("textContent",node.text());
+
+                String version = path.replaceFirst(type + "/", "");
+                version = version.substring(0, version.indexOf("/"));
+
+                jsonMap.put("version", version);
+            } else {
+                String r = "";
                 if (fileContent.contains("---")) {
-                    r = fileContent.substring(0, fileContent.indexOf("---"));
                     fileContent = fileContent.substring(fileContent.indexOf("---") + 3);
+                    if (fileContent.contains("---")) {
+                        r = fileContent.substring(0, fileContent.indexOf("---"));
+                        fileContent = fileContent.substring(fileContent.indexOf("---") + 3);
+                    }
                 }
-            }
 
 
-            Node document = parser.parse(fileContent);
-            Document node = Jsoup.parse(renderer.render(document));
-            jsonMap.put("textContent", node.text());
+                Node document = parser.parse(fileContent);
+                Document node = Jsoup.parse(renderer.render(document));
+                jsonMap.put("textContent", node.text());
 
 
-            Yaml yaml = new Yaml();
-            Map<String, Object> ret = yaml.load(r);
+                Yaml yaml = new Yaml();
+                Map<String, Object> ret = yaml.load(r);
 
-            String key = "";
-            Object value = "";
-            for (Map.Entry<String, Object> entry : ret.entrySet()) {
-                //TODO 需要处理日期不标准导致的存入ES失败的问题。
-                key = entry.getKey();
-                value = entry.getValue();
-                if (key.equals("archives")) {
-                    value = value.toString().substring(0, 6);
+                String key = "";
+                Object value = "";
+                for (Map.Entry<String, Object> entry : ret.entrySet()) {
+                    //TODO 需要处理日期不标准导致的存入ES失败的问题。
+                    key = entry.getKey();
+                    value = entry.getValue();
+                    if (key.equals("archives")) {
+                        value = value.toString().substring(0, 6);
+                    }
+                    jsonMap.put(key, value);
                 }
-                jsonMap.put(key, value);
             }
         }
+
         if (jsonMap.get("title") == "" || jsonMap.get("textContent") == "") {
             return null;
         }

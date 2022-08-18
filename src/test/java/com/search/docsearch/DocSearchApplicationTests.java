@@ -3,7 +3,10 @@ package com.search.docsearch;
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.constant.Constants;
 import com.search.docsearch.utils.EulerParse;
+import com.search.docsearch.utils.IdUtil;
 import org.apache.commons.io.FileUtils;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -47,18 +50,18 @@ class DocSearchApplicationTests {
 
 	@Test
 	void testPa() throws Exception {
-//		File mdFile = FileUtils.getFile("");
-//		Map<String, Object> map = EulerParse.parseMD("zh", "news", mdFile);
+		File mdFile = FileUtils.getFile("C:\\CYDev\\workspace\\eulerdoc\\openEuler-portal\\app\\.vitepress\\dist\\zh\\learn\\mooc\\detail\\index.html");
+		Map<String, Object> map = EulerParse.parse("zh", "download", mdFile);
 
-//		System.out.println(map);
-//
-//
-//		IndexRequest indexRequest = new IndexRequest(s.index).id(IdUtil.getId()).source(map);
-//
-//		IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
-//		System.out.println(indexResponse.toString());
-		String s = "012345";
-		System.out.println(s.substring(0, 6));
+		System.out.println(map);
+
+
+		IndexRequest indexRequest = new IndexRequest(s.index).id(IdUtil.getId()).source(map);
+
+		IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+		System.out.println(indexResponse.toString());
+//		String s = "012345";
+//		System.out.println(s.substring(0, 6));
 	}
 
 

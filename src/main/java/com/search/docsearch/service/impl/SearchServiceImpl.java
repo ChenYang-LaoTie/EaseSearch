@@ -115,7 +115,7 @@ public class SearchServiceImpl implements SearchService {
                             }
                         }
                     }
-                    System.out.println("size - " + bulkRequest.requests().size());
+                    System.out.format("%s have %d\n", deleteType, bulkRequest.requests().size());
                     DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest(s.index);
                     BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
                     boolQueryBuilder.must(new TermQueryBuilder("lang.keyword", lang));
@@ -124,6 +124,7 @@ public class SearchServiceImpl implements SearchService {
                     BulkByScrollResponse r =  restHighLevelClient.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
                     if (bulkRequest.requests().size() > 0) {
                         BulkResponse q = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+                        System.out.println("wrong ? " + q.hasFailures());
                         log.info(lang + "/" + deleteType + "更新成功");
                     }
 
