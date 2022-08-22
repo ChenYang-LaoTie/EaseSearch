@@ -58,15 +58,15 @@ public class EulerParse {
 
         if (fileName.endsWith(".html")) {
             Document node = Jsoup.parse(fileContent);
+            Elements titles = node.getElementsByTag("title");
+            if (titles.size() > 0) {
+                jsonMap.put("title", titles.first().text());
+            }
+
             Elements elements = node.getElementsByTag("main");
             if (elements.size() > 0) {
                 Element mainNode = elements.first();
-                Elements h1s = mainNode.getElementsByTag("h1");
-                if (h1s.size() > 0) {
-                    jsonMap.put("title", h1s.first().text());
-                }
                 jsonMap.put("textContent", mainNode.text());
-                return jsonMap;
             }
         } else {
             if (DOCS.equals(type)) {
