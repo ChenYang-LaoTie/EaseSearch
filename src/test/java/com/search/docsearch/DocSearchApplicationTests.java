@@ -70,9 +70,9 @@ class DocSearchApplicationTests {
 
 	@Test
 	void ines() throws IOException {
-		String d = "- ddd -aae -zzz";
-		String[] e = d.split("-");
-		System.out.println(e.toString());
+		String d = "2022-04-02";
+		String  archives = d.toString().substring(1, 13);
+		System.out.println(archives);
 	}
 
 

@@ -117,7 +117,7 @@ public class EulerParse {
                     key = entry.getKey();
                     value = entry.getValue();
                     if (key.equals("date")) {
-                        String  archives = value.toString().substring(0, 6);
+                        String  archives = value.toString().substring(0, 7);
                         jsonMap.put("archives", archives);
                     }
                     jsonMap.put(key, value);
