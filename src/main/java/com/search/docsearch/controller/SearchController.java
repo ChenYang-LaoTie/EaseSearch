@@ -74,6 +74,23 @@ public class SearchController {
         return SysResult.fail("查询失败", null);
     }
 
+    @PostMapping("pop")
+    public SysResult getPop(@RequestBody String lang) {
+        try {
+            String[] result = null;
+            if (lang.equals("zh")) {
+                result = new String[] {"docker", "mysql", "yum", "建设", "ssh", "生命周期", "虚拟化"};
+            } else {
+                result = new String[] {"docker", "mysql", "yum", "openstack", "cla"};
+            }
+
+            return SysResult.ok("查询成功", result);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return SysResult.fail("查询失败", null);
+    }
 
 
     @PostMapping("sort")
