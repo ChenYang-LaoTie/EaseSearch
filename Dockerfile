@@ -3,6 +3,7 @@ FROM node:18
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV LANGUAGE C.UTF-8
+ENV NODE_OPTIONS --max-old-space-size=8192
 
 RUN mkdir -p /EaseSearch \
     && apt update \
