@@ -116,8 +116,9 @@ public class EulerParse {
                     //TODO 需要处理日期不标准导致的存入ES失败的问题。
                     key = entry.getKey();
                     value = entry.getValue();
-                    if (key.equals("archives")) {
-                        value = value.toString().substring(0, 6);
+                    if (key.equals("date")) {
+                        String  archives = value.toString().substring(0, 6);
+                        jsonMap.put("archives", archives);
                     }
                     jsonMap.put(key, value);
                 }
