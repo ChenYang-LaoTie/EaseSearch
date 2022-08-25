@@ -327,8 +327,10 @@ public class SearchServiceImpl implements SearchService {
         boolQueryBuilder.filter(QueryBuilders.termQuery("category.keyword", searchTags.getCategory()));
 
 
-        for (Map.Entry<String, String> entry : searchTags.getCondition().entrySet()) {
-            boolQueryBuilder.filter(QueryBuilders.termQuery(entry.getKey() + ".keyword", entry.getValue()));
+        if (searchTags.getCondition() != null) {
+            for (Map.Entry<String, String> entry : searchTags.getCondition().entrySet()) {
+                boolQueryBuilder.filter(QueryBuilders.termQuery(entry.getKey() + ".keyword", entry.getValue()));
+            }
         }
 
 
