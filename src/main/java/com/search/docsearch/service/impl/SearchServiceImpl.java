@@ -326,15 +326,14 @@ public class SearchServiceImpl implements SearchService {
         boolQueryBuilder.filter(QueryBuilders.termQuery("lang.keyword", searchTags.getLang()));
         boolQueryBuilder.filter(QueryBuilders.termQuery("category.keyword", searchTags.getCategory()));
 
-        if (searchTags.getIsCascade()) {
-            for (Map.Entry<String, String> entry : searchTags.getCondition().entrySet()) {
-                System.out.println(entry.getKey() + " -- " + entry.getValue());
-                boolQueryBuilder.filter(QueryBuilders.termQuery(entry.getKey() + ".keyword", entry.getValue()));
-            }
+
+        for (Map.Entry<String, String> entry : searchTags.getCondition().entrySet()) {
+            boolQueryBuilder.filter(QueryBuilders.termQuery(entry.getKey() + ".keyword", entry.getValue()));
         }
 
+
         BucketOrder bucketOrder = BucketOrder.key(false);
-        sourceBuilder.aggregation(AggregationBuilders.terms("data").field(searchTags.getTags() + ".keyword").size(10000).order(bucketOrder));
+        sourceBuilder.aggregation(AggregationBuilders.terms("data").field(searchTags.getWant() + ".keyword").size(10000).order(bucketOrder));
         sourceBuilder.query(boolQueryBuilder);
         request.source(sourceBuilder);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
