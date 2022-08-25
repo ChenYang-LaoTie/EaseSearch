@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -18,4 +19,10 @@ public class SearchTags implements Serializable {
     private String lang;
     private String category;
     private String tags;
+    private Boolean isCascade;
+
+    private Map<String, String> condition;
+
 }
+
+
