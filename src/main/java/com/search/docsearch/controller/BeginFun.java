@@ -14,7 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-//@Component
+@Component
 @Slf4j
 public class BeginFun implements ApplicationRunner {
     @Autowired
