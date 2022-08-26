@@ -14,7 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-@Component
+//@Component
 @Slf4j
 public class BeginFun implements ApplicationRunner {
     @Autowired
@@ -26,7 +26,7 @@ public class BeginFun implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws IOException {
-
+        boolean success = false;
         try {
             log.info("===============开始拉取仓库资源=================");
             ProcessBuilder pb = new ProcessBuilder(s.initDoc);
@@ -36,6 +36,9 @@ public class BeginFun implements ApplicationRunner {
             while ((line = reader.readLine()) != null)
             {
                 log.info(line);
+                if (line.contains("build complete in")) {
+                    success = true;
+                }
             }
 
             log.info("===============仓库资源拉取成功=================");
@@ -43,7 +46,11 @@ public class BeginFun implements ApplicationRunner {
             log.error(e.getMessage());
         }
 
-        searchService.refreshDoc();
+        if (success) {
+            searchService.refreshDoc();
+        } else {
+            log.info("初始化数据失败，查看日志");
+        }
     }
 
 

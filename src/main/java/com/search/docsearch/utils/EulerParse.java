@@ -24,6 +24,7 @@ public class EulerParse {
     public static final String DOCS = "docs";
     public static final String NEWS = "news";
     public static final String OTHER = "other";
+    public static final String MIGRATION = "migration";
     public static final String SHOWCASE = "showcase";
 
 
@@ -36,7 +37,11 @@ public class EulerParse {
                 .replace("\\\\", "/")
                 .replace(".md", "")
                 .replace(".html", "");
-        if (!DOCS.equals(deleteType) && !BLOGS.equals(deleteType) && !NEWS.equals(deleteType) && !SHOWCASE.equals(deleteType)) {
+        if (!DOCS.equals(deleteType)
+                && !BLOGS.equals(deleteType)
+                && !NEWS.equals(deleteType)
+                && !SHOWCASE.equals(deleteType)
+                && !MIGRATION.equals(deleteType)) {
             type = OTHER;
             if(!fileName.equals("index.html")) {
                 return null;

@@ -14,7 +14,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -129,19 +131,31 @@ public class SearchController {
      */
     @Scheduled(cron = "${scheduled.cron}")
     public String scheduledTask() throws IOException {
+        boolean success = false;
         Process process;
         try {
-            log.info("===============开始拉取仓库资源=================");
-            process = Runtime.getRuntime().exec(s.updateDoc);
-            process.waitFor();
-            List<String> result = IOUtils.readLines(process.getInputStream(), StandardCharsets.UTF_8);
-            log.info(result.toString());
-            log.info("===============仓库资源拉取成功=================");
-        } catch (IOException | InterruptedException e) {
+            log.info("===============开始更新仓库资源=================");
+            ProcessBuilder pb = new ProcessBuilder(s.updateDoc);
+            Process p = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = null;
+            while ((line = reader.readLine()) != null)
+            {
+                log.info(line);
+                if (line.contains("build complete in")) {
+                    success = true;
+                }
+            }
+            log.info("===============仓库资源更新成功=================");
+        } catch (IOException e) {
             log.error(e.getMessage());
         }
 
-        searchService.refreshDoc();
+        if (success) {
+            searchService.refreshDoc();
+        } else {
+            log.info("更新数据失败，查看日志");
+        }
         return "success";
     }
 }
