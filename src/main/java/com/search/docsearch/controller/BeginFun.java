@@ -37,6 +37,7 @@ public class BeginFun implements ApplicationRunner {
             {
                 log.info(line);
                 if (line.contains("build complete in")) {
+                    log.info("Static resource build successfully");
                     success = true;
                 }
             }

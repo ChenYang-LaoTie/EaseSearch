@@ -32,7 +32,7 @@ rm -rf /usr/local/docs/target/zh/news
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/news /usr/local/docs/target/zh/
 rm -rf /usr/local/docs/target/zh/showcase
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/showcase /usr/local/docs/target/zh/
-rm -rf /usr/local/docs/target/migration
+rm -rf /usr/local/docs/target/zh/migration
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/migration /usr/local/docs/target/zh/
 
 rm -rf /usr/local/docs/target/en/blog
@@ -41,7 +41,7 @@ rm -rf /usr/local/docs/target/en/news
 cp -r /usr/local/docs/source/openEuler-portal/app/en/news /usr/local/docs/target/en/
 rm -rf /usr/local/docs/target/en/showcase
 cp -r /usr/local/docs/source/openEuler-portal/app/en/showcase /usr/local/docs/target/en/
-rm -rf /usr/local/docs/target/migration
+rm -rf /usr/local/docs/target/en/migration
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/migration /usr/local/docs/target/zh/
 
 rm -rf /usr/local/docs/target/ru/blog
@@ -50,7 +50,7 @@ rm -rf /usr/local/docs/target/ru/news
 cp -r /usr/local/docs/source/openEuler-portal/app/ru/news /usr/local/docs/target/ru/
 rm -rf /usr/local/docs/target/ru/showcase
 cp -r /usr/local/docs/source/openEuler-portal/app/ru/showcase /usr/local/docs/target/ru/
-rm -rf /usr/local/docs/target/migration
+rm -rf /usr/local/docs/target/ru/migration
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/migration /usr/local/docs/target/zh/
 
 
