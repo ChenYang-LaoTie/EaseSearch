@@ -125,6 +125,9 @@ public class EulerParse {
                         String  archives = value.toString().substring(0, 7);
                         jsonMap.put("archives", archives);
                     }
+                    if (key.equals("author") && value instanceof String) {
+                        value = new String[]{value.toString()};
+                    }
                     jsonMap.put(key, value);
                 }
             }
