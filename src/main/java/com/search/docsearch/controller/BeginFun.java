@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +18,7 @@ import java.io.InputStreamReader;
 
 @Component
 @Slf4j
+@RestController
 public class BeginFun implements ApplicationRunner {
     @Autowired
     public SearchService searchService;
@@ -25,6 +28,7 @@ public class BeginFun implements ApplicationRunner {
 
 
     @Override
+    @PostMapping("begin")
     public void run(ApplicationArguments args) throws IOException {
         boolean success = false;
         try {
