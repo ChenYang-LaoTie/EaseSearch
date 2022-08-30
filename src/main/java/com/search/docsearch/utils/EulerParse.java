@@ -16,6 +16,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class EulerParse {
@@ -119,7 +120,7 @@ public class EulerParse {
                 Object value = "";
                 for (Map.Entry<String, Object> entry : ret.entrySet()) {
                     //TODO 需要处理日期不标准导致的存入ES失败的问题。
-                    key = entry.getKey();
+                    key = entry.getKey().toLowerCase(Locale.ROOT);
                     value = entry.getValue();
                     if (key.equals("date")) {
                         String  archives = value.toString().substring(0, 7);
