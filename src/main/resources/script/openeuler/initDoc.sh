@@ -54,7 +54,8 @@ rm -rf /usr/local/docs/target/ru/migration
 cp -r /usr/local/docs/source/openEuler-portal/app/zh/migration /usr/local/docs/target/zh/
 
 
-
+# shellcheck disable=SC2164
+cd /usr/local/docs/source
 
 git clone https://gitee.com/openeuler/docs.git
 
