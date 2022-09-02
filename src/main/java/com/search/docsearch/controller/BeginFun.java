@@ -45,7 +45,7 @@ public class BeginFun implements ApplicationRunner {
                     success = true;
                 }
             }
-
+            System.out.println("ddd");
             log.info("===============仓库资源拉取成功=================");
         } catch (Exception e) {
             log.error(e.getMessage());
