@@ -54,7 +54,7 @@ public class BeginFun implements ApplicationRunner {
         if (success) {
             searchService.refreshDoc();
         } else {
-            log.info("初始化数据失败，查看日志!");
+            log.info("初始化数据失败，查看日志!!!");
         }
     }
 
