@@ -129,6 +129,7 @@ public class SearchController {
     /**
      * 定时任务
      */
+    @GetMapping("updoc")
     @Scheduled(cron = "${scheduled.cron}")
     public String scheduledTask() throws IOException {
         boolean success = false;
@@ -152,10 +153,20 @@ public class SearchController {
         }
 
         if (success) {
-            searchService.refreshDoc();
+            log.info("全局更新成功!");
         } else {
-            log.info("更新数据失败，查看日志");
+            log.info("全局更新失败，开始局部更新");
+            ProcessBuilder pb = new ProcessBuilder(s.updateLocal);
+            Process p = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = null;
+            while ((line = reader.readLine()) != null)
+            {
+                log.info(line);
+            }
         }
+
+        searchService.refreshDoc();
         return "success";
     }
 }

@@ -47,6 +47,7 @@ public class SystemConfig {
 
         mySystem.setInitDoc("/EaseSearch/target/classes/script/" + system + "/initDoc.sh");
         mySystem.setUpdateDoc("/EaseSearch/target/classes/script/" + system + "/updateDoc.sh");
+        mySystem.setUpdateLocal("/EaseSearch/target/classes/script/" + system + "/updateLocal.sh");
         return mySystem;
     }
 }
