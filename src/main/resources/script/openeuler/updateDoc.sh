@@ -50,7 +50,6 @@ cp -r /usr/local/docs/source/openEuler-portal/app/zh/migration /usr/local/docs/t
 
 # shellcheck disable=SC2164
 cd /usr/local/docs/source/docs
-git pull
 for r in $(git branch -r --list "origin/stable2-*")
 do
   b=${r##*origin/stable2-}
