@@ -54,6 +54,8 @@ public class BeginFun implements ApplicationRunner {
         } else {
             log.info("初始化数据失败，查看日志!");
         }
+
+//        searchService.refreshDoc();
     }
 
 

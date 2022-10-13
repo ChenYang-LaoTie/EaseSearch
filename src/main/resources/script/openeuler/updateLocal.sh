@@ -54,7 +54,7 @@ git pull
 for r in $(git branch -r --list "origin/stable2-*")
 do
   b=${r##*origin/stable2-}
-  git checkout -b $b $r
+  git checkout $b $r
   git pull
   mkdir -p /usr/local/docs/target/zh/docs/$b/docs
   mkdir -p /usr/local/docs/target/en/docs/$b/docs

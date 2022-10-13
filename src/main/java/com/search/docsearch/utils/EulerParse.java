@@ -15,6 +15,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class EulerParse {
                 && !SHOWCASE.equals(deleteType)
                 && !MIGRATION.equals(deleteType)) {
             type = OTHER;
-            if(!fileName.equals("index.html")) {
+            if (!fileName.equals("index.html")) {
                 return null;
             }
             path = path.substring(0, path.length() - 5);
@@ -91,7 +92,7 @@ public class EulerParse {
                         node.getElementsByTag("ul").first().remove();
                     }
                 }
-                jsonMap.put("textContent",node.text());
+                jsonMap.put("textContent", node.text());
 
                 String version = path.replaceFirst(type + "/", "");
                 version = version.substring(0, version.indexOf("/"));
@@ -119,15 +120,19 @@ public class EulerParse {
                 String key = "";
                 Object value = "";
                 for (Map.Entry<String, Object> entry : ret.entrySet()) {
-                    //TODO 需要处理日期不标准导致的存入ES失败的问题。
                     key = entry.getKey().toLowerCase(Locale.ROOT);
                     value = entry.getValue();
                     if (key.equals("date")) {
-                        String  archives = value.toString().substring(0, 7);
-                        jsonMap.put("archives", archives);
+                        System.out.println(value);
+                        System.out.println(value instanceof Date);
+                        //TODO 需要处理日期不标准导致的存入ES失败的问题。
                     }
                     if (key.equals("author") && value instanceof String) {
                         value = new String[]{value.toString()};
+                    }
+                    if (key.equals("archives")) {
+
+                        continue;
                     }
                     jsonMap.put(key, value);
                 }
@@ -137,8 +142,8 @@ public class EulerParse {
         if (jsonMap.get("title") == "" || jsonMap.get("textContent") == "") {
             return null;
         }
-
         return jsonMap;
     }
 
 }
+
