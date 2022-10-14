@@ -132,6 +132,9 @@ public class SearchController {
     @GetMapping("updoc")
     @Scheduled(cron = "${scheduled.cron}")
     public String scheduledTask() throws IOException {
+
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaa进入跟新接口");
+
         boolean success = false;
         Process process;
         try {
