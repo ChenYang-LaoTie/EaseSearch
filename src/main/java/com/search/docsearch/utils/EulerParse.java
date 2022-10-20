@@ -22,7 +22,8 @@ import java.util.Map;
 
 public class EulerParse {
 
-    public static final String BLOGS = "blog";
+    public static final String BLOG = "blog";
+    public static final String BLOGS = "blogs";
     public static final String DOCS = "docs";
     public static final String NEWS = "news";
     public static final String OTHER = "other";
@@ -40,6 +41,7 @@ public class EulerParse {
                 .replace(".md", "")
                 .replace(".html", "");
         if (!DOCS.equals(deleteType)
+                && !BLOG.equals(deleteType)
                 && !BLOGS.equals(deleteType)
                 && !NEWS.equals(deleteType)
                 && !SHOWCASE.equals(deleteType)
