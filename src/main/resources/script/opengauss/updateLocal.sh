@@ -1,26 +1,17 @@
 #!/bin/bash
-if [ -d "/usr/local/docs" ]; then
-  rm -rf /usr/local/docs/source/*
-  rm -rf /usr/local/docs/target/*
-fi
 
-npm i pnpm -g
-
-mkdir -p /usr/local/docs/source/
+rm -rf /usr/local/docs/target/*
 mkdir -p /usr/local/docs/target/zh/
 mkdir -p /usr/local/docs/target/en/
 
 # shellcheck disable=SC2164
-cd /usr/local/docs/source
-git clone https://gitee.com/ailoooong/gaussv2.git
-# shellcheck disable=SC2164
-cd ./gaussv2
-pnpm install
-pnpm build
-
-
-cp -r /usr/local/docs/source/gaussv2/app/.vitepress/dist/zh /usr/local/docs/target/
-cp -r /usr/local/docs/source/gaussv2/app/.vitepress/dist/en /usr/local/docs/target/
+cd /usr/local/docs/source/gaussv2
+git pull
+#pnpm install
+#pnpm build
+#
+#cp -r /usr/local/docs/source/gaussv2/app/.vitepress/dist/zh /usr/local/docs/target/
+#cp -r /usr/local/docs/source/gaussv2/app/.vitepress/dist/en /usr/local/docs/target/
 
 rm -rf /usr/local/docs/target/zh/blogs
 cp -r /usr/local/docs/source/gaussv2/app/zh/blogs /usr/local/docs/target/zh/
@@ -37,13 +28,7 @@ rm -rf /usr/local/docs/target/en/events
 cp -r /usr/local/docs/source/gaussv2/app/en/events /usr/local/docs/target/en/
 
 # shellcheck disable=SC2164
-cd /usr/local/docs/source
-
-git clone https://gitee.com/opengauss/docs.git
-
-# shellcheck disable=SC2164
-cd ./docs
-
+cd /usr/local/docs/source/docs
 for r in $(git branch -r --list "origin/*"); do
   b=${r##*origin/}
  # shellcheck disable=SC2170
@@ -60,6 +45,4 @@ for r in $(git branch -r --list "origin/*"); do
     cp -r /usr/local/docs/source/docs/docs/en/docs/* /usr/local/docs/target/en/docs/$b/docs/
  fi
 done
-
-
 

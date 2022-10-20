@@ -3,7 +3,7 @@
 rm -rf /usr/local/docs/target/*
 mkdir -p /usr/local/docs/target/zh/
 mkdir -p /usr/local/docs/target/en/
-
+mkdir -p /usr/local/docs/target/ru/
 # shellcheck disable=SC2164
 cd /usr/local/docs/source/openEuler-portal
 git pull

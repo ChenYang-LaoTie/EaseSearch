@@ -9,8 +9,7 @@ cd /usr/local/docs/source/openEuler-portal
 git pull
 #pnpm install
 #pnpm build
-
-
+#
 #cp -r /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/zh /usr/local/docs/target/
 #cp -r /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/en /usr/local/docs/target/
 #cp -r /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/ru /usr/local/docs/target/
