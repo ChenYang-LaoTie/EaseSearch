@@ -30,17 +30,17 @@ import java.security.cert.X509Certificate;
 @Slf4j
 public class ElasticSearchConfig {
 
-   @Value("${elasticsearch.username}")
-   private String userName;
-
-   @Value("${elasticsearch.password}")
-   private String password;
-
-   @Value("${elasticsearch.host}")
-   private String host;
-
-   @Value("${elasticsearch.port}")
-   private int port;
+//   @Value("${elasticsearch.username}")
+//   private String userName;
+//
+//   @Value("${elasticsearch.password}")
+//   private String password;
+//
+//   @Value("${elasticsearch.host}")
+//   private String host;
+//
+//   @Value("${elasticsearch.port}")
+//   private int port;
 
 
     @Bean(destroyMethod = "close")
