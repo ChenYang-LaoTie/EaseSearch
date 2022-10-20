@@ -13,12 +13,12 @@ pnpm build
 cp -r /usr/local/docs/source/gaussv2/app/.vitepress/dist/zh /usr/local/docs/target/
 cp -r /usr/local/docs/source/gaussv2/app/.vitepress/dist/en /usr/local/docs/target/
 
-rm -rf /usr/local/docs/target/zh/blogs
-cp -r /usr/local/docs/source/gaussv2/app/zh/blogs /usr/local/docs/target/zh/
+rm -rf /usr/local/docs/target/zh/blog
+cp -r /usr/local/docs/source/gaussv2/app/zh/blog /usr/local/docs/target/zh/
 rm -rf /usr/local/docs/target/zh/news
 cp -r /usr/local/docs/source/gaussv2/app/zh/news /usr/local/docs/target/zh/
 rm -rf /usr/local/docs/target/zh/events
-cp -r /usr/local/docs/source/gaussv2/app/zh/showcase /usr/local/docs/target/zh/
+cp -r /usr/local/docs/source/gaussv2/app/zh/events /usr/local/docs/target/zh/
 
 rm -rf /usr/local/docs/target/en/blog
 cp -r /usr/local/docs/source/gaussv2/app/en/blog /usr/local/docs/target/en/
