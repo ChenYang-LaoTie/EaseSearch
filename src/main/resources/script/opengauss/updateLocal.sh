@@ -41,8 +41,8 @@ for r in $(git branch -r --list "origin/*"); do
     git checkout $r
     mkdir -p /usr/local/docs/target/zh/docs/$b/docs
     mkdir -p /usr/local/docs/target/en/docs/$b/docs
-    cp -r /usr/local/docs/source/docs/docs/zh/docs/* /usr/local/docs/target/zh/docs/$b/docs/
-    cp -r /usr/local/docs/source/docs/docs/en/docs/* /usr/local/docs/target/en/docs/$b/docs/
+    cp -r /usr/local/docs/source/docs/content/zh/docs/* /usr/local/docs/target/zh/docs/$b/docs/
+    cp -r /usr/local/docs/source/docs/content/en/docs/* /usr/local/docs/target/en/docs/$b/docs/
  fi
 done
 
