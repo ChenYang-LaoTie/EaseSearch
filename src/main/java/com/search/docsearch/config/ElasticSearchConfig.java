@@ -46,37 +46,37 @@ public class ElasticSearchConfig {
     @Bean(destroyMethod = "close")
     public RestHighLevelClient restHighLevelClient() {
 
-       RestHighLevelClient restClient = null;
-       try {
-           final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-           credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(userName, password));
-           SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-               @Override
-               public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-                   return true;
-               }
-           }).build();
-           SSLIOSessionStrategy sessionStrategy = new SSLIOSessionStrategy(sslContext, NoopHostnameVerifier.INSTANCE);
-           restClient = new RestHighLevelClient(
-                   RestClient.builder(new HttpHost(host, port, "https")).setHttpClientConfigCallback(
-                           new RestClientBuilder.HttpClientConfigCallback() {
-                               @Override
-                               public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpAsyncClientBuilder) {
-                                   httpAsyncClientBuilder.disableAuthCaching();
-                                   httpAsyncClientBuilder.setSSLStrategy(sessionStrategy);
-                                   httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-                                   return httpAsyncClientBuilder;
-                               }
-                           }
-                   )
-           );
-       } catch (Exception e) {
-           log.error("elasticsearch TransportClient create error!!", e);
-       }
-       return restClient;
+//       RestHighLevelClient restClient = null;
+//       try {
+//           final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+//           credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(userName, password));
+//           SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+//               @Override
+//               public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+//                   return true;
+//               }
+//           }).build();
+//           SSLIOSessionStrategy sessionStrategy = new SSLIOSessionStrategy(sslContext, NoopHostnameVerifier.INSTANCE);
+//           restClient = new RestHighLevelClient(
+//                   RestClient.builder(new HttpHost(host, port, "https")).setHttpClientConfigCallback(
+//                           new RestClientBuilder.HttpClientConfigCallback() {
+//                               @Override
+//                               public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpAsyncClientBuilder) {
+//                                   httpAsyncClientBuilder.disableAuthCaching();
+//                                   httpAsyncClientBuilder.setSSLStrategy(sessionStrategy);
+//                                   httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+//                                   return httpAsyncClientBuilder;
+//                               }
+//                           }
+//                   )
+//           );
+//       } catch (Exception e) {
+//           log.error("elasticsearch TransportClient create error!!", e);
+//       }
+//       return restClient;
 
 
-//         return new RestHighLevelClient(RestClient.builder(new HttpHost("192.168.1.203", 9200, "http")));
+         return new RestHighLevelClient(RestClient.builder(new HttpHost("192.168.1.203", 9200, "http")));
 
     }
 }
