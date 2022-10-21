@@ -29,6 +29,7 @@ public class BeginFun implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws IOException {
+        System.out.println("888888");
         boolean success = false;
         try {
             log.info("===============开始拉取仓库资源=================");
