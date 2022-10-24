@@ -1,9 +1,11 @@
 #es用户名 密码等配置
 elasticsearch:
-  host: ${eshost}
-  username: ${esusername}
-  password: ${espassword}
-  port: ${esport}
+  host: ${eshost:***}
+  username: ${esusername:***}
+  password: ${espassword:***}
+  port: ${esport:***}
+  #deploy dev
+  isDev: ${isDev:false}
 
 #定时读取配置
 scheduled:
@@ -11,6 +13,7 @@ scheduled:
 
 #openEuler    openGauss    openLookeng    mindSpore
 system: ${searchsystem:openEuler}
+
 docsversion: 20
 
 #formal test
