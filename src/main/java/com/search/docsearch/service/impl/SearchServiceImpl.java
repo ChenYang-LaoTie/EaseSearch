@@ -75,7 +75,6 @@ public class SearchServiceImpl implements SearchService {
             lang = languageFile.getName();
             String saveIndex = s.index + "_" + lang;
             try {
-
                 makeIndex(saveIndex);
             } catch (Exception e) {
                 log.error(e.getMessage());
@@ -126,7 +125,7 @@ public class SearchServiceImpl implements SearchService {
 
 
     public void makeIndex(String index) throws IOException {
-        GetIndexRequest request = new GetIndexRequest(s.index);
+        GetIndexRequest request = new GetIndexRequest(index);
         request.local(false);
         request.humanReadable(true);
         request.includeDefaults(false);
@@ -135,7 +134,7 @@ public class SearchServiceImpl implements SearchService {
             return;
         }
 
-        CreateIndexRequest request1 = new CreateIndexRequest(s.index);
+        CreateIndexRequest request1 = new CreateIndexRequest(index);
         File mappingJson = FileUtils.getFile(s.mappingPath);
         String mapping = FileUtils.readFileToString(mappingJson, StandardCharsets.UTF_8);
 
