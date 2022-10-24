@@ -127,7 +127,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    @Async("defaultThreadPoolExecutor")
+    @Async("threadPoolTaskExecutor")
     public void AsyncrefreshDoc() throws IOException {
         boolean success = false;
         try {

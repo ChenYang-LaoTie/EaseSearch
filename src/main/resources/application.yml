@@ -15,3 +15,12 @@ docsversion: 20
 
 #formal test
 dep: ${depp:test}
+
+#异步配置
+asyncThreadPool:
+  corePoolSize: 10
+  maxPoolSize: 10
+  queueCapacity: 10
+  keepAliveSeconds: 300
+  awaitTerminationSeconds: 300
+  threadNamePrefix: thread-name-prefix
