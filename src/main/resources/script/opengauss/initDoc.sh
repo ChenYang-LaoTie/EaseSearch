@@ -15,8 +15,8 @@ cd /usr/local/docs/source
 git clone https://gitee.com/ailoooong/gaussv2.git
 # shellcheck disable=SC2164
 cd ./gaussv2
-pnpm install
-pnpm build
+#pnpm install
+#pnpm build
 
 
 cp -r /usr/local/docs/source/gaussv2/app/.vitepress/dist/zh /usr/local/docs/target/
