@@ -35,11 +35,14 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -121,6 +124,45 @@ public class SearchServiceImpl implements SearchService {
             }
         }
         log.info("所有文档更新成功");
+    }
+
+    @Override
+    @Async("defaultThreadPoolExecutor")
+    public void AsyncrefreshDoc() throws IOException {
+        boolean success = false;
+        try {
+            log.info("===============开始更新仓库资源=================");
+            ProcessBuilder pb = new ProcessBuilder(s.updateDoc);
+            Process p = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = null;
+            while ((line = reader.readLine()) != null)
+            {
+                log.info(line);
+                if (line.contains("build complete in")) {
+                    success = true;
+                }
+            }
+            log.info("===============仓库资源更新成功=================");
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+        if (success) {
+            log.info("全局更新成功!");
+        } else {
+            log.info("全局更新失败，开始局部更新");
+            ProcessBuilder pb = new ProcessBuilder(s.updateLocal);
+            Process p = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = null;
+            while ((line = reader.readLine()) != null)
+            {
+                log.info(line);
+            }
+        }
+
+        refreshDoc();
     }
 
 

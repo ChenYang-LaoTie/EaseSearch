@@ -16,7 +16,7 @@ public interface SearchService {
      */
     void refreshDoc() throws IOException;
 
-
+    void AsyncrefreshDoc() throws IOException;
 
     /**
      * 根据条件搜索
