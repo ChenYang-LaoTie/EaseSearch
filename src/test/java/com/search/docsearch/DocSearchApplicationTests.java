@@ -9,6 +9,10 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
@@ -20,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @SpringBootTest
@@ -70,9 +75,15 @@ class DocSearchApplicationTests {
 
 	@Test
 	void ines() throws IOException {
-		String d = "2022-04-02";
-		String  archives = d.toString().substring(1, 13);
-		System.out.println(archives);
+		CreateIndexRequest request1 = new CreateIndexRequest("ddat");
+		File mappingJson = FileUtils.getFile("C:\\CYDev\\EaseSearch\\src\\main\\resources\\mapping\\mapping.json");
+		String mapping = FileUtils.readFileToString(mappingJson, StandardCharsets.UTF_8);
+
+		request1.mapping(mapping, XContentType.JSON);
+		request1.setTimeout(TimeValue.timeValueMillis(1));
+
+		CreateIndexResponse d = restHighLevelClient.indices().create(request1, RequestOptions.DEFAULT);
+		System.out.println(d.index());
 	}
 
 
