@@ -1,9 +1,9 @@
 #es用户名 密码等配置
 elasticsearch:
-  host: ${eshost:***}
-  username: ${esusername:***}
-  password: ${espassword:***}
-  port: ${esport:***}
+  host: ${eshost:127.0.0.1}
+  username: ${esusername:admin}
+  password: ${espassword:admin}
+  port: ${esport:9200}
   #deploy dev
   isDev: ${isDev:false}
 
