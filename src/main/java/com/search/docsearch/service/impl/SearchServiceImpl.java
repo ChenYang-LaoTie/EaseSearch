@@ -9,6 +9,7 @@ import com.search.docsearch.utils.EulerParse;
 import com.search.docsearch.utils.IdUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -91,8 +92,14 @@ public class SearchServiceImpl implements SearchService {
                     BulkRequest bulkRequest = new BulkRequest();
                     deleteType = typeFile.getName();
 
-                    Collection<File> listFiles = FileUtils.listFiles(typeFile, new String[]{"md", "html"}, true);
 
+                    if (!typeFile.getName().equals("blogs")) {
+                        continue;
+                    }
+
+
+                    Collection<File> listFiles = FileUtils.listFiles(typeFile, new String[]{"md", "html"}, true);
+                    System.out.println(lang + "/" + deleteType + " -- " + listFiles.size());
                     for (File mdFile : listFiles) {
                         if (!mdFile.getName().startsWith("_")) {
                             try {
@@ -110,12 +117,25 @@ public class SearchServiceImpl implements SearchService {
                     log.info(deleteType + " have " + bulkRequest.requests().size());
                     DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest(saveIndex);
                     BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-//                    boolQueryBuilder.must(new TermQueryBuilder("lang.keyword", lang));
                     boolQueryBuilder.must(new TermQueryBuilder("deleteType.keyword", deleteType));
                     deleteByQueryRequest.setQuery(boolQueryBuilder);
                     BulkByScrollResponse r = restHighLevelClient.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
                     if (bulkRequest.requests().size() > 0) {
                         BulkResponse q = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+
+
+                        int d = 0;
+                        for (BulkItemResponse bulkItemResponse : q) {
+
+                            if (bulkItemResponse.isFailed()) {
+                                System.out.println();
+                                System.out.println(bulkItemResponse.getFailureMessage());
+                            }
+                            d ++;
+                        }
+
+
+
                         log.info("wrong ? " + q.hasFailures());
                         log.info(lang + "/" + deleteType + "更新成功");
                     }
@@ -124,6 +144,26 @@ public class SearchServiceImpl implements SearchService {
             }
         }
         log.info("所有文档更新成功");
+    }
+
+    public void makeIndex(String index) throws IOException {
+        GetIndexRequest request = new GetIndexRequest(index);
+        request.local(false);
+        request.humanReadable(true);
+        request.includeDefaults(false);
+        boolean exists = restHighLevelClient.indices().exists(request, RequestOptions.DEFAULT);
+        if (exists) {
+            return;
+        }
+
+        CreateIndexRequest request1 = new CreateIndexRequest(index);
+        File mappingJson = FileUtils.getFile(s.mappingPath);
+        String mapping = FileUtils.readFileToString(mappingJson, StandardCharsets.UTF_8);
+
+        request1.mapping(mapping, XContentType.JSON);
+        request1.setTimeout(TimeValue.timeValueMillis(1));
+
+        restHighLevelClient.indices().create(request1, RequestOptions.DEFAULT);
     }
 
     @Override
@@ -163,27 +203,6 @@ public class SearchServiceImpl implements SearchService {
         }
 
         refreshDoc();
-    }
-
-
-    public void makeIndex(String index) throws IOException {
-        GetIndexRequest request = new GetIndexRequest(index);
-        request.local(false);
-        request.humanReadable(true);
-        request.includeDefaults(false);
-        boolean exists = restHighLevelClient.indices().exists(request, RequestOptions.DEFAULT);
-        if (exists) {
-            return;
-        }
-
-        CreateIndexRequest request1 = new CreateIndexRequest(index);
-        File mappingJson = FileUtils.getFile(s.mappingPath);
-        String mapping = FileUtils.readFileToString(mappingJson, StandardCharsets.UTF_8);
-
-        request1.mapping(mapping, XContentType.JSON);
-        request1.setTimeout(TimeValue.timeValueMillis(1));
-
-        restHighLevelClient.indices().create(request1, RequestOptions.DEFAULT);
     }
 
 
@@ -238,9 +257,6 @@ public class SearchServiceImpl implements SearchService {
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-//        if (StringUtils.hasText(condition.getLang())) {
-//            boolQueryBuilder.filter(QueryBuilders.termQuery("lang.keyword", condition.getLang()));
-//        }
         if (StringUtils.hasText(condition.getType())) {
             boolQueryBuilder.filter(QueryBuilders.termQuery("type.keyword", condition.getType()));
         }
@@ -277,11 +293,10 @@ public class SearchServiceImpl implements SearchService {
 
 
     public Map<String, Object> getCount(String keyword, String lang) throws IOException {
-        SearchRequest request = new SearchRequest(s.index);
+        String saveIndex = s.index + "_" + lang;
+        SearchRequest request = new SearchRequest(saveIndex);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.filter(QueryBuilders.termQuery("lang.keyword", lang));
 
         MatchQueryBuilder titleMP = QueryBuilders.matchQuery("title", keyword);
         titleMP.boost(2);
@@ -316,7 +331,15 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Map<String, Object> advancedSearch(Map<String, String> search) throws Exception {
-        SearchRequest request = new SearchRequest(s.index);
+        String saveIndex;
+        String lang = search.get("lang");
+        if (lang != null) {
+            saveIndex = s.index + "_" + lang;
+        } else {
+            //在没有穿语言时默认为zh
+            saveIndex = s.index + "_zh";
+        }
+        SearchRequest request = new SearchRequest(saveIndex);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
@@ -377,10 +400,11 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Map<String, Object> getTags(SearchTags searchTags) throws Exception {
-        SearchRequest request = new SearchRequest(s.index);
+        String saveIndex = s.index + "_" + searchTags.getLang();
+
+        SearchRequest request = new SearchRequest(saveIndex);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.filter(QueryBuilders.termQuery("lang.keyword", searchTags.getLang()));
         boolQueryBuilder.filter(QueryBuilders.termQuery("category.keyword", searchTags.getCategory()));
 
 
@@ -389,7 +413,6 @@ public class SearchServiceImpl implements SearchService {
                 boolQueryBuilder.filter(QueryBuilders.termQuery(entry.getKey() + ".keyword", entry.getValue()));
             }
         }
-
 
         BucketOrder bucketOrder = BucketOrder.key(false);
         sourceBuilder.aggregation(AggregationBuilders.terms("data").field(searchTags.getWant() + ".keyword").size(10000).order(bucketOrder));

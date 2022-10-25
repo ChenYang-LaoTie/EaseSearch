@@ -36,7 +36,15 @@ public class DivideServiceImpl implements DivideService {
 
     @Override
     public Map<String, Object> advancedSearch(Map<String, String> search, String category) throws Exception {
-        SearchRequest request = new SearchRequest(s.index);
+        String saveIndex;
+        String lang = search.get("lang");
+        if (lang != null) {
+            saveIndex = s.index + "_" + lang;
+        } else {
+            //在没有穿语言时默认为zh
+            saveIndex = s.index + "_zh";
+        }
+        SearchRequest request = new SearchRequest(saveIndex);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.filter(QueryBuilders.termQuery("category" + ".keyword", category));
