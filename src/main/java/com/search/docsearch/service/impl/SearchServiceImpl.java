@@ -93,9 +93,9 @@ public class SearchServiceImpl implements SearchService {
                     deleteType = typeFile.getName();
 
 
-                    if (!typeFile.getName().equals("blogs")) {
-                        continue;
-                    }
+//                    if (!typeFile.getName().equals("blogs")) {
+//                        continue;
+//                    }
 
 
                     Collection<File> listFiles = FileUtils.listFiles(typeFile, new String[]{"md", "html"}, true);
