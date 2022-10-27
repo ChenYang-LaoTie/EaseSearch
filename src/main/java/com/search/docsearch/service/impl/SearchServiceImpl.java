@@ -194,6 +194,7 @@ public class SearchServiceImpl implements SearchService {
         if (response.getHits().getHits().length < 1) {
             log.info(condition.getKeyword() + " - 未搜索到结果");
             //TODO 在未搜索出结果时对搜索词进行联想
+            SuggestBuilder suggestBuilder = new SuggestBuilder();
 
 
 
