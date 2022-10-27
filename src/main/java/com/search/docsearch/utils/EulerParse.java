@@ -34,6 +34,7 @@ public class EulerParse {
     public static Map<String, Object> parse(String lang, String deleteType, File mdFile) throws Exception {
         String type = deleteType;
         String fileName = mdFile.getName();
+
         String path = mdFile.getPath()
                 .replace("\\", "/")
                 .replace(Constants.BASEPATH + lang + "/", "")
@@ -49,7 +50,6 @@ public class EulerParse {
                 && !EVENTS.equals(deleteType)) {
             type = OTHER;
             if (!fileName.equals("index.html")) {
-                System.out.println("is inddd - " + mdFile.getPath());
                 return null;
             }
             path = path.substring(0, path.length() - 5);
@@ -62,7 +62,6 @@ public class EulerParse {
         jsonMap.put("path", path);
 
         String fileContent = FileUtils.readFileToString(mdFile, StandardCharsets.UTF_8);
-
 
         Parser parser = Parser.builder().build();
         HtmlRenderer renderer = HtmlRenderer.builder().build();
@@ -117,10 +116,8 @@ public class EulerParse {
                 Document node = Jsoup.parse(renderer.render(document));
                 jsonMap.put("textContent", node.text());
 
-
                 Yaml yaml = new Yaml();
                 Map<String, Object> ret = yaml.load(r);
-
                 String key = "";
                 Object value = "";
                 for (Map.Entry<String, Object> entry : ret.entrySet()) {
@@ -138,6 +135,7 @@ public class EulerParse {
 
 //                        continue;
                     }
+                    jsonMap.put(key, value);
                 }
             }
         }
