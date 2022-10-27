@@ -138,7 +138,6 @@ public class EulerParse {
 
 //                        continue;
                     }
-                    jsonMap.put(key, value);
                 }
             }
         }

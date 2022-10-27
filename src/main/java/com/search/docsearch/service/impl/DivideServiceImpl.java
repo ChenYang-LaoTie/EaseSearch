@@ -41,7 +41,7 @@ public class DivideServiceImpl implements DivideService {
         if (lang != null) {
             saveIndex = s.index + "_" + lang;
         } else {
-            //在没有穿语言时默认为zh
+            //在没有传语言时默认为zh
             saveIndex = s.index + "_zh";
         }
         SearchRequest request = new SearchRequest(saveIndex);

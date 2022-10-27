@@ -90,14 +90,8 @@ public class SearchServiceImpl implements SearchService {
             for (File typeFile : typeDir) {
                 if (typeFile.isDirectory()) {
                     BulkRequest bulkRequest = new BulkRequest();
+                    List<Map<String, Object>> mapp = new ArrayList<>();
                     deleteType = typeFile.getName();
-
-
-//                    if (!typeFile.getName().equals("blogs")) {
-//                        continue;
-//                    }
-
-
                     Collection<File> listFiles = FileUtils.listFiles(typeFile, new String[]{"md", "html"}, true);
                     System.out.println(lang + "/" + deleteType + " -- " + listFiles.size());
                     for (File mdFile : listFiles) {
@@ -106,6 +100,7 @@ public class SearchServiceImpl implements SearchService {
                                 Map<String, Object> map = EulerParse.parse(lang, deleteType, mdFile);
                                 if (map != null) {
                                     IndexRequest indexRequest = new IndexRequest(saveIndex).id(IdUtil.getId()).source(map);
+                                    mapp.add(map);
                                     bulkRequest.add(indexRequest);
                                 }
                             } catch (Exception e) {
@@ -128,8 +123,11 @@ public class SearchServiceImpl implements SearchService {
                         for (BulkItemResponse bulkItemResponse : q) {
 
                             if (bulkItemResponse.isFailed()) {
-                                System.out.println();
                                 System.out.println(bulkItemResponse.getFailureMessage());
+                                System.out.println("------------");
+                                System.out.println(bulkRequest.requests().get(d));
+                                System.out.println("000000000000000000");
+                                System.out.println(mapp.get(d));
                             }
                             d ++;
                         }
@@ -336,7 +334,7 @@ public class SearchServiceImpl implements SearchService {
         if (lang != null) {
             saveIndex = s.index + "_" + lang;
         } else {
-            //在没有穿语言时默认为zh
+            //在没有传语言时默认为zh
             saveIndex = s.index + "_zh";
         }
         SearchRequest request = new SearchRequest(saveIndex);
