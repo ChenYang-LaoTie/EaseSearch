@@ -192,8 +192,11 @@ public class SearchServiceImpl implements SearchService {
         SearchRequest request = BuildSearchRequest(condition, saveIndex);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
         if (response.getHits().getHits().length < 1) {
-            System.out.println("未搜索到结果");
+            log.info(condition.getKeyword() + " - 未搜索到结果");
             //TODO 在未搜索出结果时对搜索词进行联想
+
+
+
         }
 
 

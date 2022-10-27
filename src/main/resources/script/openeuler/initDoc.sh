@@ -16,8 +16,8 @@ cd /usr/local/docs/source
 git clone https://gitee.com/openeuler/openEuler-portal.git
 # shellcheck disable=SC2164
 cd ./openEuler-portal
-pnpm install
-pnpm build
+#pnpm install
+#pnpm build
 
 
 
