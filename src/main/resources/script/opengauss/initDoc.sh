@@ -12,8 +12,7 @@ mkdir -p /usr/local/docs/target/en/
 
 # shellcheck disable=SC2164
 cd /usr/local/docs/source
-#git clone https://gitee.com/ailoooong/gaussv2.git
-git clone https://gitee.com/ChenYang_LaoTie/gaussv2.git
+git clone https://gitee.com/ailoooong/gaussv2.git
 # shellcheck disable=SC2164
 cd ./gaussv2
 #pnpm install

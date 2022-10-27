@@ -141,7 +141,6 @@ public class EulerParse {
         }
 
         if (jsonMap.get("title") == "" && jsonMap.get("textContent") == "") {
-            System.out.println("no tt - " + mdFile.getPath());
             return null;
         }
         return jsonMap;

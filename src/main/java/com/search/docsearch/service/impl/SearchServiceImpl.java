@@ -90,7 +90,6 @@ public class SearchServiceImpl implements SearchService {
             for (File typeFile : typeDir) {
                 if (typeFile.isDirectory()) {
                     BulkRequest bulkRequest = new BulkRequest();
-                    List<Map<String, Object>> mapp = new ArrayList<>();
                     deleteType = typeFile.getName();
                     Collection<File> listFiles = FileUtils.listFiles(typeFile, new String[]{"md", "html"}, true);
                     System.out.println(lang + "/" + deleteType + " -- " + listFiles.size());
@@ -100,7 +99,6 @@ public class SearchServiceImpl implements SearchService {
                                 Map<String, Object> map = EulerParse.parse(lang, deleteType, mdFile);
                                 if (map != null) {
                                     IndexRequest indexRequest = new IndexRequest(saveIndex).id(IdUtil.getId()).source(map);
-                                    mapp.add(map);
                                     bulkRequest.add(indexRequest);
                                 }
                             } catch (Exception e) {
@@ -117,22 +115,6 @@ public class SearchServiceImpl implements SearchService {
                     BulkByScrollResponse r = restHighLevelClient.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
                     if (bulkRequest.requests().size() > 0) {
                         BulkResponse q = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
-
-
-                        int d = 0;
-                        for (BulkItemResponse bulkItemResponse : q) {
-
-                            if (bulkItemResponse.isFailed()) {
-                                System.out.println(bulkItemResponse.getFailureMessage());
-                                System.out.println("------------");
-                                System.out.println(bulkRequest.requests().get(d));
-                                System.out.println("000000000000000000");
-                                System.out.println(mapp.get(d));
-                            }
-                            d ++;
-                        }
-
-
 
                         log.info("wrong ? " + q.hasFailures());
                         log.info(lang + "/" + deleteType + "更新成功");
