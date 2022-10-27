@@ -33,7 +33,11 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortOrder;
+import org.elasticsearch.search.suggest.Suggest;
 import org.elasticsearch.search.suggest.SuggestBuilder;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.SuggestionBuilder;
+import org.elasticsearch.search.suggest.term.TermSuggestionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
@@ -189,14 +193,41 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public Map<String, Object> searchByCondition(SearchCondition condition) throws IOException {
         String saveIndex = s.index + "_" + condition.getLang();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("triggerSuggest", false);
+        result.put("keyword", condition.getKeyword());
+
         SearchRequest request = BuildSearchRequest(condition, saveIndex);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
         if (response.getHits().getHits().length < 1) {
             log.info(condition.getKeyword() + " - 未搜索到结果");
             //TODO 在未搜索出结果时对搜索词进行联想
+            SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+            SuggestionBuilder<TermSuggestionBuilder> termSuggestionBuilder =
+                    SuggestBuilders.termSuggestion("textContent").text(condition.getKeyword()).minWordLength(2).prefixLength(0).analyzer("ik_smart");
+
             SuggestBuilder suggestBuilder = new SuggestBuilder();
+            suggestBuilder.addSuggestion("my_sugg", termSuggestionBuilder);
 
+            SearchRequest suggRequest = new SearchRequest(saveIndex);
 
+            request.source(searchSourceBuilder.suggest(suggestBuilder));
+
+            SearchResponse suggResponse = restHighLevelClient.search(suggRequest, RequestOptions.DEFAULT);
+
+            System.out.println(suggResponse);
+            StringBuilder newKeyword = new StringBuilder();
+            for (Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option> my_sugg : suggResponse.getSuggest().getSuggestion("my_sugg")) {
+                String text = my_sugg.getOptions().get(0).getText().string();
+                newKeyword.append(text).append(" ");
+            }
+            if (newKeyword.length() > 0) {
+                result.put("newKeyword", newKeyword);
+                condition.setKeyword(newKeyword.toString());
+                request = BuildSearchRequest(condition, saveIndex);
+                response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+            }
 
         }
 
@@ -228,7 +259,7 @@ public class SearchServiceImpl implements SearchService {
             return null;
         }
 
-        Map<String, Object> result = new HashMap<>();
+
         result.put("page", condition.getPage());
         result.put("pageSize", condition.getPageSize());
         result.put("records", data);

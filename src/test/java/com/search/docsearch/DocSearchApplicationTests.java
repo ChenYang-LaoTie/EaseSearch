@@ -1,12 +1,13 @@
 package com.search.docsearch;
 
 import com.search.docsearch.config.MySystem;
-import com.search.docsearch.constant.Constants;
 import com.search.docsearch.utils.EulerParse;
 import com.search.docsearch.utils.IdUtil;
 import org.apache.commons.io.FileUtils;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
@@ -17,6 +18,12 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.suggest.Suggest;
+import org.elasticsearch.search.suggest.SuggestBuilder;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.SuggestionBuilder;
+import org.elasticsearch.search.suggest.term.TermSuggestionBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -86,5 +93,27 @@ class DocSearchApplicationTests {
 		System.out.println(d.index());
 	}
 
+	@Test
+	void testSuggestions() throws IOException {
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		SuggestionBuilder<TermSuggestionBuilder> termSuggestionBuilder =
+				SuggestBuilders.termSuggestion("textContent").text("开元 opengausd").minWordLength(2).prefixLength(0).analyzer("ik_smart");
 
+		SuggestBuilder suggestBuilder = new SuggestBuilder();
+		suggestBuilder.addSuggestion("my_sugg", termSuggestionBuilder);
+
+		SearchRequest request = new SearchRequest("opengauss_articles_test_zh");
+
+		request.source(searchSourceBuilder.suggest(suggestBuilder));
+
+		SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+
+		System.out.println(response);
+		StringBuilder newKeyword = new StringBuilder();
+		for (Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option> my_sugg : response.getSuggest().getSuggestion("my_sugg")) {
+			String text = my_sugg.getOptions().get(0).getText().string();
+		}
+
+
+	}
 }
