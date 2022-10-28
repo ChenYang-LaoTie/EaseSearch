@@ -202,7 +202,7 @@ public class SearchServiceImpl implements SearchService {
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
         if (response.getHits().getHits().length < 1) {
             log.info(condition.getKeyword() + " - 未搜索到结果");
-            //TODO 在未搜索出结果时对搜索词进行联想
+            //在未搜索出结果时对搜索词进行联想
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             SuggestionBuilder<TermSuggestionBuilder> termSuggestionBuilder =
                     SuggestBuilders.termSuggestion("textContent").text(condition.getKeyword()).minWordLength(2).prefixLength(0).analyzer("ik_smart");
@@ -223,6 +223,7 @@ public class SearchServiceImpl implements SearchService {
                 newKeyword.append(text).append(" ");
             }
             if (newKeyword.length() > 0) {
+                result.put("triggerSuggest", true);
                 result.put("newKeyword", newKeyword);
                 condition.setKeyword(newKeyword.toString());
                 request = BuildSearchRequest(condition, saveIndex);

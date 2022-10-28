@@ -124,16 +124,10 @@ public class EulerParse {
                     key = entry.getKey().toLowerCase(Locale.ROOT);
                     value = entry.getValue();
                     if (key.equals("date")) {
-//                        System.out.println(value);
-//                        System.out.println(value instanceof Date);
                         //TODO 需要处理日期不标准导致的存入ES失败的问题。
                     }
                     if (key.equals("author") && value instanceof String) {
                         value = new String[]{value.toString()};
-                    }
-                    if (key.equals("archives")) {
-
-//                        continue;
                     }
                     jsonMap.put(key, value);
                 }

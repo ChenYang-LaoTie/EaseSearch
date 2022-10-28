@@ -57,16 +57,16 @@ public class BeginFun implements ApplicationRunner {
 
 //        searchService.refreshDoc();
 
-//        log.info("===============开始拉取仓库资源=================");
-//            ProcessBuilder pb = new ProcessBuilder(s.initDoc);
-//            Process p = pb.start();
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            String line = null;
-//            while ((line = reader.readLine()) != null)
-//            {
-//                log.info(line);
-//            }
-//        searchService.refreshDoc();
+        log.info("===============开始拉取仓库资源=================");
+            ProcessBuilder pb = new ProcessBuilder(s.initDoc);
+            Process p = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = null;
+            while ((line = reader.readLine()) != null)
+            {
+                log.info(line);
+            }
+        searchService.refreshDoc();
     }
 
 
