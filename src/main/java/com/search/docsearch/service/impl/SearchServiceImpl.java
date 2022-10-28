@@ -212,15 +212,16 @@ public class SearchServiceImpl implements SearchService {
 
             SearchRequest suggRequest = new SearchRequest(saveIndex);
 
-            request.source(searchSourceBuilder.suggest(suggestBuilder));
+            suggRequest.source(searchSourceBuilder.suggest(suggestBuilder));
 
             SearchResponse suggResponse = restHighLevelClient.search(suggRequest, RequestOptions.DEFAULT);
 
-            System.out.println(suggResponse);
             StringBuilder newKeyword = new StringBuilder();
             for (Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option> my_sugg : suggResponse.getSuggest().getSuggestion("my_sugg")) {
-                String text = my_sugg.getOptions().get(0).getText().string();
-                newKeyword.append(text).append(" ");
+                if (my_sugg.getOptions().size() > 0) {
+                    String text = my_sugg.getOptions().get(0).getText().string();
+                    newKeyword.append(text).append(" ");
+                }
             }
             if (newKeyword.length() > 0) {
                 result.put("triggerSuggest", true);
