@@ -58,7 +58,6 @@ public class SearchController {
         return SysResult.fail("查询失败", null);
     }
 
-
     @PostMapping("count")
     public SysResult getCount(@RequestBody SearchCondition condition) {
         try {

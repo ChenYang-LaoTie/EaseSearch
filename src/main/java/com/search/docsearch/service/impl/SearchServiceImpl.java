@@ -390,8 +390,17 @@ public class SearchServiceImpl implements SearchService {
             boolQueryBuilder.should(titleMP).should(textContentMP);
 
             boolQueryBuilder.minimumShouldMatch(1);
+
+            HighlightBuilder highlightBuilder = new HighlightBuilder()
+                    .field("textContent")
+                    .field("title")
+                    .fragmentSize(100)
+                    .preTags("<span>")
+                    .postTags("</span>");
+            sourceBuilder.highlighter(highlightBuilder);
         }
         sourceBuilder.from(startIndex).size(pageSize);
+
         sourceBuilder.query(boolQueryBuilder);
 
         sourceBuilder.sort("date", SortOrder.DESC);
