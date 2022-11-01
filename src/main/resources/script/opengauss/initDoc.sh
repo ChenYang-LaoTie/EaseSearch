@@ -58,6 +58,12 @@ for r in $(git branch -r --list "origin/*"); do
     mkdir -p /usr/local/docs/target/en/docs/$b/docs
     cp -r /usr/local/docs/source/docs/content/zh/docs/* /usr/local/docs/target/zh/docs/$b/docs/
     cp -r /usr/local/docs/source/docs/content/en/docs/* /usr/local/docs/target/en/docs/$b/docs/
+
+    mkdir -p /usr/local/docs/target/zh/docs/$b-docs-lite/docs
+    mkdir -p /usr/local/docs/target/en/docs/$b-docs-lite/docs
+    cp -r /usr/local/docs/source/docs/content/docs-lite/zh/docs/* /usr/local/docs/target/zh/docs/$b-docs-lite/docs/
+    cp -r /usr/local/docs/source/docs/content/docs-list/en/docs/* /usr/local/docs/target/en/docs/$b-docs-lite/docs/
+
  fi
 done
 
