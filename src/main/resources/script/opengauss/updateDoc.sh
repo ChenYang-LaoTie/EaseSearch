@@ -37,12 +37,17 @@ for r in $(git branch -r --list "origin/*"); do
  # shellcheck disable=SC1020
  # shellcheck disable=SC1009
  # shellcheck disable=SC2053
- if [[ "master" != $b ]] && [[ "website" != $b ]] && [[ "HEAD" != $b ]] && [[ "->" != $b ]]; then
+ if [[ "website" != $b ]] && [[ "HEAD" != $b ]] && [[ "->" != $b ]]; then
     git checkout $r
     mkdir -p /usr/local/docs/target/zh/docs/$b/docs
     mkdir -p /usr/local/docs/target/en/docs/$b/docs
     cp -r /usr/local/docs/source/docs/content/zh/docs/* /usr/local/docs/target/zh/docs/$b/docs/
     cp -r /usr/local/docs/source/docs/content/en/docs/* /usr/local/docs/target/en/docs/$b/docs/
+
+    mkdir -p /usr/local/docs/target/zh/docs/$b-lite/docs
+    mkdir -p /usr/local/docs/target/en/docs/$b-lite/docs
+    cp -r /usr/local/docs/source/docs/content/docs-lite/zh/docs/* /usr/local/docs/target/zh/docs/$b-lite/docs/
+    cp -r /usr/local/docs/source/docs/content/docs-list/en/docs/* /usr/local/docs/target/en/docs/$b-lite/docs/
  fi
 done
 
