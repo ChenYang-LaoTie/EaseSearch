@@ -5,6 +5,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
@@ -74,8 +75,16 @@ public class ElasticSearchConfig {
                                         return httpAsyncClientBuilder;
                                     }
                                 }
-                        )
-                );
+                        ).setRequestConfigCallback(
+                                new RestClientBuilder.RequestConfigCallback() {
+                                    // 该方法接收一个RequestConfig.Builder对象，对该对象进行修改后然后返回。
+                                    @Override
+                                    public RequestConfig.Builder customizeRequestConfig(RequestConfig.Builder requestConfigBuilder) {
+                                        return requestConfigBuilder.setConnectTimeout(60 * 1000) // 连接超时（默认为1秒）
+                                                .setSocketTimeout(300 * 1000);// 套接字超时（默认为30秒）//更改客户端的超时限制默认30秒现在改为100*1000分钟
+                                    }
+                                }
+                        ));
             } catch (Exception e) {
                 log.error("elasticsearch TransportClient create error!!", e);
             }
