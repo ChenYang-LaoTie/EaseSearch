@@ -1,6 +1,5 @@
 package com.search.docsearch.service;
 
-import com.search.docsearch.entity.vo.SearchCondition;
 import com.search.docsearch.entity.vo.SearchDocs;
 
 import java.io.IOException;

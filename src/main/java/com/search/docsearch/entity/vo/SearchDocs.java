@@ -7,12 +7,12 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 public class SearchDocs implements Serializable {
+
     @Serial
     private static final long serialVersionUID = -969897369024720352L;
     private String lang;
