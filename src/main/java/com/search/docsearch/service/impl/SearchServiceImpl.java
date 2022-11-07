@@ -19,6 +19,7 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.*;
@@ -238,11 +239,14 @@ public class SearchServiceImpl implements SearchService {
 
         for (SearchHit hit : response.getHits().getHits()) {
             Map<String, Object> map = hit.getSourceAsMap();
-            String highLight = map.get("textContent").toString();
+            StringBuilder highLight = new StringBuilder(map.get("textContent").toString());
             String title = map.getOrDefault("title", "").toString();
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
             if (highlightFields.containsKey("textContent")) {
-                highLight = highlightFields.get("textContent").getFragments()[0].toString();
+                highLight = new StringBuilder();
+                for (Text textContent : highlightFields.get("textContent").getFragments()) {
+                    highLight.append(textContent.toString()).append("<br>");
+                }
             }
             if (highlightFields.containsKey("title")) {
                 title = highlightFields.get("title").getFragments()[0].toString();
@@ -254,7 +258,7 @@ public class SearchServiceImpl implements SearchService {
                     .setTitle(title)
                     .setVersion(map.getOrDefault("version", "").toString())
                     .setType(map.getOrDefault("type", "").toString())
-                    .setTextContent(highLight);
+                    .setTextContent(highLight.toString());
             data.add(article);
         }
         if (data.isEmpty()) {
@@ -278,10 +282,10 @@ public class SearchServiceImpl implements SearchService {
             boolQueryBuilder.filter(QueryBuilders.termQuery("type.keyword", condition.getType()));
         }
 
-        MatchPhraseQueryBuilder ptitleMP = QueryBuilders.matchPhraseQuery("title", condition.getKeyword());
+        MatchPhraseQueryBuilder ptitleMP = QueryBuilders.matchPhraseQuery("title", condition.getKeyword()).slop(2);
         ptitleMP.boost(200);
-        MatchPhraseQueryBuilder ptextContentMP = QueryBuilders.matchPhraseQuery("textContent", condition.getKeyword());
-        ptitleMP.boost(100);
+        MatchPhraseQueryBuilder ptextContentMP = QueryBuilders.matchPhraseQuery("textContent", condition.getKeyword()).slop(2);
+        ptextContentMP.boost(100);
 
         boolQueryBuilder.should(ptitleMP).should(ptextContentMP);
 

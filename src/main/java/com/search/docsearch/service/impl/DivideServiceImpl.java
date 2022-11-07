@@ -9,6 +9,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
@@ -132,10 +133,10 @@ public class DivideServiceImpl implements DivideService {
             boolQueryBuilder.filter(QueryBuilders.termQuery("version.keyword", searchDocs.getVersion()));
         }
 
-        MatchPhraseQueryBuilder ptitleMP = QueryBuilders.matchPhraseQuery("title", searchDocs.getKeyword());
+        MatchPhraseQueryBuilder ptitleMP = QueryBuilders.matchPhraseQuery("title", searchDocs.getKeyword()).slop(2);
         ptitleMP.boost(200);
-        MatchPhraseQueryBuilder ptextContentMP = QueryBuilders.matchPhraseQuery("textContent", searchDocs.getKeyword());
-        ptitleMP.boost(100);
+        MatchPhraseQueryBuilder ptextContentMP = QueryBuilders.matchPhraseQuery("textContent", searchDocs.getKeyword()).slop(2);
+        ptextContentMP.boost(100);
 
         boolQueryBuilder.should(ptitleMP).should(ptextContentMP);
 
@@ -165,11 +166,14 @@ public class DivideServiceImpl implements DivideService {
 
         for (SearchHit hit : response.getHits().getHits()) {
             Map<String, Object> map = hit.getSourceAsMap();
-            String highLight = map.get("textContent").toString();
+            StringBuilder highLight = new StringBuilder(map.get("textContent").toString());
             String title = map.getOrDefault("title", "").toString();
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
             if (highlightFields.containsKey("textContent")) {
-                highLight = highlightFields.get("textContent").getFragments()[0].toString();
+                highLight = new StringBuilder();
+                for (Text textContent : highlightFields.get("textContent").getFragments()) {
+                    highLight.append(textContent.toString()).append("<br>");
+                }
             }
             if (highlightFields.containsKey("title")) {
                 title = highlightFields.get("title").getFragments()[0].toString();
@@ -181,7 +185,7 @@ public class DivideServiceImpl implements DivideService {
                     .setTitle(title)
                     .setVersion(map.getOrDefault("version", "").toString())
                     .setType(map.getOrDefault("type", "").toString())
-                    .setTextContent(highLight);
+                    .setTextContent(highLight.toString());
             data.add(article);
         }
         if (data.isEmpty()) {
