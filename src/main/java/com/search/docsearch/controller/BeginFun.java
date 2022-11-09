@@ -29,34 +29,6 @@ public class BeginFun implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws IOException {
-//        boolean success = false;
-//        try {
-//            log.info("===============开始拉取仓库资源=================");
-//            ProcessBuilder pb = new ProcessBuilder(s.initDoc);
-//            Process p = pb.start();
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            String line = null;
-//            while ((line = reader.readLine()) != null)
-//            {
-//                log.info(line);
-//                if (line.contains("build complete in")) {
-//                    log.info("Static resource build successfully");
-//                    success = true;
-//                }
-//            }
-//            log.info("===============仓库资源拉取成功=================");
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//        }
-//
-//        if (success) {
-//            searchService.refreshDoc();
-//        } else {
-//            log.info("初始化数据失败，查看日志!");
-//        }
-
-//        searchService.refreshDoc();
-
         log.info("===============开始拉取仓库资源=================");
             ProcessBuilder pb = new ProcessBuilder(s.initDoc);
             Process p = pb.start();

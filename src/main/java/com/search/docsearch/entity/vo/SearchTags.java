@@ -15,7 +15,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class SearchTags implements Serializable {
     @Serial
-    private static final long serialVersionUID = -969897369024720352L;
+    private static final long serialVersionUID = 1L;
     private String lang;
     private String category;
     private String want;

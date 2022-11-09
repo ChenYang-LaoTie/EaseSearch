@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class SysResult implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 3208248423120492873L;
+    private static final long serialVersionUID = 1L;
     private Integer status;
     private String msg;
     private Object obj;

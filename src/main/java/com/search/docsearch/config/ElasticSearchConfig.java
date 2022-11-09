@@ -80,8 +80,8 @@ public class ElasticSearchConfig {
                                     // 该方法接收一个RequestConfig.Builder对象，对该对象进行修改后然后返回。
                                     @Override
                                     public RequestConfig.Builder customizeRequestConfig(RequestConfig.Builder requestConfigBuilder) {
-                                        return requestConfigBuilder.setConnectTimeout(60 * 1000) // 连接超时（默认为1秒）
-                                                .setSocketTimeout(300 * 1000);// 套接字超时（默认为30秒）//更改客户端的超时限制默认30秒现在改为100*1000分钟
+                                        return requestConfigBuilder.setConnectTimeout(60 * 1000) // 连接超时（默认为1秒）现在改为60秒
+                                                .setSocketTimeout(300 * 1000);// 套接字超时（默认为30秒）现在改为300秒
                                     }
                                 }
                         ));

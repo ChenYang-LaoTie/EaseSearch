@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class SearchDocs implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = -969897369024720352L;
+    private static final long serialVersionUID = 1L;
     private String lang;
     private int page = 1;
     private int pageSize = 10;

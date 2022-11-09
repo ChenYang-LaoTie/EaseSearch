@@ -9,9 +9,6 @@ cd /usr/local/docs/source/gaussv2
 git pull
 #pnpm install
 #pnpm build
-#
-#cp -r /usr/local/docs/source/gaussv2/app/.vitepress/dist/zh /usr/local/docs/target/
-#cp -r /usr/local/docs/source/gaussv2/app/.vitepress/dist/en /usr/local/docs/target/
 
 rm -rf /usr/local/docs/target/zh/blogs
 cp -r /usr/local/docs/source/gaussv2/app/zh/blogs /usr/local/docs/target/zh/

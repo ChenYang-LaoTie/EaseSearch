@@ -33,10 +33,6 @@ public class ThreadPoolConfig {
 
     /**
      * 线程池配置
-     * @param
-     * @return java.util.concurrent.Executor
-     * @author wliduo
-     * @date 2019/2/15 14:44
      */
     @Bean(name = "threadPoolTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {

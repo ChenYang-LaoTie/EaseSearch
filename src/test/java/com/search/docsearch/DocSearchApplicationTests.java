@@ -85,7 +85,7 @@ class DocSearchApplicationTests {
 
 	@Test
 	void testPa() throws Exception {
-		File mdFile = FileUtils.getFile("C:\\CYDev\\workspace\\eulerdoc\\openEuler-portal\\app\\.vitepress\\dist\\zh\\learn\\mooc\\detail\\index.html");
+		File mdFile = FileUtils.getFile("");
 		Map<String, Object> map = EulerParse.parse("zh", "download", mdFile);
 
 		System.out.println(map);
@@ -95,8 +95,6 @@ class DocSearchApplicationTests {
 
 		IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
 		System.out.println(indexResponse.toString());
-//		String s = "012345";
-//		System.out.println(s.substring(0, 6));
 	}
 
 
@@ -106,7 +104,7 @@ class DocSearchApplicationTests {
 	@Test
 	void ines() throws IOException {
 		CreateIndexRequest request1 = new CreateIndexRequest("ddat");
-		File mappingJson = FileUtils.getFile("C:\\CYDev\\EaseSearch\\src\\main\\resources\\mapping\\mapping.json");
+		File mappingJson = FileUtils.getFile("");
 		String mapping = FileUtils.readFileToString(mappingJson, StandardCharsets.UTF_8);
 
 		request1.mapping(mapping, XContentType.JSON);
@@ -120,7 +118,7 @@ class DocSearchApplicationTests {
 	void testSuggestions() throws IOException {
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 		SuggestionBuilder<TermSuggestionBuilder> termSuggestionBuilder =
-				SuggestBuilders.termSuggestion("textContent").text("开元 opengausd").minWordLength(2).prefixLength(0).analyzer("ik_smart");
+				SuggestBuilders.termSuggestion("textContent").text("").minWordLength(2).prefixLength(0).analyzer("ik_smart");
 
 		SuggestBuilder suggestBuilder = new SuggestBuilder();
 		suggestBuilder.addSuggestion("my_sugg", termSuggestionBuilder);
@@ -255,10 +253,11 @@ class DocSearchApplicationTests {
 						// 该方法接收一个RequestConfig.Builder对象，对该对象进行修改后然后返回。
 						@Override
 						public RequestConfig.Builder customizeRequestConfig(RequestConfig.Builder requestConfigBuilder) {
-							return requestConfigBuilder.setConnectTimeout(5000 * 1000) // 连接超时（默认为1秒）
-									.setSocketTimeout(6000 * 1000);// 套接字超时（默认为30秒）//更改客户端的超时限制默认30秒现在改为100*1000分钟
+							return requestConfigBuilder.setConnectTimeout(5000 * 1000) // 连接超时（默认为1秒）因为有些es游标读取非常慢，现改为5000秒
+									.setSocketTimeout(6000 * 1000);// 套接字超时（默认为30秒）因为有些es游标读取非常慢，更改客户端的超时限制默认30秒现在改为6000秒
 						}
-					}));// 调整最大重试超时时间（默认为30秒）.setMaxRetryTimeoutMillis(60000);)
+					}));
+			// 调整最大重试超时时间（默认为30秒）.setMaxRetryTimeoutMillis(60000);)这条可看情况添加
 
 
 		} catch (Exception e) {
