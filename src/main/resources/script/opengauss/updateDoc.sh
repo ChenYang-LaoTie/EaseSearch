@@ -5,27 +5,27 @@ mkdir -p /usr/local/docs/target/zh/
 mkdir -p /usr/local/docs/target/en/
 
 # shellcheck disable=SC2164
-cd /usr/local/docs/source/gaussv2
+cd /usr/local/docs/source/website
 git pull
 pnpm install
 pnpm build
 
-cp -r /usr/local/docs/source/gaussv2/app/.vitepress/dist/zh /usr/local/docs/target/
-cp -r /usr/local/docs/source/gaussv2/app/.vitepress/dist/en /usr/local/docs/target/
+cp -r /usr/local/docs/source/website/app/.vitepress/dist/zh /usr/local/docs/target/
+cp -r /usr/local/docs/source/website/app/.vitepress/dist/en /usr/local/docs/target/
 
 rm -rf /usr/local/docs/target/zh/blogs
-cp -r /usr/local/docs/source/gaussv2/app/zh/blogs /usr/local/docs/target/zh/
+cp -r /usr/local/docs/source/website/app/zh/blogs /usr/local/docs/target/zh/
 rm -rf /usr/local/docs/target/zh/news
-cp -r /usr/local/docs/source/gaussv2/app/zh/news /usr/local/docs/target/zh/
+cp -r /usr/local/docs/source/website/app/zh/news /usr/local/docs/target/zh/
 rm -rf /usr/local/docs/target/zh/events
-cp -r /usr/local/docs/source/gaussv2/app/zh/events /usr/local/docs/target/zh/
+cp -r /usr/local/docs/source/website/app/zh/events /usr/local/docs/target/zh/
 
 rm -rf /usr/local/docs/target/en/blogs
-cp -r /usr/local/docs/source/gaussv2/app/en/blogs /usr/local/docs/target/en/
+cp -r /usr/local/docs/source/website/app/en/blogs /usr/local/docs/target/en/
 rm -rf /usr/local/docs/target/en/news
-cp -r /usr/local/docs/source/gaussv2/app/en/news /usr/local/docs/target/en/
+cp -r /usr/local/docs/source/website/app/en/news /usr/local/docs/target/en/
 rm -rf /usr/local/docs/target/en/events
-cp -r /usr/local/docs/source/gaussv2/app/en/events /usr/local/docs/target/en/
+cp -r /usr/local/docs/source/website/app/en/events /usr/local/docs/target/en/
 
 # shellcheck disable=SC2164
 cd /usr/local/docs/source/docs
