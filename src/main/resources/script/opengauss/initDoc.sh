@@ -4,7 +4,7 @@ if [ -d "/usr/local/docs" ]; then
   rm -rf /usr/local/docs/target/*
 fi
 
-#npm i pnpm -g
+npm i pnpm -g
 
 mkdir -p /usr/local/docs/source/
 mkdir -p /usr/local/docs/target/zh/
