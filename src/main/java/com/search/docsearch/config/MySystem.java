@@ -14,6 +14,7 @@ public class MySystem {
     public String system;
     public String docsVersion;
     public String index;
+    public String trackerIndex;
     public String mappingPath;
     public String basePath;
     public String initDoc;

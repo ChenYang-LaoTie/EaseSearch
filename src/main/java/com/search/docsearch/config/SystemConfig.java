@@ -40,6 +40,7 @@ public class SystemConfig {
         } else {
             mySystem.setIndex(system + "_articles");
         }
+        mySystem.setTrackerIndex(system + "_tracker");
 
         mySystem.setDocsVersion(docsVersion);
         mySystem.setMappingPath(MAPPINGPATH);

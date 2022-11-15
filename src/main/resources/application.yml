@@ -7,6 +7,13 @@ elasticsearch:
   #deploy dev
   isDev: ${isDev:false}
 
+#网站埋点数据库
+tracker:
+  host: ${teshost:127.0.0.1}
+  username: ${tesusername:admin}
+  password: ${tespassword:admin}
+  port: ${tesport:9200}
+
 #定时读取配置
 scheduled:
   cron: 0 31 11 ? * *
