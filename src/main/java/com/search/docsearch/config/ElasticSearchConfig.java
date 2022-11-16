@@ -108,6 +108,9 @@ public class ElasticSearchConfig {
     @Bean(destroyMethod = "close")
     public RestHighLevelClient trackerClient() {
 
+        System.out.println(trackerUserName);
+        System.out.println(trackerPassword);
+
         RestHighLevelClient restClient = null;
         try {
             final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
