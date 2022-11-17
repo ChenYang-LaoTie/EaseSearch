@@ -129,6 +129,9 @@ public class EulerParse {
                     if (key.equals("author") && value instanceof String) {
                         value = new String[]{value.toString()};
                     }
+                    if (key.equals("head")) {
+                        continue;
+                    }
                     jsonMap.put(key, value);
                 }
             }
