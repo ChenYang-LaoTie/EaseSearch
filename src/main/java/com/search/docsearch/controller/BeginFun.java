@@ -38,7 +38,6 @@ public class BeginFun implements ApplicationRunner {
             log.info(line);
         }
         searchService.refreshDoc();
-        System.out.println("ddd");
     }
 
 
