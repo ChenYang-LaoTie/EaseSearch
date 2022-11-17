@@ -161,8 +161,7 @@ public class SearchServiceImpl implements SearchService {
             Process p = pb.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line = null;
-            while ((line = reader.readLine()) != null)
-            {
+            while ((line = reader.readLine()) != null) {
                 log.info(line);
                 if (line.contains("build complete in")) {
                     success = true;
@@ -181,8 +180,7 @@ public class SearchServiceImpl implements SearchService {
             Process p = pb.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line = null;
-            while ((line = reader.readLine()) != null)
-            {
+            while ((line = reader.readLine()) != null) {
                 log.info(line);
             }
         }
@@ -191,49 +189,59 @@ public class SearchServiceImpl implements SearchService {
     }
 
 
+    public Map<String, Object> getSuggestion(String keyword, String lang) throws IOException {
+        String saveIndex = s.index + "_" + lang;
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        SuggestionBuilder<TermSuggestionBuilder> termSuggestionBuilder =
+                SuggestBuilders.termSuggestion("textContent")
+                        .text(keyword)
+                        .minWordLength(2)
+                        .prefixLength(0)
+                        .analyzer("ik_smart")
+                        .size(3)
+                        .suggestMode(TermSuggestionBuilder.SuggestMode.ALWAYS);
+
+        SuggestBuilder suggestBuilder = new SuggestBuilder();
+        suggestBuilder.addSuggestion("my_sugg", termSuggestionBuilder);
+
+        SearchRequest suggRequest = new SearchRequest(saveIndex);
+
+        suggRequest.source(searchSourceBuilder.suggest(suggestBuilder));
+
+        SearchResponse suggResponse = restHighLevelClient.search(suggRequest, RequestOptions.DEFAULT);
+
+        List<String> suggestList = new ArrayList<>();
+        for (int i = 0; i <= 3; i++) {
+            StringBuilder sb = new StringBuilder();
+            boolean isNew = false;
+            for (Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option> my_sugg : suggResponse.getSuggest().getSuggestion("my_sugg")) {
+                String op = my_sugg.getText().string();
+                if (my_sugg.getOptions().size() > i) {
+                    op = my_sugg.getOptions().get(i).getText().string();
+                    isNew = true;
+                }
+                sb.append(op).append(" ");
+            }
+            if (isNew) {
+                suggestList.add(sb.toString());
+            }
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("suggestList", suggestList);
+        return result;
+    }
+
+
     @Override
     public Map<String, Object> searchByCondition(SearchCondition condition) throws IOException {
         String saveIndex = s.index + "_" + condition.getLang();
 
         Map<String, Object> result = new HashMap<>();
-        result.put("triggerSuggest", false);
         result.put("keyword", condition.getKeyword());
 
         SearchRequest request = BuildSearchRequest(condition, saveIndex);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-        if (response.getHits().getHits().length < 1) {
-            log.info(condition.getKeyword() + " - 未搜索到结果");
-            //在未搜索出结果时对搜索词进行联想
-            SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-            SuggestionBuilder<TermSuggestionBuilder> termSuggestionBuilder =
-                    SuggestBuilders.termSuggestion("textContent").text(condition.getKeyword()).minWordLength(2).prefixLength(0).analyzer("ik_smart");
-
-            SuggestBuilder suggestBuilder = new SuggestBuilder();
-            suggestBuilder.addSuggestion("my_sugg", termSuggestionBuilder);
-
-            SearchRequest suggRequest = new SearchRequest(saveIndex);
-
-            suggRequest.source(searchSourceBuilder.suggest(suggestBuilder));
-
-            SearchResponse suggResponse = restHighLevelClient.search(suggRequest, RequestOptions.DEFAULT);
-
-            StringBuilder newKeyword = new StringBuilder();
-            for (Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option> my_sugg : suggResponse.getSuggest().getSuggestion("my_sugg")) {
-                if (my_sugg.getOptions().size() > 0) {
-                    String text = my_sugg.getOptions().get(0).getText().string();
-                    newKeyword.append(text).append(" ");
-                }
-            }
-            if (newKeyword.length() > 0) {
-                result.put("triggerSuggest", true);
-                result.put("newKeyword", newKeyword);
-                condition.setKeyword(newKeyword.toString());
-                request = BuildSearchRequest(condition, saveIndex);
-                response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-            }
-
-        }
-
 
         List<Article> data = new ArrayList<>();
 

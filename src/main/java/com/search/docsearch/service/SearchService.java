@@ -18,6 +18,8 @@ public interface SearchService {
 
     void AsyncrefreshDoc() throws IOException;
 
+    Map<String, Object> getSuggestion(String keyword, String lang) throws IOException;
+
     /**
      * 根据条件搜索
      *
