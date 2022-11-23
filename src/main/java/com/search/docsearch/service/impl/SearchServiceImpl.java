@@ -291,9 +291,9 @@ public class SearchServiceImpl implements SearchService {
         }
 
         MatchPhraseQueryBuilder ptitleMP = QueryBuilders.matchPhraseQuery("title", condition.getKeyword()).analyzer("ik_max_word");
-        ptitleMP.boost(200);
+        ptitleMP.boost(1000);
         MatchPhraseQueryBuilder ptextContentMP = QueryBuilders.matchPhraseQuery("textContent", condition.getKeyword()).analyzer("ik_max_word");
-        ptextContentMP.boost(100);
+        ptextContentMP.boost(500);
 
         boolQueryBuilder.should(ptitleMP).should(ptextContentMP);
 
