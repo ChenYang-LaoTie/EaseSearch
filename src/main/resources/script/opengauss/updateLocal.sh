@@ -16,6 +16,8 @@ rm -rf /usr/local/docs/target/zh/news
 cp -r /usr/local/docs/source/website/app/zh/news /usr/local/docs/target/zh/
 rm -rf /usr/local/docs/target/zh/events
 cp -r /usr/local/docs/source/website/app/zh/events /usr/local/docs/target/zh/
+rm -rf /usr/local/docs/target/zh/userPractice
+cp -r /usr/local/docs/source/website/app/zh/userPractice /usr/local/docs/target/zh/
 
 rm -rf /usr/local/docs/target/en/blogs
 cp -r /usr/local/docs/source/website/app/en/blogs /usr/local/docs/target/en/
@@ -23,6 +25,8 @@ rm -rf /usr/local/docs/target/en/news
 cp -r /usr/local/docs/source/website/app/en/news /usr/local/docs/target/en/
 rm -rf /usr/local/docs/target/en/events
 cp -r /usr/local/docs/source/website/app/en/events /usr/local/docs/target/en/
+rm -rf /usr/local/docs/target/en/userPractice
+cp -r /usr/local/docs/source/website/app/en/userPractice /usr/local/docs/target/en/
 
 # shellcheck disable=SC2164
 cd /usr/local/docs/source/docs
