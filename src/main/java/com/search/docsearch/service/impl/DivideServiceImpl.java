@@ -152,9 +152,9 @@ public class DivideServiceImpl implements DivideService {
             boolQueryBuilder.filter(QueryBuilders.termQuery("version.keyword", searchDocs.getVersion()));
         }
 
-        MatchPhraseQueryBuilder ptitleMP = QueryBuilders.matchPhraseQuery("title", searchDocs.getKeyword()).slop(2);
+        MatchPhraseQueryBuilder ptitleMP = QueryBuilders.matchPhraseQuery("title", searchDocs.getKeyword()).analyzer("ik_max_word").slop(2);
         ptitleMP.boost(200);
-        MatchPhraseQueryBuilder ptextContentMP = QueryBuilders.matchPhraseQuery("textContent", searchDocs.getKeyword()).slop(2);
+        MatchPhraseQueryBuilder ptextContentMP = QueryBuilders.matchPhraseQuery("textContent", searchDocs.getKeyword()).analyzer("ik_max_word").slop(2);
         ptextContentMP.boost(100);
 
         boolQueryBuilder.should(ptitleMP).should(ptextContentMP);
