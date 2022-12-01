@@ -28,6 +28,7 @@ public class EulerParse {
     public static final String MIGRATION = "migration";
     public static final String SHOWCASE = "showcase";
     public static final String EVENTS = "events";
+    public static final String USERPRACTICE = "userPractice";
 
     public static Map<String, Object> parse(String lang, String deleteType, File mdFile) throws Exception {
         String type = deleteType;
@@ -45,7 +46,8 @@ public class EulerParse {
                 && !NEWS.equals(deleteType)
                 && !SHOWCASE.equals(deleteType)
                 && !MIGRATION.equals(deleteType)
-                && !EVENTS.equals(deleteType)) {
+                && !EVENTS.equals(deleteType)
+                && !USERPRACTICE.equals(deleteType)){
             type = OTHER;
             if (!fileName.equals("index.html")) {
                 return null;
