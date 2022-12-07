@@ -36,4 +36,20 @@ public class DivideController {
         return SysResult.fail("查询失败", null);
     }
 
+    @PostMapping("docs")
+    public SysResult DivideDocs(@RequestBody SearchDocs searchDocs) {
+        try {
+            Map<String, Object> result = divideService.docsSearch(searchDocs);
+            if (result == null) {
+                return SysResult.fail("内容不存在", null);
+            }
+            return SysResult.ok("查询成功", result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return SysResult.fail("查询失败", null);
+    }
+
 }
