@@ -112,20 +112,20 @@ public class DivideServiceImpl implements DivideService {
         List<Map<String, Object>> data = new ArrayList<>();
         for (SearchHit hit : response.getHits().getHits()) {
             Map<String, Object> map = hit.getSourceAsMap();
+            try {
+                Object la = map.get("lang");
+                Object up = map.get("path");
+                String url_path = "/" + la + "/" + up + ".html";
+                CountRequest countRequest = new CountRequest(s.trackerIndex);
+                BoolQueryBuilder trackerBoolQueryBuilder = QueryBuilders.boolQuery();
+                trackerBoolQueryBuilder.must(QueryBuilders.termQuery("event", "pageview")).must(QueryBuilders.termQuery("properties.$url_path.keyword", url_path));
+                countRequest.query(trackerBoolQueryBuilder);
+                CountResponse countResponse = trackerClient.count(countRequest, RequestOptions.DEFAULT);
 
-
-            Object la = map.get("lang");
-            Object up = map.get("path");
-            String url_path = "/" + la + "/" + up + ".html";
-
-            CountRequest countRequest = new CountRequest(s.trackerIndex);
-            BoolQueryBuilder trackerBoolQueryBuilder = QueryBuilders.boolQuery();
-            trackerBoolQueryBuilder.must(QueryBuilders.termQuery("event", "pageview")).must(QueryBuilders.termQuery("properties.$url_path.keyword", url_path));
-            countRequest.query(trackerBoolQueryBuilder);
-            CountResponse countResponse = trackerClient.count(countRequest, RequestOptions.DEFAULT);
-
-            map.put("views", countResponse.getCount());
-
+                map.put("views", countResponse.getCount());
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
             data.add(map);
         }
         result.put("page", page);
