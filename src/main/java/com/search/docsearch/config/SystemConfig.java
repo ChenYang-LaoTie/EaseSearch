@@ -17,8 +17,6 @@ public class SystemConfig {
 
     @Value("${system}")
     private String system;
-    @Value("${docsversion}")
-    private String docsVersion;
     @Value("${dep}")
     private String dep;
 
@@ -42,7 +40,6 @@ public class SystemConfig {
         }
         mySystem.setTrackerIndex(system + "_tracker");
 
-        mySystem.setDocsVersion(docsVersion);
         mySystem.setMappingPath(MAPPINGPATH);
         mySystem.setBasePath(BASEPATH);
 

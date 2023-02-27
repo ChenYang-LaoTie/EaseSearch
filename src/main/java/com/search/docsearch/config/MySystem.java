@@ -12,7 +12,6 @@ import lombok.experimental.Accessors;
 public class MySystem {
 
     public String system;
-    public String docsVersion;
     public String index;
     public String trackerIndex;
     public String mappingPath;
