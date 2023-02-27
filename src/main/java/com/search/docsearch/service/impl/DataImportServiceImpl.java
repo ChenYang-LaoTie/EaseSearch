@@ -178,7 +178,7 @@ public class DataImportServiceImpl implements DataImportService {
 
     @Override
     public void sendKafka(String data, String parameter) {
-        String topic = s.getSystem() + "_topic";
+        String topic = s.getSystem() + "_search_topic";
         ProducerRecord<String, String> mess = new ProducerRecord<String, String>(topic, parameter + " " + data);
         kafkaProducer.send(mess);
     }
@@ -190,7 +190,7 @@ public class DataImportServiceImpl implements DataImportService {
     @Override
     @Async("threadPoolTaskExecutor")
     public void listenKafka() {
-        String topic = s.getSystem() + "_topic";
+        String topic = s.getSystem() + "_search_topic";
         kafkaConsumer.subscribe(Collections.singleton(topic));
         while (true) {
             ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(1));
