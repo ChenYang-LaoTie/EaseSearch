@@ -301,7 +301,8 @@ public class DataImportServiceImpl implements DataImportService {
             if (map != null) {
                 List<Map<String,Object>> d = (List<Map<String, Object>>) map;
                 for (Map<String, Object> lm : d) {
-                    insert(lm, s.getIndex() + "_syn_" + lm.get("lang"));
+//                    insert(lm, s.getIndex() + "_syn_" + lm.get("lang"));
+                    insert(lm, s.getIndex() + "_" + lm.get("lang"));
                 }
             } else {
             }
