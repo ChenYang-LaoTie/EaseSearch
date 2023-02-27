@@ -22,7 +22,6 @@ public class KafkaConfig {
     @Value("${kafka.consumer.group}")
 
     @Bean()
-    @Conditional(Need.class)
     public KafkaProducer<String, String> kafkaProducerClient() {
         if (needKafka) {
             Properties props = new Properties();
@@ -38,7 +37,6 @@ public class KafkaConfig {
     }
 
     @Bean()
-    @Conditional(Need.class)
     public KafkaConsumer<String, String> kafkaConsumerClient() {
         if (needKafka) {
             Properties props = new Properties();
