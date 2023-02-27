@@ -31,8 +31,6 @@ scheduled:
 system: ${searchsystem:openEuler}
 
 
-docsversion: 20
-
 #formal test
 dep: ${depp:test}
 

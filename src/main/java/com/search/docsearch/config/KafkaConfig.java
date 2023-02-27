@@ -5,8 +5,8 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
+import org.springframework.core.type.AnnotatedTypeMetadata;
 
 import java.util.Properties;
 
@@ -16,12 +16,21 @@ public class KafkaConfig {
     @Value("${kafka.need}")
     private boolean needKafka;
 
+    public class need implements Condition {
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            return needKafka;
+        }
+    }
+
+
     @Value("${kafka.bootstrap}")
     private String bootstrap;
 
     @Value("${kafka.consumer.group}")
 
     @Bean()
+    @Conditional(need.class)
     public KafkaProducer<String, String> kafkaProducerClient() {
         if (needKafka) {
             Properties props = new Properties();
@@ -37,6 +46,7 @@ public class KafkaConfig {
     }
 
     @Bean()
+    @Conditional(need.class)
     public KafkaConsumer<String, String> kafkaConsumerClient() {
         if (needKafka) {
             Properties props = new Properties();
@@ -52,7 +62,6 @@ public class KafkaConfig {
         }
         return null;
     }
-
 
 
 

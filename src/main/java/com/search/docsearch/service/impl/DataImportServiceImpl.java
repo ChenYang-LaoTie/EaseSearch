@@ -125,8 +125,7 @@ public class DataImportServiceImpl implements DataImportService {
         }
 
         CreateIndexRequest request1 = new CreateIndexRequest(index);
-//        File mappingJson = FileUtils.getFile(s.mappingPath);
-        File mappingJson = FileUtils.getFile("C:\\CYDev\\workspace\\EaseSearch\\src\\main\\resources\\mapping\\mapping.json");
+        File mappingJson = FileUtils.getFile(s.mappingPath);
         String mapping = FileUtils.readFileToString(mappingJson, StandardCharsets.UTF_8);
 
         request1.mapping(mapping, XContentType.JSON);
