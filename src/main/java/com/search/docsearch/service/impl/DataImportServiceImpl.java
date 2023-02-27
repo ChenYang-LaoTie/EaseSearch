@@ -24,6 +24,8 @@ import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -107,7 +109,7 @@ public class DataImportServiceImpl implements DataImportService {
 
     }
 
-    public void insert(Map<String, Object> data, String indexPrefix)throws Exception {
+    public void insert(Map<String, Object> data, String indexPrefix) throws Exception {
         IndexRequest indexRequest = new IndexRequest(indexPrefix + data.get("lang")).id((String) data.get("path")).source(data);
         IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
     }
@@ -294,12 +296,17 @@ public class DataImportServiceImpl implements DataImportService {
 //            }
 //        }
         try {
+            DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest(s.getIndex() + "_*");
+            deleteByQueryRequest.setQuery(QueryBuilders.termQuery("type", "forum"));
+            BulkByScrollResponse bulkByScrollResponse = restHighLevelClient.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
+
+
             String className = "com.search.docsearch.parse." + s.getSystem().toUpperCase(Locale.ROOT);
             Class<?> c = Class.forName(className);
             Method m = c.getMethod("customizeData");
             Object map = m.invoke(c.getDeclaredConstructor().newInstance());
             if (map != null) {
-                List<Map<String,Object>> d = (List<Map<String, Object>>) map;
+                List<Map<String, Object>> d = (List<Map<String, Object>>) map;
                 for (Map<String, Object> lm : d) {
 //                    insert(lm, s.getIndex() + "_syn_" + lm.get("lang"));
                     insert(lm, s.getIndex() + "_" + lm.get("lang"));
