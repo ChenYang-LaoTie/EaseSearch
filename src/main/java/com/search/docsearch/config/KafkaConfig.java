@@ -16,21 +16,13 @@ public class KafkaConfig {
     @Value("${kafka.need}")
     private boolean needKafka;
 
-    public class need implements Condition {
-        @Override
-        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            return needKafka;
-        }
-    }
-
-
     @Value("${kafka.bootstrap}")
     private String bootstrap;
 
     @Value("${kafka.consumer.group}")
 
     @Bean()
-    @Conditional(KafkaConfig.need.class)
+    @Conditional(Need.class)
     public KafkaProducer<String, String> kafkaProducerClient() {
         if (needKafka) {
             Properties props = new Properties();
@@ -46,7 +38,7 @@ public class KafkaConfig {
     }
 
     @Bean()
-    @Conditional(KafkaConfig.need.class)
+    @Conditional(Need.class)
     public KafkaConsumer<String, String> kafkaConsumerClient() {
         if (needKafka) {
             Properties props = new Properties();
