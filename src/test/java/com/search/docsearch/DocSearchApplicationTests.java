@@ -1,10 +1,7 @@
 package com.search.docsearch;
 
 import com.search.docsearch.config.MySystem;
-import com.search.docsearch.parse.OPENEULER;
 import com.search.docsearch.service.DataImportService;
-import com.search.docsearch.utils.EulerParse;
-import com.search.docsearch.utils.IdUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -17,11 +14,9 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.ClearScrollRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -35,7 +30,6 @@ import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
@@ -59,7 +53,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Map;
 
 @SpringBootTest
 class DocSearchApplicationTests {
@@ -87,24 +80,6 @@ class DocSearchApplicationTests {
 		BulkByScrollResponse bulkByScrollResponse = restHighLevelClient.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
 		System.out.println(bulkByScrollResponse);
 	}
-
-
-
-	@Test
-	void testPa() throws Exception {
-		File mdFile = FileUtils.getFile("");
-		Map<String, Object> map = EulerParse.parse("zh", "download", mdFile);
-
-		System.out.println(map);
-
-
-		IndexRequest indexRequest = new IndexRequest(s.index).id(IdUtil.getId()).source(map);
-
-		IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
-		System.out.println(indexResponse.toString());
-	}
-
-
 
 
 
