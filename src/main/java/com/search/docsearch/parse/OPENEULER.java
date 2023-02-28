@@ -20,6 +20,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -263,6 +264,7 @@ public class OPENEULER {
             req = path + i;
             try {
                 connection = sendHTTP(req, "GET");
+                TimeUnit.SECONDS.sleep(30);
                 if (connection.getResponseCode() == 200) {
                     result = ReadInput(connection.getInputStream());
                     if (!setData(result, r)) {
@@ -271,7 +273,7 @@ public class OPENEULER {
                 } else {
                     return null;
                 }
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
                 return null;
             } finally {
