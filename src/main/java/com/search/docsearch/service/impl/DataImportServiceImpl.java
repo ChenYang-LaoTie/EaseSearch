@@ -82,7 +82,7 @@ public class DataImportServiceImpl implements DataImportService {
                     Object map = m.invoke(c.getDeclaredConstructor().newInstance(), paresFile);
                     if (map != null) {
                         Map<String, Object> d = (Map<String, Object>) map;
-                        renew(d, s.getIndex() + "_");
+                        renew(d, s.getIndex() + "_" + d.get("lang"));
                     }
 
                 } catch (Exception e) {
@@ -96,21 +96,21 @@ public class DataImportServiceImpl implements DataImportService {
         log.info("所有文档更新成功");
     }
 
-    public void renew(Map<String, Object> data, String indexPrefix) throws Exception {
-        DeleteRequest deleteRequest = new DeleteRequest(indexPrefix + data.get("lang"), (String) data.get("path"));
+    public void renew(Map<String, Object> data, String index) throws Exception {
+        DeleteRequest deleteRequest = new DeleteRequest(index, (String) data.get("path"));
         DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
 
         if (data.containsKey("delete")) {
             return;
         }
 
-        IndexRequest indexRequest = new IndexRequest(indexPrefix + data.get("lang")).id((String) data.get("path")).source(data);
+        IndexRequest indexRequest = new IndexRequest(index).id((String) data.get("path")).source(data);
         IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
 
     }
 
-    public void insert(Map<String, Object> data, String indexPrefix) throws Exception {
-        IndexRequest indexRequest = new IndexRequest(indexPrefix + data.get("lang")).id((String) data.get("path")).source(data);
+    public void insert(Map<String, Object> data, String index) throws Exception {
+        IndexRequest indexRequest = new IndexRequest(index).id((String) data.get("path")).source(data);
         IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
     }
 
@@ -202,7 +202,7 @@ public class DataImportServiceImpl implements DataImportService {
                     Object map = m.invoke(c.getDeclaredConstructor().newInstance(), record.value());
                     if (map != null) {
                         Map<String, Object> d = (Map<String, Object>) map;
-                        renew(d, s.getIndex() + "_");
+                        renew(d, s.getIndex() + "_" + d.get("lang"));
                     }
 
                 } catch (Exception e) {
@@ -309,7 +309,7 @@ public class DataImportServiceImpl implements DataImportService {
                 List<Map<String, Object>> d = (List<Map<String, Object>>) map;
                 for (Map<String, Object> lm : d) {
 //                    insert(lm, s.getIndex() + "_syn_" + lm.get("lang"));
-                    insert(lm, s.getIndex());
+                    insert(lm, s.getIndex() + "_" + lm.get("lang"));
                 }
             } else {
             }
