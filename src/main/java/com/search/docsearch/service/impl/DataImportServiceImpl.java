@@ -194,7 +194,6 @@ public class DataImportServiceImpl implements DataImportService {
         while (true) {
             ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(1));
             for (ConsumerRecord<String, String> record : records) {
-                System.out.println(record.value());
                 try {
                     String className = "com.search.docsearch.parse." + s.getSystem().toUpperCase(Locale.ROOT);
                     Class<?> c = Class.forName(className);

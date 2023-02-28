@@ -37,7 +37,7 @@ public class OPENEULER {
     public static final String USERPRACTICE = "userPractice";
 
 
-    public static final String FORUMDOMAIM = "https://discourse.test.osinfra.cn";
+    public static final String FORUMDOMAIM = "https://forum.openeuler.org";
 
     public Map<String, Object> parse(File mdFile) throws Exception {
         String originalPath = mdFile.getPath();
