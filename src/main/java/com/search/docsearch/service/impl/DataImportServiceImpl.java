@@ -1,5 +1,6 @@
 package com.search.docsearch.service.impl;
 
+import com.search.docsearch.config.KafkaConfig;
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.service.DataImportService;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +54,9 @@ public class DataImportServiceImpl implements DataImportService {
     @Autowired
     @Qualifier("setConfig")
     private MySystem s;
+
+    @Autowired
+    private KafkaConfig kafkaConfig;
 
 
     @Override
@@ -171,24 +175,20 @@ public class DataImportServiceImpl implements DataImportService {
         refreshDoc();
     }
 
-    @Autowired
-    @Qualifier("kafkaProducerClient")
-    private KafkaProducer<String, String> kafkaProducer;
-
     @Override
     public void sendKafka(String data, String parameter) {
+        KafkaProducer<String, String> kafkaProducer = kafkaConfig.kafkaProducerClient();
         String topic = s.getSystem() + "_search_topic";
         ProducerRecord<String, String> mess = new ProducerRecord<String, String>(topic, parameter + " " + data);
         kafkaProducer.send(mess);
+        kafkaProducer.close();
     }
 
-    @Autowired
-    @Qualifier("kafkaConsumerClient")
-    private KafkaConsumer<String, String> kafkaConsumer;
 
     @Override
     @Async("threadPoolTaskExecutor")
     public void listenKafka() {
+        KafkaConsumer<String, String> kafkaConsumer = kafkaConfig.kafkaConsumerClient();
         String topic = s.getSystem() + "_search_topic";
         kafkaConsumer.subscribe(Collections.singleton(topic));
         while (true) {
@@ -207,8 +207,6 @@ public class DataImportServiceImpl implements DataImportService {
                 } catch (Exception e) {
                     log.error("error: " + e.getMessage());
                 }
-
-
             }
         }
     }

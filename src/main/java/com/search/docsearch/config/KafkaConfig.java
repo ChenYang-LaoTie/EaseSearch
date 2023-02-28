@@ -5,8 +5,7 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
-import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.Properties;
 
@@ -21,7 +20,6 @@ public class KafkaConfig {
 
     @Value("${kafka.consumer.group}")
 
-    @Bean()
     public KafkaProducer<String, String> kafkaProducerClient() {
         if (needKafka) {
             Properties props = new Properties();
@@ -36,7 +34,7 @@ public class KafkaConfig {
         return null;
     }
 
-    @Bean()
+
     public KafkaConsumer<String, String> kafkaConsumerClient() {
         if (needKafka) {
             Properties props = new Properties();
