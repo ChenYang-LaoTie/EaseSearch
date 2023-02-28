@@ -14,6 +14,4 @@ public interface DataImportService {
     void listenKafka();
 
     void deleteExpired(Set<String> idSet);
-
-    boolean refreshSynIndex();
 }
