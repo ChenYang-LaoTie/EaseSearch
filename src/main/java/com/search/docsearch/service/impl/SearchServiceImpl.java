@@ -134,7 +134,7 @@ public class SearchServiceImpl implements SearchService {
                 title = highlightFields.get("title").getFragments()[0].toString();
             }
             Article article = new Article().setId(hit.getId())
-                    .setArticleName(map.get("articleName").toString())
+                    .setArticleName(map.getOrDefault("articleName", "").toString())
                     .setLang(map.getOrDefault("lang", "").toString())
                     .setPath(map.getOrDefault("path", "").toString())
                     .setTitle(title)
