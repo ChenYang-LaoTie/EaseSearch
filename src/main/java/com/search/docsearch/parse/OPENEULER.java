@@ -16,7 +16,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -231,7 +230,7 @@ public class OPENEULER {
         }
 
         //验证是否为删除
-        //为了清楚http请求缓存所在请求路径上加了随机数
+        //为了清除http请求缓存所在请求路径上加了随机数
         String p = FORUMDOMAIM + jsonMap.get("path") + "?ran=" + Math.random(); ;
         HttpURLConnection connection = null;
         try {
