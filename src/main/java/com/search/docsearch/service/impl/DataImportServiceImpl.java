@@ -56,6 +56,7 @@ public class DataImportServiceImpl implements DataImportService {
     private MySystem s;
 
     @Autowired
+    @Qualifier("initKafka")
     private KafkaConfig kafkaConfig;
 
 
@@ -177,18 +178,16 @@ public class DataImportServiceImpl implements DataImportService {
 
     @Override
     public void sendKafka(String data, String parameter) {
-        KafkaProducer<String, String> kafkaProducer = kafkaConfig.kafkaProducerClient();
         String topic = s.getSystem() + "_search_topic";
         ProducerRecord<String, String> mess = new ProducerRecord<String, String>(topic, parameter + " " + data);
-        kafkaProducer.send(mess);
-        kafkaProducer.close();
+        kafkaConfig.kafkaProducer.send(mess);
     }
 
 
     @Override
     @Async("threadPoolTaskExecutor")
     public void listenKafka() {
-        KafkaConsumer<String, String> kafkaConsumer = kafkaConfig.kafkaConsumerClient();
+        KafkaConsumer<String, String> kafkaConsumer = kafkaConfig.kafkaConsumer;
         String topic = s.getSystem() + "_search_topic";
         kafkaConsumer.subscribe(Collections.singleton(topic));
         while (true) {
