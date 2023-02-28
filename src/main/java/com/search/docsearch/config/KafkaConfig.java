@@ -19,6 +19,8 @@ public class KafkaConfig {
     private String bootstrap;
 
     @Value("${kafka.consumer.group}")
+    private String group;
+
 
     public KafkaProducer<String, String> kafkaProducerClient() {
         if (needKafka) {
@@ -40,7 +42,7 @@ public class KafkaConfig {
             Properties props = new Properties();
             props.put("bootstrap.servers", bootstrap);
 
-            props.put("group.id", "openeuler");
+            props.put("group.id", group);
             props.put("key.deserializer", StringDeserializer.class);
             props.put("value.deserializer", StringDeserializer.class);
 
