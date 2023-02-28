@@ -20,7 +20,6 @@ public class SystemConfig {
     @Value("${dep}")
     private String dep;
 
-    //d
     public static final String MAPPINGPATH = "/EaseSearch/target/classes/mapping/mapping.json";
 
     public static final String BASEPATH = "/usr/local/docs/target/";
