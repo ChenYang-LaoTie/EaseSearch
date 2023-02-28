@@ -194,6 +194,7 @@ public class DataImportServiceImpl implements DataImportService {
         while (true) {
             ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(1));
             for (ConsumerRecord<String, String> record : records) {
+                System.out.println(record.value());
                 try {
                     String className = "com.search.docsearch.parse." + s.getSystem().toUpperCase(Locale.ROOT);
                     Class<?> c = Class.forName(className);
@@ -308,7 +309,7 @@ public class DataImportServiceImpl implements DataImportService {
                 List<Map<String, Object>> d = (List<Map<String, Object>>) map;
                 for (Map<String, Object> lm : d) {
 //                    insert(lm, s.getIndex() + "_syn_" + lm.get("lang"));
-                    insert(lm, s.getIndex() + "_" + lm.get("lang"));
+                    insert(lm, s.getIndex());
                 }
             } else {
             }

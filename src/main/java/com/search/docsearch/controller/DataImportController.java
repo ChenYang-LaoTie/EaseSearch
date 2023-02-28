@@ -68,6 +68,7 @@ public class DataImportController implements ApplicationRunner {
 
     @PostMapping("/hook/{parameter}")
     public void webhook(@RequestBody String data, @PathVariable String parameter) {
+        System.out.println("--- " + data + parameter);
         dataImportService.sendKafka(data, parameter);
     }
 
