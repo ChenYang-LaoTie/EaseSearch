@@ -252,7 +252,7 @@ public class DataImportServiceImpl implements DataImportService {
             for (SearchHit hit : hits) {
                 System.out.println(hit.getId());
                 if (!idSet.contains(hit.getId())) {
-                    DeleteRequest deleteRequest = new DeleteRequest(s.getIndex() + "_*", hit.getId());
+                    DeleteRequest deleteRequest = new DeleteRequest(hit.getIndex(), hit.getId());
                     DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
                 }
             }
@@ -268,7 +268,7 @@ public class DataImportServiceImpl implements DataImportService {
                 for (SearchHit hit : hits) {
                     System.out.println(hit.getId());
                     if (!idSet.contains(hit.getId())) {
-                        DeleteRequest deleteRequest = new DeleteRequest(s.getIndex() + "_*", hit.getId());
+                        DeleteRequest deleteRequest = new DeleteRequest(hit.getIndex(), hit.getId());
                         DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
                     }
                 }
