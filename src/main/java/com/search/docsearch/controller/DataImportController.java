@@ -42,13 +42,13 @@ public class DataImportController implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws IOException {
         log.info("===============开始拉取仓库资源=================");
-//        ProcessBuilder pb = new ProcessBuilder(s.initDoc);
-//        Process p = pb.start();
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//        String line = null;
-//        while ((line = reader.readLine()) != null) {
-//            log.info(line);
-//        }
+        ProcessBuilder pb = new ProcessBuilder(s.initDoc);
+        Process p = pb.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            log.info(line);
+        }
         dataImportService.refreshDoc();
         if (needKafka) {
             dataImportService.listenKafka();
@@ -69,11 +69,6 @@ public class DataImportController implements ApplicationRunner {
     @PostMapping("/hook/{parameter}")
     public void webhook(@RequestBody String data, @PathVariable String parameter) {
         dataImportService.sendKafka(data, parameter);
-    }
-
-    @GetMapping("syn")
-    public void scheduledTask() {
-        dataImportService.refreshSynIndex();
     }
 
 }

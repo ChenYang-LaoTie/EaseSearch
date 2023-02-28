@@ -53,6 +53,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.HashSet;
 
 @SpringBootTest
 class DocSearchApplicationTests {
@@ -261,7 +262,7 @@ class DocSearchApplicationTests {
 //		OPENEULER openeuler = new OPENEULER();
 //		openeuler.customizeData();
 
-		dataImportService.refreshSynIndex();
+		dataImportService.deleteExpired(new HashSet<>());
 	}
 
 

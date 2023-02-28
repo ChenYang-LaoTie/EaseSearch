@@ -34,7 +34,7 @@ public class SystemConfig {
         mySystem.setSystem(system);
 
         if (dep.equals("test")) {
-            mySystem.setIndex(system + "_articles_test");
+            mySystem.setIndex(system + "_test");
         } else {
             mySystem.setIndex(system + "_articles");
         }
@@ -47,7 +47,6 @@ public class SystemConfig {
         mySystem.setUpdateDoc("/EaseSearch/target/classes/script/" + system + "/updateDoc.sh");
         mySystem.setUpdateLocal("/EaseSearch/target/classes/script/" + system + "/updateLocal.sh");
 
-        System.out.println("----" + mySystem.getInitDoc());
         return mySystem;
     }
 }
