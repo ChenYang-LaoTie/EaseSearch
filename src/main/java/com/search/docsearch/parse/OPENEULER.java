@@ -128,7 +128,7 @@ public class OPENEULER {
         }
         jsonMap.put("textContent", node.text());
 
-        String version = path.replaceFirst(type + "/", "");
+        String version = path.replaceFirst(jsonMap.get("lang") + "/" + type + "/", "");
         version = version.substring(0, version.indexOf("/"));
 
         jsonMap.put("version", version);
