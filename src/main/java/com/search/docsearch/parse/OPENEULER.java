@@ -68,7 +68,7 @@ public class OPENEULER {
             }
 
         }
-        if (type.equals(OTHER) || type.equals(SHOWCASE)) {
+        if (type.equals(OTHER) || type.equals(SHOWCASE) || type.equals(MIGRATION)) {
             path = path.substring(0, path.length() - 5);
         }
         Map<String, Object> jsonMap = new HashMap<>();
