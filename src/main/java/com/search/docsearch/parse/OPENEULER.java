@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.search.docsearch.constant.Constants;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class OPENEULER {
 
     public static final String BLOG = "blog";
@@ -271,6 +273,7 @@ public class OPENEULER {
                         break;
                     }
                 } else {
+                    log.error(req + " - ", connection.getResponseCode());
                     return null;
                 }
             } catch (IOException | InterruptedException e) {
@@ -323,7 +326,8 @@ public class OPENEULER {
                     jsonMap.put("path", "/t/" + slug + "/" + id);
 
                     r.add(jsonMap);
-
+                } else {
+                    log.error(path + " - ", connection.getResponseCode());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
