@@ -251,19 +251,4 @@ class DocSearchApplicationTests {
 
 	}
 
-
-	@Test
-	void testNy() throws IOException {
-
-//		DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest(s.getIndex() + "_*");
-//		deleteByQueryRequest.setQuery(QueryBuilders.matchAllQuery());
-//		BulkByScrollResponse bulkByScrollResponse = restHighLevelClient.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
-//		System.out.println(bulkByScrollResponse.getDeleted());
-//		OPENEULER openeuler = new OPENEULER();
-//		openeuler.customizeData();
-
-		dataImportService.deleteExpired(new HashSet<>());
-	}
-
-
 }

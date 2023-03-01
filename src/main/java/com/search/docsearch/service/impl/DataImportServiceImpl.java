@@ -237,7 +237,6 @@ public class DataImportServiceImpl implements DataImportService {
             searchSourceBuilder.size(scrollSize);
             Scroll scroll = new Scroll(TimeValue.timeValueMinutes(10));//设置一次读取的最大连接时长
             SearchRequest searchRequest = new SearchRequest(s.getIndex() + "_*");
-//        searchRequest1.types("_doc");
             searchRequest.source(searchSourceBuilder);
             searchRequest.scroll(scroll);
 

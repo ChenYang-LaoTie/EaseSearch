@@ -60,7 +60,6 @@ public class DataImportController implements ApplicationRunner {
      * 定时任务
      */
     @GetMapping("updoc")
-//    @Scheduled(cron = "${scheduled.cron}")
     public String asyncrefreshDoc() throws IOException {
         dataImportService.asyncrefreshDoc();
         return "Now try to start updating the document, it will take about three minutes";
