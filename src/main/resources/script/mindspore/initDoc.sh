@@ -37,6 +37,7 @@ rm -rf pic
 rm -rf security
 rm -rf statement
 rm -rf statics
+rm -rf tutorials
 rm -rf video
 
 
