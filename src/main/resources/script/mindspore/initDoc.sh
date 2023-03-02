@@ -17,9 +17,19 @@ cd /usr/local/docs/source/mindspore.github.io
 
 cp -r /usr/local/docs/source/mindspore.github.io/webapp/public/* /usr/local/docs/target/
 
+# shellcheck disable=SC2164
 cd /usr/local/docs/target/
+
 rm -rf admin
 rm -rf allow_sersor
+rm -rf cla
+rm -rf commonJs
+rm -rf images
+rm -rf lib
+rm -rf more
+rm -rf pdfjs
+rm -rf pic
+rm -rf video
 
 
 

@@ -201,6 +201,7 @@ public class OPENEULER {
 
 
     public Map<String, Object> parseHook(String data) {
+        System.out.println(data);
         int index = data.indexOf(" ");
         String parameter = data.substring(0, index);
         String value = data.substring(index);
@@ -238,6 +239,8 @@ public class OPENEULER {
         HttpURLConnection connection = null;
         try {
             connection = sendHTTP(p, "GET");
+            System.out.println(p);
+            System.out.println(connection.getResponseCode());
             if (connection.getResponseCode() != 200) {
                 jsonMap.put("delete", "true");
             }
