@@ -20,15 +20,23 @@ cp -r /usr/local/docs/source/mindspore.github.io/webapp/public/* /usr/local/docs
 # shellcheck disable=SC2164
 cd /usr/local/docs/target/
 
+# shellcheck disable=SC2035
+rm -f *
 rm -rf admin
 rm -rf allow_sersor
+rm -rf api
+rm -rf apicc
 rm -rf cla
 rm -rf commonJs
+rm -rf doc
 rm -rf images
 rm -rf lib
 rm -rf more
 rm -rf pdfjs
 rm -rf pic
+rm -rf security
+rm -rf statement
+rm -rf statics
 rm -rf video
 
 
