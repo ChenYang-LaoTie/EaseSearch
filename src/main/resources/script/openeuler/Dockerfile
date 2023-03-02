@@ -15,6 +15,7 @@ RUN chmod 777 -R ./* \
     && ./mvnw clean install package -Dmaven.test.skip \
     && cd ./target/classes \
     && chmod 777 -R script \
+    && mkdir -p /usr/local/docs/source/ \
     && cd /usr/local/docs/source \
     && git clone https://gitee.com/openeuler/openEuler-portal.git \
     && cd openEuler-portal \
