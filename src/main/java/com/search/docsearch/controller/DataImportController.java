@@ -49,7 +49,7 @@ public class DataImportController implements ApplicationRunner {
 //        while ((line = reader.readLine()) != null) {
 //            log.info(line);
 //        }
-//        dataImportService.refreshDoc();
+        dataImportService.refreshDoc();
 //        if (needKafka) {
 //            dataImportService.listenKafka();
 //        }
