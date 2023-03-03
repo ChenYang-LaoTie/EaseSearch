@@ -13,10 +13,14 @@ import java.util.Map;
 
 public class MINDSPORE {
 
+
     public static final String LANG_EN = "/en/";
     public static final String LANG_ZH = "/zh-CN/";
 
     public Map<String, Object> parse(File file) throws Exception {
+
+        System.out.println("dddd");
+
         String originalPath = file.getPath();
         String fileName = file.getName();
         String path = originalPath
