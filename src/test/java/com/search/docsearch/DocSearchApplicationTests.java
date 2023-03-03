@@ -251,4 +251,16 @@ class DocSearchApplicationTests {
 
 	}
 
+
+	@Test
+	public void myTest() {
+		String path = "mindquantum/docs/en/master/mindquantum.core.html";
+
+		if (path.contains("/en/")) {
+			String v = path.substring(path.indexOf("/en/") + 4);
+			String d = v.substring(0, v.indexOf("/"));
+			System.out.println(d);
+		}
+	}
+
 }

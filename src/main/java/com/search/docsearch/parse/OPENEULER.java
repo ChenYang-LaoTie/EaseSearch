@@ -41,9 +41,9 @@ public class OPENEULER {
 
     public static final String FORUMDOMAIM = "https://forum.openeuler.org";
 
-    public Map<String, Object> parse(File mdFile) throws Exception {
-        String originalPath = mdFile.getPath();
-        String fileName = mdFile.getName();
+    public Map<String, Object> parse(File file) throws Exception {
+        String originalPath = file.getPath();
+        String fileName = file.getName();
         String path = originalPath
                 .replace("\\", "/")
                 .replace(Constants.BASEPATH, "")
@@ -77,7 +77,7 @@ public class OPENEULER {
         jsonMap.put("articleName", fileName);
         jsonMap.put("path", path);
 
-        String fileContent = FileUtils.readFileToString(mdFile, StandardCharsets.UTF_8);
+        String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
         if (fileName.endsWith(".html")) {
             parseHtml(jsonMap, fileContent);

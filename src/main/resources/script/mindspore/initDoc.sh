@@ -21,9 +21,9 @@ cp -r /usr/local/docs/source/mindspore.github.io/webapp/public/* /usr/local/docs
 cd /usr/local/docs/target/
 
 # shellcheck disable=SC2035
-rm -f *
+
 rm -rf admin
-rm -rf allow_sersor
+rm -rf allow_sensor
 rm -rf api
 rm -rf apicc
 rm -rf cla
@@ -37,12 +37,19 @@ rm -rf pic
 rm -rf security
 rm -rf statement
 rm -rf statics
-rm -rf tutorials
+rm -rf tutorial
 rm -rf video
 
+rm -f *
 
-
-
+# shellcheck disable=SC2038
+find ./ -name _images |xargs rm -rf
+# shellcheck disable=SC2038
+find ./ -name _modules |xargs rm -rf
+# shellcheck disable=SC2038
+find ./ -name _sources |xargs rm -rf
+# shellcheck disable=SC2038
+find ./ -name _static |xargs rm -rf
 
 
 
