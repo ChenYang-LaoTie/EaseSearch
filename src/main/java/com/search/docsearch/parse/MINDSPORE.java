@@ -19,8 +19,6 @@ public class MINDSPORE {
 
     public Map<String, Object> parse(File file) throws Exception {
 
-        System.out.println("dddd");
-
         String originalPath = file.getPath();
         String fileName = file.getName();
         String path = originalPath
