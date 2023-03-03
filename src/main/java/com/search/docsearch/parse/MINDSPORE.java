@@ -26,7 +26,9 @@ public class MINDSPORE {
                 .replace(Constants.BASEPATH, "")
                 .replace("\\\\", "/");
 
-        if (path.endsWith("search.html")) {
+        if (path.endsWith("search.html")
+                || path.endsWith("genindex.html")
+                || path.endsWith("py-modindex.html")) {
             return null;
         }
 
@@ -106,7 +108,7 @@ public class MINDSPORE {
         if (sections.size() > 0) {
             textContent = sections.text();
         } else {
-            System.out.println("-----++ " + jsonMap.get("path"));
+            System.out.println("https://www.mindspore.cn/" + jsonMap.get("path"));
         }
 
         jsonMap.put("title", title);
