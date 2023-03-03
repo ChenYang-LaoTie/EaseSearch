@@ -42,6 +42,9 @@ import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.SuggestionBuilder;
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -253,14 +256,17 @@ class DocSearchApplicationTests {
 
 
 	@Test
-	public void myTest() {
-		String path = "mindquantum/docs/en/master/mindquantum.core.html";
+	public void myTest() throws IOException {
+		File file = FileUtils.getFile("C:\\CYDev\\workspace\\mindspore.github.io\\webapp\\public\\docs\\en\\master\\migration_guide\\enveriment_preparation.html");
+		String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+//		System.out.println(fileContent);
+		Document node = Jsoup.parse(fileContent);
 
-		if (path.contains("/en/")) {
-			String v = path.substring(path.indexOf("/en/") + 4);
-			String d = v.substring(0, v.indexOf("/"));
-			System.out.println(d);
-		}
+		Elements sections = node.getElementsByClass("section");
+		System.out.println(sections.size());
+
+
+		System.out.println(sections.text());
 	}
 
 }

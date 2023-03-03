@@ -4,6 +4,7 @@ import com.search.docsearch.constant.Constants;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -23,7 +24,7 @@ public class MINDSPORE {
                 .replace(Constants.BASEPATH, "")
                 .replace("\\\\", "/");
 
-        System.out.println(path);
+//        System.out.println(path);
 
         if (path.endsWith("search.html")) {
             return null;
@@ -96,8 +97,19 @@ public class MINDSPORE {
     }
 
     public void parseHtml(Map<String, Object> jsonMap, String fileContent) {
+        String title = "";
+        String textContent = "";
         Document node = Jsoup.parse(fileContent);
 
+        Elements sections = node.getElementsByClass("section");
+        if (sections.size() > 0) {
+            textContent = sections.text();
+        } else {
+            System.out.println("-----++ " + jsonMap.get("path"));
+        }
+
+        jsonMap.put("title", title);
+        jsonMap.put("textContent", textContent);
     }
 
 
