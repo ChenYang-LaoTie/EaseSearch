@@ -26,13 +26,12 @@ public class MINDSPORE {
                 .replace(Constants.BASEPATH, "")
                 .replace("\\\\", "/");
 
-//        System.out.println(path);
-
         if (path.endsWith("search.html")) {
             return null;
         }
 
         Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("path", path);
 
         String c = path.substring(0, path.indexOf("/"));
         String components = switch (c) {
