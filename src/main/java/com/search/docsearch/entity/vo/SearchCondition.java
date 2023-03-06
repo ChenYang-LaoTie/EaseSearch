@@ -21,4 +21,5 @@ public class SearchCondition implements Serializable {
     private int pageSize = 10;
     private String keyword;
     private String type;
+    private String docsVersion;
 }

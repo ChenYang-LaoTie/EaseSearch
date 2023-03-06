@@ -175,6 +175,10 @@ public class SearchServiceImpl implements SearchService {
         titleMP.boost(2);
         MatchQueryBuilder textContentMP = QueryBuilders.matchQuery("textContent", condition.getKeyword()).analyzer("ik_smart");
         textContentMP.boost(1);
+
+        if (StringUtils.hasText(condition.getDocsVersion())) {
+
+        }
         boolQueryBuilder.should(titleMP).should(textContentMP);
 
         boolQueryBuilder.minimumShouldMatch(1);
