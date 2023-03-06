@@ -97,7 +97,8 @@ public class MINDSPORE {
 
 
 
-        return jsonMap;
+//        return jsonMap;
+        return null;
     }
 
     public void parseHtml(Map<String, Object> jsonMap, String fileContent) {
