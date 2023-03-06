@@ -339,7 +339,7 @@ public class SearchServiceImpl implements SearchService {
         SearchRequest request = new SearchRequest(saveIndex);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.filter(QueryBuilders.termQuery("category.keyword", searchTags.getCategory()));
+        boolQueryBuilder.filter(QueryBuilders.termQuery("type.keyword", searchTags.getCategory()));
 
 
         if (searchTags.getCondition() != null) {
