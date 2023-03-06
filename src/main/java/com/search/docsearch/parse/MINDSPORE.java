@@ -29,7 +29,15 @@ public class MINDSPORE {
 
         if (path.endsWith("search.html")
                 || path.endsWith("genindex.html")
-                || path.endsWith("py-modindex.html")) {
+                || path.endsWith("py-modindex.html")
+                || path.endsWith("lite.md")
+                || path.endsWith("lite_en.md")
+                || path.endsWith("globals_defs.html")) {
+            return null;
+        }
+
+        if (fileName.contains("functions_")
+                || fileName.contains("all_")) {
             return null;
         }
 
@@ -93,10 +101,6 @@ public class MINDSPORE {
         }
 
 
-
-
-
-
 //        return jsonMap;
         return null;
     }
@@ -123,9 +127,6 @@ public class MINDSPORE {
     public void parseInstall(Map<String, Object> jsonMap, String fileContent) {
 
     }
-
-
-
 
 
 }
