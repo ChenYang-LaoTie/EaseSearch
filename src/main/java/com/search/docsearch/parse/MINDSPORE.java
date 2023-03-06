@@ -4,6 +4,7 @@ import com.search.docsearch.constant.Constants;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
@@ -107,6 +108,8 @@ public class MINDSPORE {
         Elements sections = node.getElementsByClass("section");
         if (sections.size() > 0) {
             textContent = sections.text();
+            Element one = sections.get(0);
+
         } else {
             System.out.println("https://www.mindspore.cn/" + jsonMap.get("path"));
         }

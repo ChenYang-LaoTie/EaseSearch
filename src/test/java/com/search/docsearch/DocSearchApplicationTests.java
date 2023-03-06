@@ -44,6 +44,7 @@ import org.elasticsearch.search.suggest.SuggestionBuilder;
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -263,10 +264,9 @@ class DocSearchApplicationTests {
 		Document node = Jsoup.parse(fileContent);
 
 		Elements sections = node.getElementsByClass("section");
-		System.out.println(sections.size());
-
-
-		System.out.println(sections.text());
+//		System.out.println(sections.size());
+		Element one = sections.get(0);
+		System.out.println(one);
 	}
 
 }

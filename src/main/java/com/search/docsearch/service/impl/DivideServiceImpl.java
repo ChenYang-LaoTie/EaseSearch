@@ -115,7 +115,7 @@ public class DivideServiceImpl implements DivideService {
             try {
                 Object la = map.get("lang");
                 Object up = map.get("path");
-                String url_path = "/" + la + "/" + up + ".html";
+                String url_path = "/" + up + ".html";
                 CountRequest countRequest = new CountRequest(s.trackerIndex);
                 BoolQueryBuilder trackerBoolQueryBuilder = QueryBuilders.boolQuery();
                 trackerBoolQueryBuilder.must(QueryBuilders.termQuery("event", "pageview")).must(QueryBuilders.termQuery("properties.$url_path.keyword", url_path));
