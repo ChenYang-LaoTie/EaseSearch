@@ -2,6 +2,9 @@ package com.search.docsearch.parse;
 
 import com.search.docsearch.constant.Constants;
 import org.apache.commons.io.FileUtils;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MINDSPORE {
-
 
     public static final String LANG_EN = "/en/";
     public static final String LANG_ZH = "/zh-CN/";
@@ -29,6 +31,7 @@ public class MINDSPORE {
 
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("path", path);
+        jsonMap.put("articleName", fileName);
 
         String c = path.substring(0, path.indexOf("/"));
         String components = switch (c) {
@@ -104,15 +107,19 @@ public class MINDSPORE {
 
         Elements sections = node.getElementsByClass("section");
         if (sections.size() > 0) {
-            textContent = sections.text();
+
             Element one = sections.get(0);
 
             Elements enTitle = one.getElementsByAttributeValue("title","Permalink to this headline");
             Elements zhTitle = one.getElementsByAttributeValue("title","永久链接至标题");
             if (enTitle.size() > 0) {
-                title = enTitle.get(0).parent().text();
+                Element t = enTitle.get(0).parent();
+                title = t.text();
+                t.remove();
             } else if (zhTitle.size() > 0) {
-                title = zhTitle.get(0).parent().text();
+                Element t = enTitle.get(0).parent();
+                title = t.text();
+                t.remove();
             } else {
                 System.out.println("https://www.mindspore.cn/" + jsonMap.get("path"));
                 return false;
@@ -120,6 +127,8 @@ public class MINDSPORE {
         } else {
             return false;
         }
+
+        textContent = sections.text();
         jsonMap.put("title", title);
         jsonMap.put("textContent", textContent);
         return true;
@@ -127,6 +136,18 @@ public class MINDSPORE {
 
 
     public Boolean parseInstall(Map<String, Object> jsonMap, String fileContent) {
+        Parser parser = Parser.builder().build();
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        Node document = parser.parse(fileContent);
+
+        Document node = Jsoup.parse(renderer.render(document));
+        Element t =  node.body().child(0);
+        String title =t.text();
+        t.remove();
+        String textContent = node.text();
+
+        jsonMap.put("title", title);
+        jsonMap.put("textContent", textContent);
         return false;
     }
 

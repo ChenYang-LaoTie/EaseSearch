@@ -1,6 +1,7 @@
 package com.search.docsearch;
 
 import com.search.docsearch.config.MySystem;
+import com.search.docsearch.parse.MINDSPORE;
 import com.search.docsearch.service.DataImportService;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpHost;
@@ -258,15 +259,11 @@ class DocSearchApplicationTests {
 
 	@Test
 	public void myTest() throws IOException {
-		File file = FileUtils.getFile("C:\\CYDev\\workspace\\mindspore.github.io\\webapp\\public\\docs\\en\\master\\migration_guide\\enveriment_preparation.html");
+		File file = FileUtils.getFile("C:\\CYDev\\workspace\\mindspore.github.io\\webapp\\public\\install\\mindspore_cpu_install_docker_en.md");
 		String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 //		System.out.println(fileContent);
-		Document node = Jsoup.parse(fileContent);
-
-		Elements sections = node.getElementsByClass("section");
-//		System.out.println(sections.size());
-		Element one = sections.get(0);
-		System.out.println(one);
+		MINDSPORE mindspore = new MINDSPORE();
+		mindspore.parseInstall(null, fileContent);
 	}
 
 }
