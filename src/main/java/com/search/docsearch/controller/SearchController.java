@@ -81,7 +81,7 @@ public class SearchController {
     @PostMapping("count")
     public SysResult getCount(@RequestBody SearchCondition condition) {
         try {
-            Map<String, Object> result = searchService.getCount(condition.getKeyword(), condition.getLang());
+            Map<String, Object> result = searchService.getCount(condition);
             if (result == null) {
                 return SysResult.fail("内容不存在", null);
             }

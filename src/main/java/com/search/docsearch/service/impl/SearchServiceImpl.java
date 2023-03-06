@@ -175,13 +175,18 @@ public class SearchServiceImpl implements SearchService {
         titleMP.boost(2);
         MatchQueryBuilder textContentMP = QueryBuilders.matchQuery("textContent", condition.getKeyword()).analyzer("ik_smart");
         textContentMP.boost(1);
-
-        if (StringUtils.hasText(condition.getDocsVersion())) {
-
-        }
         boolQueryBuilder.should(titleMP).should(textContentMP);
 
         boolQueryBuilder.minimumShouldMatch(1);
+
+        if (StringUtils.hasText(condition.getDocsVersion())) {
+            String[] versions = condition.getDocsVersion().split(",");
+            BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
+            vBuilder.must(QueryBuilders.termQuery("type.keyword", "docs"));
+            vBuilder.mustNot(QueryBuilders.termsQuery("version.keyword", versions));
+
+            boolQueryBuilder.mustNot(vBuilder);
+        }
 
         sourceBuilder.query(boolQueryBuilder);
 
@@ -199,20 +204,31 @@ public class SearchServiceImpl implements SearchService {
     }
 
 
-    public Map<String, Object> getCount(String keyword, String lang) throws IOException {
-        String saveIndex = s.index + "_" + lang;
+    public Map<String, Object> getCount(SearchCondition condition) throws IOException {
+        String saveIndex = s.index + "_" + condition.getLang();
         SearchRequest request = new SearchRequest(saveIndex);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        MatchPhraseQueryBuilder ptitleMP = QueryBuilders.matchPhraseQuery("title", keyword).analyzer("ik_max_word").slop(2);
-        MatchPhraseQueryBuilder ptextContentMP = QueryBuilders.matchPhraseQuery("textContent", keyword).analyzer("ik_max_word").slop(2);
+        MatchPhraseQueryBuilder ptitleMP = QueryBuilders.matchPhraseQuery("title", condition.getKeyword()).analyzer("ik_max_word").slop(2);
+        MatchPhraseQueryBuilder ptextContentMP = QueryBuilders.matchPhraseQuery("textContent", condition.getKeyword()).analyzer("ik_max_word").slop(2);
 
         boolQueryBuilder.should(ptitleMP).should(ptextContentMP);
 
-        MatchQueryBuilder titleMP = QueryBuilders.matchQuery("title", keyword).analyzer("ik_smart");
-        MatchQueryBuilder textContentMP = QueryBuilders.matchQuery("textContent", keyword).analyzer("ik_smart");
+        MatchQueryBuilder titleMP = QueryBuilders.matchQuery("title", condition.getKeyword()).analyzer("ik_smart");
+        MatchQueryBuilder textContentMP = QueryBuilders.matchQuery("textContent", condition.getKeyword()).analyzer("ik_smart");
         boolQueryBuilder.should(titleMP).should(textContentMP);
+
+        boolQueryBuilder.minimumShouldMatch(1);
+
+        if (StringUtils.hasText(condition.getDocsVersion())) {
+            String[] versions = condition.getDocsVersion().split(",");
+            BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
+            vBuilder.must(QueryBuilders.termQuery("type.keyword", "docs"));
+            vBuilder.mustNot(QueryBuilders.termsQuery("version.keyword", versions));
+
+            boolQueryBuilder.mustNot(vBuilder);
+        }
 
         sourceBuilder.query(boolQueryBuilder);
 
