@@ -27,20 +27,6 @@ public class MINDSPORE {
                 .replace(Constants.BASEPATH, "")
                 .replace("\\\\", "/");
 
-        if (path.endsWith("search.html")
-                || path.endsWith("genindex.html")
-                || path.endsWith("py-modindex.html")
-                || path.endsWith("lite.md")
-                || path.endsWith("lite_en.md")
-                || path.endsWith("globals_defs.html")) {
-            return null;
-        }
-
-        if (fileName.contains("functions_")
-                || fileName.contains("all_")) {
-            return null;
-        }
-
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("path", path);
 
@@ -88,24 +74,30 @@ public class MINDSPORE {
 
         if (path.contains("/api/")) {
             jsonMap.put("type", "api");
-            parseHtml(jsonMap, fileContent);
+            if (!parseHtml(jsonMap, fileContent)) {
+                return null;
+            }
         } else if (path.startsWith("tutorials/")) {
             jsonMap.put("type", "tutorials");
-            parseHtml(jsonMap, fileContent);
+            if (!parseHtml(jsonMap, fileContent)) {
+                return null;
+            }
         } else if (path.startsWith("install/")) {
             jsonMap.put("type", "install");
-            parseInstall(jsonMap, fileContent);
+            if (!parseInstall(jsonMap, fileContent)) {
+                return null;
+            }
         } else {
             jsonMap.put("type", "docs");
-            parseHtml(jsonMap, fileContent);
+            if (!parseHtml(jsonMap, fileContent)) {
+                return null;
+            }
         }
-
-
-//        return jsonMap;
-        return null;
+        return jsonMap;
+//        return null;
     }
 
-    public void parseHtml(Map<String, Object> jsonMap, String fileContent) {
+    public Boolean parseHtml(Map<String, Object> jsonMap, String fileContent) {
         String title = "";
         String textContent = "";
         Document node = Jsoup.parse(fileContent);
@@ -115,18 +107,27 @@ public class MINDSPORE {
             textContent = sections.text();
             Element one = sections.get(0);
 
+            Elements enTitle = one.getElementsByAttributeValue("title","Permalink to this headline");
+            Elements zhTitle = one.getElementsByAttributeValue("title","永久链接至标题");
+            if (enTitle.size() > 0) {
+                title = enTitle.get(0).parent().text();
+            } else if (zhTitle.size() > 0) {
+                title = zhTitle.get(0).parent().text();
+            } else {
+                System.out.println("https://www.mindspore.cn/" + jsonMap.get("path"));
+                return false;
+            }
         } else {
-            System.out.println("https://www.mindspore.cn/" + jsonMap.get("path"));
+            return false;
         }
-
         jsonMap.put("title", title);
         jsonMap.put("textContent", textContent);
+        return true;
     }
 
 
-    public void parseInstall(Map<String, Object> jsonMap, String fileContent) {
-
+    public Boolean parseInstall(Map<String, Object> jsonMap, String fileContent) {
+        return false;
     }
-
 
 }
