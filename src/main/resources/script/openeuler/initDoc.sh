@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ -d "/usr/local/docs" ]; then
+if [ -d "/usr/local/docs/target" ]; then
 #  rm -rf /usr/local/docs/source/*
   rm -rf /usr/local/docs/target/*
 fi
