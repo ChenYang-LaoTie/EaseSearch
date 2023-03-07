@@ -6,7 +6,7 @@ fi
 
 #npm i pnpm -g
 
-mkdir -p /usr/local/docs/source/
+#mkdir -p /usr/local/docs/source/
 mkdir -p /usr/local/docs/target/zh/
 mkdir -p /usr/local/docs/target/en/
 mkdir -p /usr/local/docs/target/ru/
