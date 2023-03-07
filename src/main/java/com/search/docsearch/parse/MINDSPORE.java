@@ -70,6 +70,7 @@ public class MINDSPORE {
             String version = v.substring(0, v.indexOf("/"));
             jsonMap.put("version", version);
         } else {
+            System.out.println(path);
             jsonMap.put("lang", "zh");
         }
 
@@ -97,7 +98,6 @@ public class MINDSPORE {
             }
         }
         return jsonMap;
-//        return null;
     }
 
     public Boolean parseHtml(Map<String, Object> jsonMap, String fileContent) {
