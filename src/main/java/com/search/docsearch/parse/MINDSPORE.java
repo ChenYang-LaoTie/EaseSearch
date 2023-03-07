@@ -70,8 +70,10 @@ public class MINDSPORE {
             String version = v.substring(0, v.indexOf("/"));
             jsonMap.put("version", version);
         } else {
-            System.out.println(path);
-            jsonMap.put("lang", "zh");
+            if (!path.startsWith("install/")) {
+                System.out.println("------------- " + path);
+                jsonMap.put("lang", "zh");
+            }
         }
 
         String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
@@ -117,7 +119,7 @@ public class MINDSPORE {
                 title = t.text();
                 t.remove();
             } else if (zhTitle.size() > 0) {
-                Element t = enTitle.get(0).parent();
+                Element t = zhTitle.get(0).parent();
                 title = t.text();
                 t.remove();
             } else {
@@ -136,6 +138,12 @@ public class MINDSPORE {
 
 
     public Boolean parseInstall(Map<String, Object> jsonMap, String fileContent) {
+        String fileName = (String) jsonMap.get("articleName");
+        if (fileName.endsWith("_en.md")) {
+            jsonMap.put("lang", "en");
+        } else {
+            jsonMap.put("lang", "zh");
+        }
         Parser parser = Parser.builder().build();
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         Node document = parser.parse(fileContent);
@@ -148,7 +156,7 @@ public class MINDSPORE {
 
         jsonMap.put("title", title);
         jsonMap.put("textContent", textContent);
-        return false;
+        return true;
     }
 
 }
