@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MINDSPORE {
@@ -157,6 +158,13 @@ public class MINDSPORE {
         jsonMap.put("title", title);
         jsonMap.put("textContent", textContent);
         return true;
+    }
+
+
+    public List<Map<String, Object>> customizeData() {
+        String url = System.getenv("murl");
+
+        return null;
     }
 
 }

@@ -1,7 +1,6 @@
 package com.search.docsearch.service.impl;
 
 import com.search.docsearch.config.MySystem;
-import com.search.docsearch.entity.Article;
 import com.search.docsearch.entity.vo.SearchCondition;
 import com.search.docsearch.entity.vo.SearchTags;
 import com.search.docsearch.service.SearchService;
@@ -117,31 +116,29 @@ public class SearchServiceImpl implements SearchService {
         SearchRequest request = BuildSearchRequest(condition, saveIndex);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
 
-        List<Article> data = new ArrayList<>();
+        List<Map<String, Object>> data = new ArrayList<>();
 
         for (SearchHit hit : response.getHits().getHits()) {
             Map<String, Object> map = hit.getSourceAsMap();
-            StringBuilder highLight = new StringBuilder(map.get("textContent").toString());
-            String title = map.getOrDefault("title", "").toString();
+            String text = (String)map.getOrDefault("textContent", "");
+            if (text.length() > 200) {
+                text = text.substring(0, 200) + "......";
+            }
+            map.put("textContent", text);
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
             if (highlightFields.containsKey("textContent")) {
-                highLight = new StringBuilder();
+                StringBuilder highLight = new StringBuilder();
                 for (Text textContent : highlightFields.get("textContent").getFragments()) {
                     highLight.append(textContent.toString()).append("<br>");
                 }
+                map.put("textContent", highLight.toString());
             }
+
             if (highlightFields.containsKey("title")) {
-                title = highlightFields.get("title").getFragments()[0].toString();
+                map.put("title", highlightFields.get("title").getFragments()[0].toString());
             }
-            Article article = new Article().setId(hit.getId())
-                    .setArticleName(map.getOrDefault("articleName", "").toString())
-                    .setLang(map.getOrDefault("lang", "").toString())
-                    .setPath(map.getOrDefault("path", "").toString())
-                    .setTitle(title)
-                    .setVersion(map.getOrDefault("version", "").toString())
-                    .setType(map.getOrDefault("type", "").toString())
-                    .setTextContent(highLight.toString());
-            data.add(article);
+
+            data.add(map);
         }
         if (data.isEmpty()) {
             return null;

@@ -259,11 +259,13 @@ class DocSearchApplicationTests {
 
 	@Test
 	public void myTest() throws IOException {
-		File file = FileUtils.getFile("C:\\CYDev\\workspace\\mindspore.github.io\\webapp\\public\\install\\mindspore_cpu_install_docker_en.md");
-		String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-//		System.out.println(fileContent);
-		MINDSPORE mindspore = new MINDSPORE();
-		mindspore.parseInstall(null, fileContent);
+//		File file = FileUtils.getFile("C:\\CYDev\\workspace\\mindspore.github.io\\webapp\\public\\install\\mindspore_cpu_install_docker_en.md");
+//		String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+////		System.out.println(fileContent);
+//		MINDSPORE mindspore = new MINDSPORE();
+//		mindspore.parseInstall(null, fileContent);
+
+		System.out.println("asdcssss33".substring(5));
 	}
 
 }
