@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ -d "/usr/local/docs" ]; then
-  rm -rf /usr/local/docs/source/*
-#  rm -rf /usr/local/docs/target/*
+#  rm -rf /usr/local/docs/source/*
+  rm -rf /usr/local/docs/target/*
 fi
 
 #mkdir -p /usr/local/docs/source/
