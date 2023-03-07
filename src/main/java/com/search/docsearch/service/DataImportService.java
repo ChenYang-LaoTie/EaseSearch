@@ -5,9 +5,7 @@ import java.util.Set;
 
 public interface DataImportService {
 
-    void refreshDoc();
-
-    void asyncrefreshDoc() throws IOException;
+    void refreshDoc() throws IOException;
 
     void sendKafka(String data, String parameter);
 

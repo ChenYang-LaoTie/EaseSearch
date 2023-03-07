@@ -58,7 +58,18 @@ public class DataImportServiceImpl implements DataImportService {
 
 
     @Override
-    public void refreshDoc() {
+    @Async("threadPoolTaskExecutor")
+    public void refreshDoc() throws IOException {
+        log.info("===============开始运行bash脚本=================");
+        ProcessBuilder pb = new ProcessBuilder(s.initDoc);
+        Process p = pb.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            log.info(line);
+        }
+        log.info("===============bash脚本运行完成=================");
+
         File indexFile = new File(s.basePath);
         if (!indexFile.exists()) {
             log.error(String.format("%s 文件夹不存在", indexFile.getPath()));
@@ -156,42 +167,6 @@ public class DataImportServiceImpl implements DataImportService {
         restHighLevelClient.indices().create(request1, RequestOptions.DEFAULT);
     }
 
-    @Override
-    @Async("threadPoolTaskExecutor")
-    public void asyncrefreshDoc() throws IOException {
-        boolean success = false;
-        try {
-            log.info("===============开始更新仓库资源=================");
-            ProcessBuilder pb = new ProcessBuilder(s.updateDoc);
-            Process p = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                log.info(line);
-                if (line.contains("build complete in")) {
-                    success = true;
-                }
-            }
-            log.info("===============仓库资源更新成功=================");
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-
-        if (success) {
-            log.info("全局更新成功!");
-        } else {
-            log.info("全局更新失败，开始局部更新");
-            ProcessBuilder pb = new ProcessBuilder(s.updateLocal);
-            Process p = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                log.info(line);
-            }
-        }
-
-        refreshDoc();
-    }
 
     @Override
     public void sendKafka(String data, String parameter) {

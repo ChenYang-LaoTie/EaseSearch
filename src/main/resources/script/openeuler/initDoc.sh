@@ -1,24 +1,13 @@
 #!/bin/bash
 if [ -d "/usr/local/docs/target" ]; then
-#  rm -rf /usr/local/docs/source/*
   rm -rf /usr/local/docs/target/*
 fi
 
-#npm i pnpm -g
-
-#mkdir -p /usr/local/docs/source/
 mkdir -p /usr/local/docs/target/zh/
 mkdir -p /usr/local/docs/target/en/
 mkdir -p /usr/local/docs/target/ru/
 
 # shellcheck disable=SC2164
-#cd /usr/local/docs/source
-#git clone https://gitee.com/openeuler/openEuler-portal.git
-# shellcheck disable=SC2164
-#cd ./openEuler-portal
-#pnpm install
-#pnpm build
-
 cd /usr/local/docs/source/openEuler-portal
 
 cp -r /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/zh /usr/local/docs/target/
