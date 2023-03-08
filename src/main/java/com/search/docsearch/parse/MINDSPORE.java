@@ -177,6 +177,10 @@ public class MINDSPORE {
             String username = System.getenv("musername");
             String password = System.getenv("mpassword");
 
+            url = "jdbc:mysql://192.168.1.203:3306/website?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+            username = "root";
+            password = "root";
+
             conn = DriverManager.getConnection(url,username,password);
 
             stmt = conn.createStatement();
@@ -233,8 +237,8 @@ public class MINDSPORE {
                 jsonMap.put("lang", lang);
                 jsonMap.put("category", category);
                 jsonMap.put("subclass", type);
-                jsonMap.put("type", "Information");
-
+                jsonMap.put("type", "information");
+                jsonMap.put("path", "news/newschildren?id=" + id);
                 r.add(jsonMap);
             }
 
