@@ -82,7 +82,7 @@ public class MINDSPORE {
 
         String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
-        if (path.contains("/api/")) {
+        if (path.contains("/api/") || path.contains("/api_python/")) {
             jsonMap.put("type", "api");
             if (!parseHtml(jsonMap, fileContent)) {
                 return null;
@@ -130,6 +130,7 @@ public class MINDSPORE {
                 System.out.println("https://www.mindspore.cn/" + jsonMap.get("path"));
                 return false;
             }
+            title = title.replaceAll("¶", "");
         } else {
             return false;
         }

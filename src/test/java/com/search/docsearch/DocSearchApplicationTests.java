@@ -62,213 +62,227 @@ import java.util.HashSet;
 
 @SpringBootTest
 class DocSearchApplicationTests {
-	@Autowired
-	@Qualifier("restHighLevelClient")
-	private RestHighLevelClient restHighLevelClient;
+    @Autowired
+    @Qualifier("restHighLevelClient")
+    private RestHighLevelClient restHighLevelClient;
 
-	@Autowired
-	@Qualifier("setConfig")
-	private MySystem s;
+    @Autowired
+    @Qualifier("setConfig")
+    private MySystem s;
 
-	@Autowired
-	public DataImportService dataImportService;
-
-
-
-	@Test
-	void contextLoads() throws IOException {
-
-		DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest("");
-		BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-		boolQueryBuilder.must(new TermQueryBuilder("lang", "zh"));
-		boolQueryBuilder.must(new TermQueryBuilder("type", "news"));
-		deleteByQueryRequest.setQuery(boolQueryBuilder);
-		BulkByScrollResponse bulkByScrollResponse = restHighLevelClient.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
-		System.out.println(bulkByScrollResponse);
-	}
+    @Autowired
+    public DataImportService dataImportService;
 
 
+    @Test
+    void contextLoads() throws IOException {
 
-	@Test
-	void ines() throws IOException {
-		CreateIndexRequest request1 = new CreateIndexRequest("ddat");
-		File mappingJson = FileUtils.getFile("");
-		String mapping = FileUtils.readFileToString(mappingJson, StandardCharsets.UTF_8);
-
-		request1.mapping(mapping, XContentType.JSON);
-		request1.setTimeout(TimeValue.timeValueMillis(1));
-
-		CreateIndexResponse d = restHighLevelClient.indices().create(request1, RequestOptions.DEFAULT);
-		System.out.println(d.index());
-	}
-
-	@Test
-	void testSuggestions() throws IOException {
-		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		SuggestionBuilder<TermSuggestionBuilder> termSuggestionBuilder =
-				SuggestBuilders.termSuggestion("textContent").text("").minWordLength(2).prefixLength(0).analyzer("ik_smart");
-
-		SuggestBuilder suggestBuilder = new SuggestBuilder();
-		suggestBuilder.addSuggestion("my_sugg", termSuggestionBuilder);
-
-		SearchRequest request = new SearchRequest("opengauss_articles_test_zh");
-
-		request.source(searchSourceBuilder.suggest(suggestBuilder));
-
-		SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-
-		System.out.println(response);
-		StringBuilder newKeyword = new StringBuilder();
-		for (Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option> my_sugg : response.getSuggest().getSuggestion("my_sugg")) {
-			String text = my_sugg.getOptions().get(0).getText().string();
-		}
-	}
+        DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest("");
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        boolQueryBuilder.must(new TermQueryBuilder("lang", "zh"));
+        boolQueryBuilder.must(new TermQueryBuilder("type", "news"));
+        deleteByQueryRequest.setQuery(boolQueryBuilder);
+        BulkByScrollResponse bulkByScrollResponse = restHighLevelClient.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
+        System.out.println(bulkByScrollResponse);
+    }
 
 
-	@Test
-	void testMigrate() throws IOException {
-		System.out.println("begin --------");
-		long st = System.currentTimeMillis();
-		//源es
-		RestHighLevelClient input = getEsClientSecurity("host", 9200, "username", "password");
-		//目标迁移es
-		RestHighLevelClient output = getEsClientSecurity("host", 9200, "username", "password");
+    @Test
+    void ines() throws IOException {
+        CreateIndexRequest request1 = new CreateIndexRequest("ddat");
+        File mappingJson = FileUtils.getFile("");
+        String mapping = FileUtils.readFileToString(mappingJson, StandardCharsets.UTF_8);
+
+        request1.mapping(mapping, XContentType.JSON);
+        request1.setTimeout(TimeValue.timeValueMillis(1));
+
+        CreateIndexResponse d = restHighLevelClient.indices().create(request1, RequestOptions.DEFAULT);
+        System.out.println(d.index());
+    }
+
+    @Test
+    void testSuggestions() throws IOException {
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        SuggestionBuilder<TermSuggestionBuilder> termSuggestionBuilder =
+                SuggestBuilders.termSuggestion("textContent").text("").minWordLength(2).prefixLength(0).analyzer("ik_smart");
+
+        SuggestBuilder suggestBuilder = new SuggestBuilder();
+        suggestBuilder.addSuggestion("my_sugg", termSuggestionBuilder);
+
+        SearchRequest request = new SearchRequest("opengauss_articles_test_zh");
+
+        request.source(searchSourceBuilder.suggest(suggestBuilder));
+
+        SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+
+        System.out.println(response);
+        StringBuilder newKeyword = new StringBuilder();
+        for (Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option> my_sugg : response.getSuggest().getSuggestion("my_sugg")) {
+            String text = my_sugg.getOptions().get(0).getText().string();
+        }
+    }
+
+
+    @Test
+    void testMigrate() throws IOException {
+        System.out.println("begin --------");
+        long st = System.currentTimeMillis();
+        //源es
+        RestHighLevelClient input = getEsClientSecurity("host", 9200, "username", "password");
+        //目标迁移es
+        RestHighLevelClient output = getEsClientSecurity("host", 9200, "username", "password");
 //		RestHighLevelClient output = getEsClient("127.0.0.1", 9200);
-		//你需要迁移的index
-		String index = "mindspore_articles";
+        //你需要迁移的index
+        String index = "mindspore_articles";
 
-		int scrollSize = 500;//一次读取的doc数量
-		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		searchSourceBuilder.query(QueryBuilders.matchAllQuery());//读取全量数据
-		searchSourceBuilder.size(scrollSize);
-		Scroll scroll = new Scroll(TimeValue.timeValueMinutes(10));//设置一次读取的最大连接时长
+        int scrollSize = 500;//一次读取的doc数量
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());//读取全量数据
+        searchSourceBuilder.size(scrollSize);
+        Scroll scroll = new Scroll(TimeValue.timeValueMinutes(10));//设置一次读取的最大连接时长
 
-		SearchRequest searchRequest = new SearchRequest(index);
+        SearchRequest searchRequest = new SearchRequest(index);
 //        searchRequest1.types("_doc");
-		searchRequest.source(searchSourceBuilder);
-		searchRequest.scroll(scroll);
+        searchRequest.source(searchSourceBuilder);
+        searchRequest.scroll(scroll);
 
-		SearchResponse searchResponse = input.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = input.search(searchRequest, RequestOptions.DEFAULT);
 
-		String scrollId = searchResponse.getScrollId();
-		System.out.println("scrollId - " + scrollId);
+        String scrollId = searchResponse.getScrollId();
+        System.out.println("scrollId - " + scrollId);
 
-		SearchHit[] hits = searchResponse.getHits().getHits();
-		System.out.println("hits - " + hits.length);
-		BulkRequest bulkRequest = new BulkRequest();
-		for (SearchHit hit : hits) {
-			IndexRequest indexRequest = new IndexRequest(index).source(hit.getSourceAsMap());
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        System.out.println("hits - " + hits.length);
+        BulkRequest bulkRequest = new BulkRequest();
+        for (SearchHit hit : hits) {
+            IndexRequest indexRequest = new IndexRequest(index).source(hit.getSourceAsMap());
 
-			bulkRequest.add(indexRequest);
-		}
-		if (bulkRequest.requests().size() > 0) {
-			BulkResponse q = output.bulk(bulkRequest, RequestOptions.DEFAULT);
+            bulkRequest.add(indexRequest);
+        }
+        if (bulkRequest.requests().size() > 0) {
+            BulkResponse q = output.bulk(bulkRequest, RequestOptions.DEFAULT);
 
-			System.out.println("wrong ? " + q.hasFailures());
-		}
+            System.out.println("wrong ? " + q.hasFailures());
+        }
 
-		while (hits.length > 0) {
-			SearchScrollRequest searchScrollRequestS = new SearchScrollRequest(scrollId);
-			searchScrollRequestS.scroll(scroll);
-			SearchResponse searchScrollResponseS = input.scroll(searchScrollRequestS,RequestOptions.DEFAULT);
-			scrollId = searchScrollResponseS.getScrollId();
-			System.out.println("scrollId - " + scrollId);
+        while (hits.length > 0) {
+            SearchScrollRequest searchScrollRequestS = new SearchScrollRequest(scrollId);
+            searchScrollRequestS.scroll(scroll);
+            SearchResponse searchScrollResponseS = input.scroll(searchScrollRequestS, RequestOptions.DEFAULT);
+            scrollId = searchScrollResponseS.getScrollId();
+            System.out.println("scrollId - " + scrollId);
 
-			hits = searchScrollResponseS.getHits().getHits();
-			System.out.println("hits - " + hits.length);
+            hits = searchScrollResponseS.getHits().getHits();
+            System.out.println("hits - " + hits.length);
 
-			BulkRequest bulkRequestS = new BulkRequest();
-			for (SearchHit hit : hits) {
-				IndexRequest indexRequest = new IndexRequest(index).source(hit.getSourceAsMap());
+            BulkRequest bulkRequestS = new BulkRequest();
+            for (SearchHit hit : hits) {
+                IndexRequest indexRequest = new IndexRequest(index).source(hit.getSourceAsMap());
 
-				bulkRequestS.add(indexRequest);
-			}
-			if (bulkRequestS.requests().size() > 0) {
-				BulkResponse q = output.bulk(bulkRequestS, RequestOptions.DEFAULT);
+                bulkRequestS.add(indexRequest);
+            }
+            if (bulkRequestS.requests().size() > 0) {
+                BulkResponse q = output.bulk(bulkRequestS, RequestOptions.DEFAULT);
 
-				System.out.println("wrong ? " + q.hasFailures());
-			}
+                System.out.println("wrong ? " + q.hasFailures());
+            }
 
-		}
+        }
 
-		ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
-		clearScrollRequest.addScrollId(scrollId);
-		try {
-			input.clearScroll(clearScrollRequest,RequestOptions.DEFAULT);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("读取用时:" + (System.currentTimeMillis() - st));
+        ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+        clearScrollRequest.addScrollId(scrollId);
+        try {
+            input.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("读取用时:" + (System.currentTimeMillis() - st));
 
-	}
-
-
-	public RestHighLevelClient getEsClient(String host, int port) {
-		return new RestHighLevelClient(RestClient.builder(new HttpHost(host, port, "http")).setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
-			// 该方法接收一个RequestConfig.Builder对象，对该对象进行修改后然后返回。
-			@Override
-			public RequestConfig.Builder customizeRequestConfig(RequestConfig.Builder requestConfigBuilder) {
-				return requestConfigBuilder.setConnectTimeout(5000 * 1000) // 连接超时（默认为1秒）
-						.setSocketTimeout(6000 * 1000);// 套接字超时（默认为30秒）//更改客户端的超时限制默认30秒现在改为100*1000分钟
-			}
-		}));
-	}
-
-	public RestHighLevelClient getEsClientSecurity(String host, int port, String username, String password) {
-		RestHighLevelClient restClient = null;
-		try {
-			final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-			credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
-			SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-				@Override
-				public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-					return true;
-				}
-			}).build();
-			SSLIOSessionStrategy sessionStrategy = new SSLIOSessionStrategy(sslContext, NoopHostnameVerifier.INSTANCE);
-			restClient = new RestHighLevelClient(
-					RestClient.builder(new HttpHost(host, port, "https")).setHttpClientConfigCallback(
-							new RestClientBuilder.HttpClientConfigCallback() {
-								@Override
-								public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpAsyncClientBuilder) {
-									httpAsyncClientBuilder.disableAuthCaching();
-									httpAsyncClientBuilder.setSSLStrategy(sessionStrategy);
-									httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-									return httpAsyncClientBuilder;
-								}
-							}
-					).setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
-						// 该方法接收一个RequestConfig.Builder对象，对该对象进行修改后然后返回。
-						@Override
-						public RequestConfig.Builder customizeRequestConfig(RequestConfig.Builder requestConfigBuilder) {
-							return requestConfigBuilder.setConnectTimeout(5000 * 1000) // 连接超时（默认为1秒）因为有些es游标读取非常慢，现改为5000秒
-									.setSocketTimeout(6000 * 1000);// 套接字超时（默认为30秒）因为有些es游标读取非常慢，更改客户端的超时限制默认30秒现在改为6000秒
-						}
-					}));
-			// 调整最大重试超时时间（默认为30秒）.setMaxRetryTimeoutMillis(60000);)这条可看情况添加
+    }
 
 
-		} catch (Exception e) {
-			System.out.println(e.toString());
-		}
-		return restClient;
+    public RestHighLevelClient getEsClient(String host, int port) {
+        return new RestHighLevelClient(RestClient.builder(new HttpHost(host, port, "http")).setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
+            // 该方法接收一个RequestConfig.Builder对象，对该对象进行修改后然后返回。
+            @Override
+            public RequestConfig.Builder customizeRequestConfig(RequestConfig.Builder requestConfigBuilder) {
+                return requestConfigBuilder.setConnectTimeout(5000 * 1000) // 连接超时（默认为1秒）
+                        .setSocketTimeout(6000 * 1000);// 套接字超时（默认为30秒）//更改客户端的超时限制默认30秒现在改为100*1000分钟
+            }
+        }));
+    }
+
+    public RestHighLevelClient getEsClientSecurity(String host, int port, String username, String password) {
+        RestHighLevelClient restClient = null;
+        try {
+            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+                @Override
+                public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                    return true;
+                }
+            }).build();
+            SSLIOSessionStrategy sessionStrategy = new SSLIOSessionStrategy(sslContext, NoopHostnameVerifier.INSTANCE);
+            restClient = new RestHighLevelClient(
+                    RestClient.builder(new HttpHost(host, port, "https")).setHttpClientConfigCallback(
+                            new RestClientBuilder.HttpClientConfigCallback() {
+                                @Override
+                                public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpAsyncClientBuilder) {
+                                    httpAsyncClientBuilder.disableAuthCaching();
+                                    httpAsyncClientBuilder.setSSLStrategy(sessionStrategy);
+                                    httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                                    return httpAsyncClientBuilder;
+                                }
+                            }
+                    ).setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
+                        // 该方法接收一个RequestConfig.Builder对象，对该对象进行修改后然后返回。
+                        @Override
+                        public RequestConfig.Builder customizeRequestConfig(RequestConfig.Builder requestConfigBuilder) {
+                            return requestConfigBuilder.setConnectTimeout(5000 * 1000) // 连接超时（默认为1秒）因为有些es游标读取非常慢，现改为5000秒
+                                    .setSocketTimeout(6000 * 1000);// 套接字超时（默认为30秒）因为有些es游标读取非常慢，更改客户端的超时限制默认30秒现在改为6000秒
+                        }
+                    }));
+            // 调整最大重试超时时间（默认为30秒）.setMaxRetryTimeoutMillis(60000);)这条可看情况添加
 
 
-	}
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return restClient;
 
 
-	@Test
-	public void myTest() throws IOException {
-//		File file = FileUtils.getFile("C:\\CYDev\\workspace\\mindspore.github.io\\webapp\\public\\install\\mindspore_cpu_install_docker_en.md");
-//		String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-////		System.out.println(fileContent);
-//		MINDSPORE mindspore = new MINDSPORE();
-//		mindspore.parseInstall(null, fileContent);
+    }
 
 
+    @Test
+    public void myTest() throws IOException {
+        File file = FileUtils.getFile("C:\\CYDev\\workspace\\mindspore.github.io\\webapp\\public\\docs\\zh-CN\\master\\api_python\\nn_probability\\mindspore.nn.probability.distribution.Geometric.html");
+        String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+//		System.out.println(fileContent);
 
-		MINDSPORE mindspore = new MINDSPORE();
-		mindspore.customizeData();
-	}
+        Document node = Jsoup.parse(fileContent);
+
+        Elements sections = node.getElementsByClass("section");
+
+        Element one = sections.get(0);
+
+        Elements enTitle = one.getElementsByAttributeValue("title", "Permalink to this headline");
+        Elements zhTitle = one.getElementsByAttributeValue("title", "永久链接至标题");
+        String title = "";
+        if (enTitle.size() > 0) {
+            Element t = enTitle.get(0).parent();
+            title = t.text();
+            t.remove();
+        } else if (zhTitle.size() > 0) {
+            Element t = zhTitle.get(0).parent();
+            System.out.println(zhTitle.get(0).parent());
+            title = t.text();
+            t.remove();
+        } else {
+            System.out.println("https://www.mindspore.cn/");
+        }
+        System.out.println(title);
+    }
 
 }
