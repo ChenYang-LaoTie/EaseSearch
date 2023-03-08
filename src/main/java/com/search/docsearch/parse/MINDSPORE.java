@@ -9,9 +9,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,9 +165,114 @@ public class MINDSPORE {
 
 
     public List<Map<String, Object>> customizeData() {
-        String url = System.getenv("murl");
+        List<Map<String, Object>> r = new ArrayList<>();
 
-        return null;
+        Connection conn = null;
+        Statement stmt = null;
+        PreparedStatement pstmt = null;
+        try {
+
+            String url = System.getenv("murl");
+            String username = System.getenv("musername");
+            String password = System.getenv("mpassword");
+            url = "jdbc:mysql://192.168.1.203:3306/website?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+            username = "root";
+            password = "root";
+
+
+            conn = DriverManager.getConnection(url,username,password);
+
+            stmt = conn.createStatement();
+
+            String sql;
+
+            sql = "SELECT * FROM website.webnews;";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // 展开结果集数据库
+            while(rs.next()){
+                Map<String, Object> jsonMap = new HashMap<>();
+                String id = rs.getString("id");
+                if (id == null || id.isBlank()) {
+                    continue;
+                }
+
+                String s = "SELECT newsDetail FROM website.newsdetail WHERE newsId = ?;";
+                pstmt = conn.prepareStatement(s);
+                pstmt.setString(1, id);
+                ResultSet rd = pstmt.executeQuery();
+                String textContent = "";
+                while (rd.next()) {
+                    String detail = rd.getString("newsDetail");
+                    //双重解析转义
+                    Document node = Jsoup.parse(Jsoup.parse(detail).text());
+                    textContent = node.text();
+                }
+
+                String title = rs.getString("newsTitle");
+                if (title == null || title.isBlank()) {
+                    continue;
+                }
+
+                String lang = rs.getString("tag");
+                if (lang == null || lang.isBlank()) {
+                    continue;
+                }
+
+                String category = rs.getString("category");
+                if (category != null) {
+                    category = "";
+                }
+
+                String type = rs.getString("type");
+                if (type == null || type.isBlank()) {
+                    type = "0";
+                }
+                type = getInformationType(type);
+
+
+                jsonMap.put("title", title);
+                jsonMap.put("textContent", textContent);
+                jsonMap.put("lang", lang);
+                jsonMap.put("category", category);
+                jsonMap.put("subclass", type);
+                jsonMap.put("type", "Information");
+
+                r.add(jsonMap);
+            }
+
+            // 完成后关闭
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            // 关闭资源
+            try{
+                if(stmt!=null) stmt.close();
+                if(pstmt!=null) pstmt.close();
+            }catch(SQLException se2){
+                System.out.println(se2.getMessage());
+            }// 什么都不做
+            try{
+                if(conn!=null) conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+
+        return r;
     }
 
+    public String getInformationType(String t) {
+        return switch (t) {
+            case "1" -> "版本发布";
+            case "2" -> "技术博客";
+            case "3" -> "社区活动";
+            case "4" -> "新闻";
+            case "5" -> "案例";
+            default -> "新闻";
+        };
+    }
 }

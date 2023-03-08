@@ -265,7 +265,10 @@ class DocSearchApplicationTests {
 //		MINDSPORE mindspore = new MINDSPORE();
 //		mindspore.parseInstall(null, fileContent);
 
-		System.out.println("asdcssss33".substring(5));
+
+
+		MINDSPORE mindspore = new MINDSPORE();
+		mindspore.customizeData();
 	}
 
 }
