@@ -177,10 +177,6 @@ public class MINDSPORE {
             String username = System.getenv("musername");
             String password = System.getenv("mpassword");
 
-            url = "jdbc:mysql://192.168.1.203:3306/website?useUnicode=true&characterEncoding=utf-8&useSSL=false";
-            username = "root";
-            password = "root";
-
             conn = DriverManager.getConnection(url,username,password);
 
             stmt = conn.createStatement();
