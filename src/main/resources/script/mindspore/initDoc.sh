@@ -7,9 +7,6 @@ fi
 mkdir -p /usr/local/docs/source/
 mkdir -p /usr/local/docs/target/
 
-echo ${GIT_USERNAME}
-echo ${GIT_PASSWORD}
-
 #shellcheck disable=SC2164
 cd /usr/local/docs/source
 git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@gitee.com/mindspore/mindspore.github.io.git
