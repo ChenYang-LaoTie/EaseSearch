@@ -51,7 +51,10 @@ public class DataImportController implements ApplicationRunner {
 
     @PostMapping("/hook/{parameter}")
     public void webhook(@RequestBody String data, @PathVariable String parameter) {
-        dataImportService.sendKafka(data, parameter);
+        if (needKafka) {
+            dataImportService.sendKafka(data, parameter);
+        }
+
     }
 
 }
