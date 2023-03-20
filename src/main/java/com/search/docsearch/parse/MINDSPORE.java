@@ -1,6 +1,10 @@
 package com.search.docsearch.parse;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.search.docsearch.constant.Constants;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -11,18 +15,23 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.util.StringUtils;
 
-import java.io.File;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class MINDSPORE {
 
     public static final String LANG_EN = "/en/";
     public static final String LANG_ZH = "/zh-CN/";
+    public static final String MINDSPORE_OFFICIAL = "https://www.mindspore.cn";
 
     public Map<String, Object> parse(File file) throws Exception {
 
@@ -116,8 +125,8 @@ public class MINDSPORE {
 
             Element one = sections.get(0);
 
-            Elements enTitle = one.getElementsByAttributeValue("title","Permalink to this headline");
-            Elements zhTitle = one.getElementsByAttributeValue("title","永久链接至标题");
+            Elements enTitle = one.getElementsByAttributeValue("title", "Permalink to this headline");
+            Elements zhTitle = one.getElementsByAttributeValue("title", "永久链接至标题");
             if (enTitle.size() > 0) {
                 Element t = enTitle.get(0).parent();
                 title = t.text();
@@ -154,8 +163,8 @@ public class MINDSPORE {
         Node document = parser.parse(fileContent);
 
         Document node = Jsoup.parse(renderer.render(document));
-        Element t =  node.body().child(0);
-        String title =t.text();
+        Element t = node.body().child(0);
+        String title = t.text();
         t.remove();
         String textContent = node.text();
 
@@ -165,102 +174,165 @@ public class MINDSPORE {
     }
 
 
-    public List<Map<String, Object>> customizeData() {
+    public List<Map<String, Object>> customizeData() throws Exception {
         List<Map<String, Object>> r = new ArrayList<>();
+        String path = MINDSPORE_OFFICIAL + "/selectWebNews";
 
-        Connection conn = null;
-        Statement stmt = null;
-        PreparedStatement pstmt = null;
-        try {
-
-            String url = System.getenv("murl");
-            String username = System.getenv("musername");
-            String password = System.getenv("mpassword");
-
-            conn = DriverManager.getConnection(url,username,password);
-
-            stmt = conn.createStatement();
-
-            String sql;
-
-            sql = "SELECT * FROM website.webnews;";
-            ResultSet rs = stmt.executeQuery(sql);
-
-            // 展开结果集数据库
-            while(rs.next()){
-                Map<String, Object> jsonMap = new HashMap<>();
-                String id = rs.getString("id");
-                if (id == null || id.isBlank()) {
-                    continue;
+        HttpURLConnection connection = null;
+        String result;  // 返回结果字符串
+        for (int i = 1; ; i++) {
+            TimeUnit.SECONDS.sleep(10);
+            try {
+                JSONObject param = new JSONObject();
+                param.put("category", null);
+                param.put("newsTime", "");
+                param.put("pageCurrent", i);
+                param.put("tag", "zh");
+                param.put("type", 0);
+                connection = sendHTTP(path, "POST", param.toString());
+                if (connection.getResponseCode() == 200) {
+                    result = ReadInput(connection.getInputStream());
+                    if (!setData(result, r, "zh")) {
+                        break;
+                    }
+                } else {
+                    log.error(path + " - ", connection.getResponseCode());
+                    return null;
                 }
 
-                String s = "SELECT newsDetail FROM website.newsdetail WHERE newsId = ?;";
-                pstmt = conn.prepareStatement(s);
-                pstmt.setString(1, id);
-                ResultSet rd = pstmt.executeQuery();
-                String textContent = "";
-                while (rd.next()) {
-                    String detail = rd.getString("newsDetail");
-                    //双重解析转义
-                    Document node = Jsoup.parse(Jsoup.parse(detail).text());
-                    textContent = node.text();
+                param.put("tag", "en");
+                connection = sendHTTP(path, "POST", param.toString());
+                if (connection.getResponseCode() == 200) {
+                    result = ReadInput(connection.getInputStream());
+                    if (!setData(result, r, "en")) {
+                        break;
+                    }
+                } else {
+                    log.error(path + " - ", connection.getResponseCode());
+                    return null;
                 }
-
-                String title = rs.getString("newsTitle");
-                if (title == null || title.isBlank()) {
-                    continue;
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (null != connection) {
+                    connection.disconnect();
                 }
-
-                String lang = rs.getString("tag");
-                if (lang == null || lang.isBlank()) {
-                    continue;
-                }
-
-                String category = rs.getString("category");
-                if (category != null) {
-                    category = "";
-                }
-
-                String type = rs.getString("type");
-                if (type == null || type.isBlank()) {
-                    type = "0";
-                }
-                type = getInformationType(type);
-
-
-                jsonMap.put("title", title);
-                jsonMap.put("textContent", textContent);
-                jsonMap.put("lang", lang);
-                jsonMap.put("category", category);
-                jsonMap.put("subclass", type);
-                jsonMap.put("type", "information");
-                jsonMap.put("path", "news/newschildren?id=" + id);
-                r.add(jsonMap);
-            }
-
-            // 完成后关闭
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        } finally {
-            // 关闭资源
-            try{
-                if(stmt!=null) stmt.close();
-                if(pstmt!=null) pstmt.close();
-            }catch(SQLException se2){
-                System.out.println(se2.getMessage());
-            }// 什么都不做
-            try{
-                if(conn!=null) conn.close();
-            }catch(SQLException se){
-                se.printStackTrace();
             }
         }
 
+
         return r;
     }
+
+
+    private HttpURLConnection sendHTTP(String path, String method, String param) throws IOException {
+        URL url = new URL(path);
+        HttpURLConnection connection = null;
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestProperty("Content-type", "application/json");
+        connection.setRequestMethod(method);
+        connection.setConnectTimeout(15000);
+        connection.setReadTimeout(60000);
+        connection.setUseCaches(false);
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8);
+        writer.write(param);
+        writer.flush();
+        connection.connect();
+        return connection;
+    }
+
+    private HttpURLConnection sendGET(String path, String method) throws IOException {
+        URL url = new URL(path);
+        HttpURLConnection connection = null;
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod(method);
+        connection.setConnectTimeout(15000);
+        connection.setReadTimeout(60000);
+        connection.connect();
+        return connection;
+    }
+
+    private String ReadInput(InputStream is) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        StringBuffer sbf = new StringBuffer();
+        String temp = null;
+        while ((temp = br.readLine()) != null) {
+            sbf.append(temp);
+        }
+        try {
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sbf.toString();
+
+    }
+
+    private boolean setData(String data, List<Map<String, Object>> r, String lang) {
+        JSONObject post = JSON.parseObject(data);
+        JSONArray records = post.getJSONArray("records");
+        System.out.println(records.size());
+        if (records.size() <= 0) {
+            return false;
+        }
+
+        String path = "";
+        HttpURLConnection connection = null;
+        String result;
+        for (int i = 0; i < records.size(); i++) {
+            JSONObject topic = records.getJSONObject(i);
+            int id = topic.getInteger("id");
+            String type = getInformationType(topic.getString("type"));
+
+            path = String.format("https://www.mindspore.cn/selectNewsInfo?id=%d", id);
+
+            try {
+                connection = sendGET(path, "GET");
+                if (connection.getResponseCode() == 200) {
+                    result = ReadInput(connection.getInputStream());
+                    JSONObject st = JSON.parseObject(result);
+                    JSONObject detail = st.getJSONObject("detail");
+                    String newsDetail = detail.getString("newsDetail");
+                    //双重解析转义
+                    Document node = Jsoup.parse(Jsoup.parse(newsDetail).text());
+                    String textContent = node.text();
+                    String title = st.getString("titie");
+
+                    String category = detail.getString("category");
+
+                    Map<String, Object> jsonMap = new HashMap<>();
+
+                    jsonMap.put("title", title);
+                    jsonMap.put("textContent", textContent);
+                    jsonMap.put("lang", lang);
+                    jsonMap.put("category", category);
+                    jsonMap.put("subclass", type);
+                    jsonMap.put("type", "information");
+                    jsonMap.put("path", "news/newschildren?id=" + id);
+                    r.add(jsonMap);
+                    System.out.println(jsonMap.get("title"));
+                } else {
+                    log.error(path + " - ", connection.getResponseCode());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (null != connection) {
+                    connection.disconnect();
+                }
+            }
+
+        }
+        return true;
+    }
+
 
     public String getInformationType(String t) {
         return switch (t) {
