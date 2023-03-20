@@ -278,7 +278,6 @@ public class MINDSPORE {
     private boolean setData(String data, List<Map<String, Object>> r, String lang) {
         JSONObject post = JSON.parseObject(data);
         JSONArray records = post.getJSONArray("records");
-        System.out.println(records.size());
         if (records.size() <= 0) {
             return false;
         }
@@ -317,7 +316,6 @@ public class MINDSPORE {
                     jsonMap.put("type", "information");
                     jsonMap.put("path", "news/newschildren?id=" + id);
                     r.add(jsonMap);
-                    System.out.println(jsonMap.get("title"));
                 } else {
                     log.error(path + " - ", connection.getResponseCode());
                 }
