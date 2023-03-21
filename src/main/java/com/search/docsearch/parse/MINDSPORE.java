@@ -170,6 +170,8 @@ public class MINDSPORE {
 
         jsonMap.put("title", title);
         jsonMap.put("textContent", textContent);
+        String path = "install/detail?path=" + jsonMap.get("path");
+        jsonMap.put("path", path);
         return true;
     }
 
