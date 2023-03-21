@@ -290,7 +290,13 @@ public class MINDSPORE {
         for (int i = 0; i < records.size(); i++) {
             JSONObject topic = records.getJSONObject(i);
             int id = topic.getInteger("id");
-            String type = getInformationType(topic.getString("type"));
+            String type = "";
+            if (lang.equals("zh")) {
+                type = getInformationType(topic.getString("type"));
+            } else {
+                type = getInformationTypeEn(topic.getString("type"));
+            }
+
 
             path = String.format("https://www.mindspore.cn/selectNewsInfo?id=%d", id);
 
@@ -342,6 +348,16 @@ public class MINDSPORE {
             case "4" -> "新闻";
             case "5" -> "案例";
             default -> "新闻";
+        };
+    }
+
+    public String getInformationTypeEn(String t) {
+        return switch (t) {
+            case "1" -> "Version Release";
+            case "2" -> "Blogs";
+            case "3" -> "Activities";
+            case "4" -> "News";
+            default -> "News";
         };
     }
 }
