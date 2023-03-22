@@ -168,10 +168,19 @@ public class MINDSPORE {
         t.remove();
         String textContent = node.text();
 
+
+        String path = (String) jsonMap.get("path");
+        String v = path.substring(path.indexOf("/") + 1);
+        int location = v.indexOf("/");
+        if (location > 0) {
+            jsonMap.put("version", v.substring(0, location));
+        } else {
+            jsonMap.put("version", "-");
+        }
+
         jsonMap.put("title", title);
         jsonMap.put("textContent", textContent);
-        String path = "install/detail?path=" + jsonMap.get("path");
-        jsonMap.put("path", path);
+        jsonMap.put("path", "install/detail?path=" + path);
         return true;
     }
 
