@@ -17,6 +17,4 @@ public class MySystem {
     public String mappingPath;
     public String basePath;
     public String initDoc;
-    public String updateDoc;
-    public String updateLocal;
 }
