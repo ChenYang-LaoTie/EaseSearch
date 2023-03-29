@@ -19,7 +19,7 @@ RUN chmod 777 -R ./* \
     && mkdir -p /usr/local/docs/source/ \
     && cd /usr/local/docs/source \
     && git clone -b https://gitee.com/opengauss/website.git v2 \
-    && cd openEuler-portal \
+    && cd website \
     && pnpm install \
     && pnpm build \
     && cd /EaseSearch/target
