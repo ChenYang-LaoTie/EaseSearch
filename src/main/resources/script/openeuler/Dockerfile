@@ -3,6 +3,7 @@ FROM node
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV LANGUAGE C.UTF-8
+ENV searchsystem openEuler
 
 RUN mkdir -p /EaseSearch \
     && apt update \
