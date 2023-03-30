@@ -46,7 +46,7 @@ for r in $(git branch -r --list "origin/*"); do
  # shellcheck disable=SC1020
  # shellcheck disable=SC1009
  # shellcheck disable=SC2053
- if [[ "website" != $b ]] && [[ "HEAD" != $b ]] && [[ "->" != $b ]]; then
+ if [[ "website" != $b ]] && [[ "HEAD" != $b ]] && [[ "->" != $b ]] && [[ "reconstruct-frozen" != $b ]] && [[ "master-bak" != $b ]] && [[ "website-v2" != $b ]]; then
     git checkout $r
     mkdir -p /usr/local/docs/target/zh/docs/$b/docs
     mkdir -p /usr/local/docs/target/en/docs/$b/docs
