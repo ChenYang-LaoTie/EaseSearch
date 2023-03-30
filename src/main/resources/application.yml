@@ -7,14 +7,6 @@ elasticsearch:
   #deploy dev
   isDev: ${isDev:false}
 
-#elasticsearch:
-#  host: ${eshost:192.168.1.203}
-#  username: ${esusername:admin}
-#  password: ${espassword:admin}
-#  port: ${esport:9200}
-#  #deploy dev
-#  isDev: ${isDev:true}
-
 #网站埋点数据库
 tracker:
   host: ${teshost:127.0.0.1}
@@ -37,7 +29,6 @@ scheduled:
 
 #openEuler    openGauss    openLookeng    mindSpore
 system: ${searchsystem:openEuler}
-#system: ${searchsystem:openGauss}
 
 #formal test
 dep: ${depp:test}
