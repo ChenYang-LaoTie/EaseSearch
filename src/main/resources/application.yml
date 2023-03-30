@@ -1,20 +1,20 @@
-##es用户名 密码等配置
-#elasticsearch:
-#  host: ${eshost:127.0.0.1}
-#  username: ${esusername:admin}
-#  password: ${espassword:admin}
-#  port: ${esport:9200}
-#  #deploy dev
-#  isDev: ${isDev:false}
-#
-##网站埋点数据库
-#tracker:
-#  host: ${teshost:127.0.0.1}
-#  username: ${tesusername:admin}
-#  password: ${tespassword:admin}
-#  port: ${tesport:9200}
-#
-#
+#es用户名 密码等配置
+elasticsearch:
+  host: ${eshost:127.0.0.1}
+  username: ${esusername:admin}
+  password: ${espassword:admin}
+  port: ${esport:9200}
+  #deploy dev
+  isDev: ${isDev:false}
+
+#网站埋点数据库
+tracker:
+  host: ${teshost:127.0.0.1}
+  username: ${tesusername:admin}
+  password: ${tespassword:admin}
+  port: ${tesport:9200}
+
+
 #kafka:
 #  need: ${kneed:false}
 #  bootstrap: ${kbootstrap:127.0.0.1:9092}
@@ -46,21 +46,21 @@
 #server:
 #  port: 8080
 
-#es用户名 密码等配置
-elasticsearch:
-  host: 159.138.10.226
-  username: admin
-  password: Cloudfoundry@123
-  port: 9200
-  #deploy dev
-  isDev: false
-
-#网站埋点数据库
-tracker:
-  host: https://log.osinfra.cn
-  username: admin
-  password: MEG19@LKeng80
-  port: 9200
+##es用户名 密码等配置
+#elasticsearch:
+#  host: 159.138.10.226
+#  username: admin
+#  password: Cloudfoundry@123
+#  port: 9200
+#  #deploy dev
+#  isDev: false
+#
+##网站埋点数据库
+#tracker:
+#  host: https://log.osinfra.cn
+#  username: admin
+#  password: MEG19@LKeng80
+#  port: 9200
 
 
 kafka:
