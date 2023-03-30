@@ -26,6 +26,7 @@ public class SystemConfig {
 
     @Bean
     public MySystem setConfig() {
+        log.info("system -> " + system);
         system = system.toLowerCase(Locale.ROOT);
         dep = dep.toLowerCase(Locale.ROOT);
         MySystem mySystem = new MySystem();
