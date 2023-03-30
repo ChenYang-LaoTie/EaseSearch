@@ -15,60 +15,12 @@ tracker:
   port: ${tesport:9200}
 
 
-#kafka:
-#  need: ${kneed:false}
-#  bootstrap: ${kbootstrap:127.0.0.1:9092}
-#  producer:
-#  consumer:
-#    group: ${kgroup:openeuler}
-#
-#
-##定时读取配置
-#scheduled:
-#  cron: 0 31 11 ? * *
-#
-##openEuler    openGauss    openLookeng    mindSpore
-#system: ${searchsystem:openEuler}
-#
-#
-##formal test
-#dep: ${depp:test}
-#
-##异步配置
-#asyncThreadPool:
-#  corePoolSize: 10
-#  maxPoolSize: 10
-#  queueCapacity: 10
-#  keepAliveSeconds: 300
-#  awaitTerminationSeconds: 300
-#  threadNamePrefix: thread-name-prefix
-#
-#server:
-#  port: 8080
-
-##es用户名 密码等配置
-#elasticsearch:
-#  host: 159.138.10.226
-#  username: admin
-#  password: Cloudfoundry@123
-#  port: 9200
-#  #deploy dev
-#  isDev: false
-#
-##网站埋点数据库
-#tracker:
-#  host: https://log.osinfra.cn
-#  username: admin
-#  password: MEG19@LKeng80
-#  port: 9200
-
-
 kafka:
-  need: false
-  bootstrap: 119.8.232.178:9094,119.13.88.34:9094,119.13.76.20:9094
+  need: ${kneed:false}
+  bootstrap: ${kbootstrap:127.0.0.1:9092}
   producer:
   consumer:
-    group: openeuler-test
+    group: ${kgroup:openeuler}
 
 
 #定时读取配置
@@ -76,7 +28,7 @@ scheduled:
   cron: 0 31 11 ? * *
 
 #openEuler    openGauss    openLookeng    mindSpore
-system: openGauss
+system: ${searchsystem:openEuler}
 
 
 #formal test
