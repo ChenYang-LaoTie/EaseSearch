@@ -172,6 +172,7 @@ public class DataImportServiceImpl implements DataImportService {
     public void sendKafka(String data, String parameter) {
         String topic = s.getSystem() + "_search_topic";
         ProducerRecord<String, String> mess = new ProducerRecord<String, String>(topic, parameter + " " + data);
+        System.out.println("producer -> " + parameter + " " + data);
         kafkaConfig.kafkaProducer.send(mess);
     }
 
@@ -186,6 +187,8 @@ public class DataImportServiceImpl implements DataImportService {
             ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(1));
             for (ConsumerRecord<String, String> record : records) {
                 try {
+                    System.out.println("coo - > " + record.value() + "---" + record.topic());
+
                     String className = "com.search.docsearch.parse." + s.getSystem().toUpperCase(Locale.ROOT);
                     Class<?> c = Class.forName(className);
                     Method m = c.getMethod("parseHook", String.class);
