@@ -61,7 +61,6 @@ public class DataImportServiceImpl implements DataImportService {
     @Async("threadPoolTaskExecutor")
     public void refreshDoc() throws IOException {
         log.info("===============开始运行bash脚本=================");
-        System.out.println(s.initDoc);
         ProcessBuilder pb = new ProcessBuilder(s.initDoc);
         Process p = pb.start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
