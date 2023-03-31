@@ -61,7 +61,7 @@ public class DivideServiceImpl implements DivideService {
         SearchRequest request = new SearchRequest(saveIndex);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.filter(QueryBuilders.termQuery("category" + ".keyword", category));
+        boolQueryBuilder.filter(QueryBuilders.termQuery("type" + ".keyword", category));
 
 
         int page = 1;
