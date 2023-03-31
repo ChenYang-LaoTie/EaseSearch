@@ -41,12 +41,17 @@ public class DataImportController implements ApplicationRunner {
     private boolean needKafka;
 
     @Override
-    public void run(ApplicationArguments args) throws IOException {
-        dataImportService.refreshDoc();
+    public void run(ApplicationArguments args) {
+        try {
+            dataImportService.refreshDoc();
 
-        if (needKafka) {
-            dataImportService.listenKafka();
+            if (needKafka) {
+                dataImportService.listenKafka();
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
+
     }
 
     @PostMapping("/hook/{parameter}")
