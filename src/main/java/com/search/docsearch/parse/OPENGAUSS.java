@@ -42,7 +42,7 @@ public class OPENGAUSS {
                 .replace(".md", "")
                 .replace(".html", "");
 
-        String lang = path.substring(0,path.indexOf("/"));
+        String lang = path.substring(0, path.indexOf("/"));
 
         String type = path.substring(lang.length() + 1, path.indexOf("/", lang.length() + 1));
         if (!DOCS.equals(type)
@@ -124,7 +124,8 @@ public class OPENGAUSS {
         String version = path.replaceFirst(jsonMap.get("lang") + "/" + type + "/", "");
         version = version.substring(0, version.indexOf("/"));
         if (version.equals("master")) {
-            version = "latest";
+            String p = (String) jsonMap.get("path");
+            jsonMap.put("path", p.replaceAll("master", "latest"));
         }
         jsonMap.put("version", version);
     }
@@ -190,7 +191,6 @@ public class OPENGAUSS {
         }
 
     }
-
 
 
 }
