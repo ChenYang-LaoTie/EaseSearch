@@ -123,7 +123,7 @@ public class OPENGAUSS {
 
         String version = path.replaceFirst(jsonMap.get("lang") + "/" + type + "/", "");
         version = version.substring(0, version.indexOf("/"));
-        if (version.equals("master")) {
+        if (version.equals("master") || version.equals("master-lite")) {
             String p = (String) jsonMap.get("path");
             jsonMap.put("path", p.replaceAll("master", "latest"));
         }
