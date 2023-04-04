@@ -57,7 +57,9 @@ public class OPENGAUSS {
             if (!fileName.equals("index.html")) {
                 return null;
             }
-
+        }
+        if (type.equals(USERPRACTICE)) {
+            type = SHOWCASE;
         }
         if (type.equals(OTHER) || type.equals(SHOWCASE)) {
             path = path.substring(0, path.length() - 5);
