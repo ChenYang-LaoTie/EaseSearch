@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 @Component
 @Slf4j
@@ -40,11 +39,16 @@ public class DataImportController implements ApplicationRunner {
     @Value("${kafka.need}")
     private boolean needKafka;
 
+    /**
+     *  该方法在项目启动时就会运行
+     * @param args
+     */
     @Override
     public void run(ApplicationArguments args) {
         try {
+            //导入es数据
             dataImportService.refreshDoc();
-
+            //如果配置钟需要kafka则启动监听
             if (needKafka) {
                 dataImportService.listenKafka();
             }
@@ -53,9 +57,15 @@ public class DataImportController implements ApplicationRunner {
         }
     }
 
+    /**
+     * 对外提供的webhook
+     * @param data
+     * @param parameter
+     */
     @PostMapping("/hook/{parameter}")
     public void webhook(@RequestBody String data, @PathVariable String parameter) {
         if (needKafka) {
+            //将webhook接收到的数据发送到kafka
             dataImportService.sendKafka(data, parameter);
         }
 
