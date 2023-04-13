@@ -29,7 +29,7 @@ public class SearchController {
     private MySystem s;
 
     /**
-     * 查询文档
+     * 查询文档，首页大搜索
      *
      * @param condition 封装查询条件
      * @return 搜索结果
