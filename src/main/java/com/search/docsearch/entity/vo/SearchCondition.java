@@ -7,6 +7,8 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -21,5 +23,6 @@ public class SearchCondition implements Serializable {
     private int pageSize = 10;
     private String keyword;
     private String type;
-    private String docsVersion;
+    private List<Map<String, String>> limit;
+    private List<Map<String, String>> filter;
 }

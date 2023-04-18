@@ -246,20 +246,22 @@ public class SearchServiceImpl implements SearchService {
 
         boolQueryBuilder.minimumShouldMatch(1);
 
-//        for (Map<String, String> map : condition.getLimit()) {
-//            BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
-//            for (Map.Entry<String, String> entry : map.entrySet()) {
-//                String key = entry.getKey();
-//                String value = entry.getValue();
-//                if (key.equals("version")) {
-//                    String[] versions = value.split(",");
-//                    vBuilder.mustNot(QueryBuilders.termsQuery("version.keyword", versions));
-//                } else {
-//                    vBuilder.must(QueryBuilders.termQuery(key + ".keyword", value));
-//                }
-//            }
-//            boolQueryBuilder.mustNot(vBuilder);
-//        }
+        if (condition.getLimit() != null) {
+            for (Map<String, String> map : condition.getLimit()) {
+                BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue();
+                    if (key.equals("version")) {
+                        String[] versions = value.split(",");
+                        vBuilder.mustNot(QueryBuilders.termsQuery("version.keyword", versions));
+                    } else {
+                        vBuilder.must(QueryBuilders.termQuery(key + ".keyword", value));
+                    }
+                }
+                boolQueryBuilder.mustNot(vBuilder);
+            }
+        }
 
         sourceBuilder.query(boolQueryBuilder);
 
