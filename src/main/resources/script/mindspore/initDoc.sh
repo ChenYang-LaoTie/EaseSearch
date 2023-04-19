@@ -9,13 +9,13 @@ mkdir -p /usr/local/docs/target/
 
 #shellcheck disable=SC2164
 cd /usr/local/docs/source
-git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@gitee.com/mindspore/mindspore.github.io.git
+git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@gitee.com/mindspore/website-docs.git
 
 
 # shellcheck disable=SC2164
-cd /usr/local/docs/source/mindspore.github.io
+cd /usr/local/docs/source/website-docs
 
-cp -r /usr/local/docs/source/mindspore.github.io/webapp/public/* /usr/local/docs/target/
+cp -r /usr/local/docs/source/website-docs/public/* /usr/local/docs/target/
 
 # shellcheck disable=SC2164
 cd /usr/local/docs/target/
