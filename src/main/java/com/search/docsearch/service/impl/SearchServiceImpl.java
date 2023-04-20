@@ -175,42 +175,49 @@ public class SearchServiceImpl implements SearchService {
         boolQueryBuilder.should(titleMP).should(textContentMP);
 
         boolQueryBuilder.minimumShouldMatch(1);
-        if (condition.getLimit() != null) {
-            for (Map<String, String> map : condition.getLimit()) {
-                BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
-                for (Map.Entry<String, String> entry : map.entrySet()) {
-                    String key = entry.getKey();
-                    String value = entry.getValue();
-                    if (key.equals("version")) {
-                        String[] versions = value.split(",");
-                        vBuilder.mustNot(QueryBuilders.termsQuery("version.keyword", versions));
-                    } else {
-                        vBuilder.must(QueryBuilders.termQuery(key + ".keyword", value));
-                    }
-                }
-                boolQueryBuilder.mustNot(vBuilder);
-            }
-        }
+//        if (condition.getLimit() != null) {
+//            for (Map<String, String> map : condition.getLimit()) {
+//                BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
+//                for (Map.Entry<String, String> entry : map.entrySet()) {
+//                    String key = entry.getKey();
+//                    String value = entry.getValue();
+//                    if (key.equals("version")) {
+//                        String[] versions = value.split(",");
+//                        vBuilder.mustNot(QueryBuilders.termsQuery("version.keyword", versions));
+//                    } else {
+//                        vBuilder.must(QueryBuilders.termQuery(key + ".keyword", value));
+//                    }
+//                }
+//                boolQueryBuilder.mustNot(vBuilder);
+//            }
+//        }
+//
+//        if (condition.getFilter() != null) {
+//            BoolQueryBuilder zBuilder = QueryBuilders.boolQuery();
+//            for (Map<String, String> map : condition.getFilter()) {
+//                BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
+//                for (Map.Entry<String, String> entry : map.entrySet()) {
+//                    String key = entry.getKey();
+//                    String value = entry.getValue();
+//                    if (key.equals("version")) {
+//                        String[] versions = value.split(",");
+//                        vBuilder.must(QueryBuilders.termsQuery("version.keyword", versions));
+//                    } else {
+//                        vBuilder.must(QueryBuilders.termQuery(key + ".keyword", value));
+//                    }
+//                }
+//               zBuilder.should(vBuilder);
+//            }
+//            boolQueryBuilder.filter(zBuilder);
+//        }
+        if (StringUtils.hasText(condition.getDocsVersion())) {
+            String[] versions = condition.getDocsVersion().split(",");
+            BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
+            vBuilder.must(QueryBuilders.termQuery("type.keyword", "docs"));
+            vBuilder.mustNot(QueryBuilders.termsQuery("version.keyword", versions));
 
-        if (condition.getFilter() != null) {
-            BoolQueryBuilder zBuilder = QueryBuilders.boolQuery();
-            for (Map<String, String> map : condition.getFilter()) {
-                BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
-                for (Map.Entry<String, String> entry : map.entrySet()) {
-                    String key = entry.getKey();
-                    String value = entry.getValue();
-                    if (key.equals("version")) {
-                        String[] versions = value.split(",");
-                        vBuilder.must(QueryBuilders.termsQuery("version.keyword", versions));
-                    } else {
-                        vBuilder.must(QueryBuilders.termQuery(key + ".keyword", value));
-                    }
-                }
-               zBuilder.should(vBuilder);
-            }
-            boolQueryBuilder.filter(zBuilder);
+            boolQueryBuilder.mustNot(vBuilder);
         }
-
 
 
         sourceBuilder.query(boolQueryBuilder);
@@ -246,21 +253,30 @@ public class SearchServiceImpl implements SearchService {
 
         boolQueryBuilder.minimumShouldMatch(1);
 
-        if (condition.getLimit() != null) {
-            for (Map<String, String> map : condition.getLimit()) {
-                BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
-                for (Map.Entry<String, String> entry : map.entrySet()) {
-                    String key = entry.getKey();
-                    String value = entry.getValue();
-                    if (key.equals("version")) {
-                        String[] versions = value.split(",");
-                        vBuilder.mustNot(QueryBuilders.termsQuery("version.keyword", versions));
-                    } else {
-                        vBuilder.must(QueryBuilders.termQuery(key + ".keyword", value));
-                    }
-                }
-                boolQueryBuilder.mustNot(vBuilder);
-            }
+//        if (condition.getLimit() != null) {
+//            for (Map<String, String> map : condition.getLimit()) {
+//                BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
+//                for (Map.Entry<String, String> entry : map.entrySet()) {
+//                    String key = entry.getKey();
+//                    String value = entry.getValue();
+//                    if (key.equals("version")) {
+//                        String[] versions = value.split(",");
+//                        vBuilder.mustNot(QueryBuilders.termsQuery("version.keyword", versions));
+//                    } else {
+//                        vBuilder.must(QueryBuilders.termQuery(key + ".keyword", value));
+//                    }
+//                }
+//                boolQueryBuilder.mustNot(vBuilder);
+//            }
+//        }
+
+        if (StringUtils.hasText(condition.getDocsVersion())) {
+            String[] versions = condition.getDocsVersion().split(",");
+            BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
+            vBuilder.must(QueryBuilders.termQuery("type.keyword", "docs"));
+            vBuilder.mustNot(QueryBuilders.termsQuery("version.keyword", versions));
+
+            boolQueryBuilder.mustNot(vBuilder);
         }
 
         sourceBuilder.query(boolQueryBuilder);

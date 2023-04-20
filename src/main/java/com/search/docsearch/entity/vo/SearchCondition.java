@@ -23,6 +23,7 @@ public class SearchCondition implements Serializable {
     private int pageSize = 10;
     private String keyword;
     private String type;
-    private List<Map<String, String>> limit;
-    private List<Map<String, String>> filter;
+    //    private List<Map<String, String>> limit;
+//    private List<Map<String, String>> filter;
+    private String docsVersion;
 }
