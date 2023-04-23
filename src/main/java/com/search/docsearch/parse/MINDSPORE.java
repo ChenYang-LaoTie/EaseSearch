@@ -45,30 +45,6 @@ public class MINDSPORE {
         jsonMap.put("articleName", fileName);
 
         String c = path.substring(0, path.indexOf("/"));
-//        String components = switch (c) {
-//            case "docs" -> "MindSpore";
-//            case "lite" -> "MindSpore Lite";
-//            case "mindpandas" -> "MindPandas";
-//            case "mindinsight" -> "MindInsight";
-//            case "mindarmour" -> "MindArmour";
-//            case "serving" -> "MindSpore Serving";
-//            case "federated" -> "MindSpore Federated";
-//            case "golden_stick" -> "MindSpore Golden Stick";
-//            case "xai" -> "MindSpore XAI";
-//            case "devtoolkit" -> "MindSpore Dev Toolkit";
-//            case "graphlearning" -> "MindSpore Graph Learning";
-//            case "reinforcement" -> "MindSpore Reinforcement";
-//            case "probability" -> "MindSpore Probability";
-//            case "hub" -> "MindSpore Hub";
-//            case "mindelec" -> "MindElec";
-//            case "mindsponge" -> "MindSPONGE";
-//            case "mindflow" -> "MindFlow";
-//            case "mindquantum" -> "MindQuantum";
-//            default -> c;
-//        };
-//
-//        jsonMap.put("components", components);
-
 
         switch (c) {
             case "docs" ->  jsonMap.put("components", "MindSpore");
