@@ -262,6 +262,24 @@ public class SearchServiceImpl implements SearchService {
             }
         }
 
+        if (condition.getFilter() != null) {
+            BoolQueryBuilder zBuilder = QueryBuilders.boolQuery();
+            for (Map<String, String> map : condition.getFilter()) {
+                BoolQueryBuilder vBuilder = QueryBuilders.boolQuery();
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue();
+                    if (key.equals("version")) {
+                        String[] versions = value.split(",");
+                        vBuilder.must(QueryBuilders.termsQuery("version.keyword", versions));
+                    } else {
+                        vBuilder.must(QueryBuilders.termQuery(key + ".keyword", value));
+                    }
+                }
+                zBuilder.should(vBuilder);
+            }
+            boolQueryBuilder.filter(zBuilder);
+        }
 
         sourceBuilder.query(boolQueryBuilder);
 

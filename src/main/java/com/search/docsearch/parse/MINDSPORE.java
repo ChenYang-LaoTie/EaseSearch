@@ -45,29 +45,52 @@ public class MINDSPORE {
         jsonMap.put("articleName", fileName);
 
         String c = path.substring(0, path.indexOf("/"));
-        String components = switch (c) {
-            case "docs" -> "MindSpore";
-            case "lite" -> "MindSpore Lite";
-            case "mindpandas" -> "MindPandas";
-            case "mindinsight" -> "MindInsight";
-            case "mindarmour" -> "MindArmour";
-            case "serving" -> "MindSpore Serving";
-            case "federated" -> "MindSpore Federated";
-            case "golden_stick" -> "MindSpore Golden Stick";
-            case "xai" -> "MindSpore XAI";
-            case "devtoolkit" -> "MindSpore Dev Toolkit";
-            case "graphlearning" -> "MindSpore Graph Learning";
-            case "reinforcement" -> "MindSpore Reinforcement";
-            case "probability" -> "MindSpore Probability";
-            case "hub" -> "MindSpore Hub";
-            case "mindelec" -> "MindElec";
-            case "mindsponge" -> "MindSPONGE";
-            case "mindflow" -> "MindFlow";
-            case "mindquantum" -> "MindQuantum";
-            default -> c;
+//        String components = switch (c) {
+//            case "docs" -> "MindSpore";
+//            case "lite" -> "MindSpore Lite";
+//            case "mindpandas" -> "MindPandas";
+//            case "mindinsight" -> "MindInsight";
+//            case "mindarmour" -> "MindArmour";
+//            case "serving" -> "MindSpore Serving";
+//            case "federated" -> "MindSpore Federated";
+//            case "golden_stick" -> "MindSpore Golden Stick";
+//            case "xai" -> "MindSpore XAI";
+//            case "devtoolkit" -> "MindSpore Dev Toolkit";
+//            case "graphlearning" -> "MindSpore Graph Learning";
+//            case "reinforcement" -> "MindSpore Reinforcement";
+//            case "probability" -> "MindSpore Probability";
+//            case "hub" -> "MindSpore Hub";
+//            case "mindelec" -> "MindElec";
+//            case "mindsponge" -> "MindSPONGE";
+//            case "mindflow" -> "MindFlow";
+//            case "mindquantum" -> "MindQuantum";
+//            default -> c;
+//        };
+//
+//        jsonMap.put("components", components);
+
+
+        switch (c) {
+            case "docs" ->  jsonMap.put("components", "MindSpore");
+            case "lite" -> jsonMap.put("components", "MindSpore Lite");
+            case "mindpandas" -> jsonMap.put("components", "MindPandas");
+            case "mindinsight" -> jsonMap.put("components", "MindInsight");
+            case "mindarmour" -> jsonMap.put("components", "MindArmour");
+            case "serving" -> jsonMap.put("components", "MindSpore Serving");
+            case "federated" -> jsonMap.put("components", "MindSpore Federated");
+            case "golden_stick" -> jsonMap.put("components", "MindSpore Golden Stick");
+            case "xai" -> jsonMap.put("components", "MindSpore XAI");
+            case "devtoolkit" -> jsonMap.put("components", "MindSpore Dev Toolkit");
+            case "graphlearning" -> jsonMap.put("components", "MindSpore Graph Learning");
+            case "reinforcement" -> jsonMap.put("components", "MindSpore Reinforcement");
+            case "probability" -> jsonMap.put("components", "MindSpore Probability");
+            case "hub" -> jsonMap.put("components", "MindSpore Hub");
+            case "mindelec" -> jsonMap.put("components", "MindElec");
+            case "mindsponge" -> jsonMap.put("components", "MindSPONGE");
+            case "mindflow" -> jsonMap.put("components", "MindFlow");
+            case "mindquantum" -> jsonMap.put("components", "MindQuantum");
         };
 
-        jsonMap.put("components", components);
 
 
         if (path.contains(LANG_EN)) {
