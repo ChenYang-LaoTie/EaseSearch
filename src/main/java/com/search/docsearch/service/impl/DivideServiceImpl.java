@@ -123,7 +123,7 @@ public class DivideServiceImpl implements DivideService {
 
                 map.put("views", countResponse.getCount());
             } catch (Exception e) {
-                log.error(e.getMessage());
+                log.error("get tracker error : " + e.getMessage());
             }
             data.add(map);
         }
