@@ -133,7 +133,7 @@ public class MINDSPORE {
                 title = t.text();
                 t.remove();
             } else {
-                System.out.println("https://www.mindspore.cn/" + jsonMap.get("path"));
+                System.out.println(MINDSPORE_OFFICIAL+ "/" + jsonMap.get("path"));
                 return false;
             }
             title = title.replaceAll("¶", "");
