@@ -31,6 +31,29 @@ public class MINDSPORE {
     public static final String LANG_ZH = "/zh-CN/";
     public static final String MINDSPORE_OFFICIAL = "https://www.mindspore.cn";
 
+    private static final HashMap<String, String > COMPONENTS_MAP  = new HashMap<String, String>(){{
+        put("docs", "MindSpore");
+        put("lite", "MindSpore Lite");
+        put("mindpandas", "MindPandas");
+        put("mindinsight", "MindInsight");
+        put("mindarmour", "MindArmour");
+        put("serving", "MindSpore Serving");
+        put("federated", "MindSpore Federated");
+        put("golden_stick", "MindSpore Golden Stick");
+        put("xai", "MindSpore XAI");
+        put("devtoolkit", "MindSpore Dev Toolkit");
+        put("graphlearning", "MindSpore Graph Learning");
+        put("reinforcement", "MindSpore Reinforcement");
+        put("probability", "MindSpore Probability");
+        put("hub", "MindSpore Hub");
+        put("mindelec", "MindElec");
+        put("mindsponge", "MindSPONGE");
+        put("mindflow", "MindFlow");
+        put("mindquantum", "MindQuantum");
+        put("recommender", "MindSpore Recommender");
+    }};
+
+
     public Map<String, Object> parse(File file) throws Exception {
 
         String originalPath = file.getPath();
@@ -46,28 +69,9 @@ public class MINDSPORE {
 
         String c = path.substring(0, path.indexOf("/"));
 
-        switch (c) {
-            case "docs" ->  jsonMap.put("components", "MindSpore");
-            case "lite" -> jsonMap.put("components", "MindSpore Lite");
-            case "mindpandas" -> jsonMap.put("components", "MindPandas");
-            case "mindinsight" -> jsonMap.put("components", "MindInsight");
-            case "mindarmour" -> jsonMap.put("components", "MindArmour");
-            case "serving" -> jsonMap.put("components", "MindSpore Serving");
-            case "federated" -> jsonMap.put("components", "MindSpore Federated");
-            case "golden_stick" -> jsonMap.put("components", "MindSpore Golden Stick");
-            case "xai" -> jsonMap.put("components", "MindSpore XAI");
-            case "devtoolkit" -> jsonMap.put("components", "MindSpore Dev Toolkit");
-            case "graphlearning" -> jsonMap.put("components", "MindSpore Graph Learning");
-            case "reinforcement" -> jsonMap.put("components", "MindSpore Reinforcement");
-            case "probability" -> jsonMap.put("components", "MindSpore Probability");
-            case "hub" -> jsonMap.put("components", "MindSpore Hub");
-            case "mindelec" -> jsonMap.put("components", "MindElec");
-            case "mindsponge" -> jsonMap.put("components", "MindSPONGE");
-            case "mindflow" -> jsonMap.put("components", "MindFlow");
-            case "mindquantum" -> jsonMap.put("components", "MindQuantum");
-        };
-
-
+        if (COMPONENTS_MAP.containsKey(c)) {
+            jsonMap.put("components", COMPONENTS_MAP.get(c));
+        }
 
         if (path.contains(LANG_EN)) {
             jsonMap.put("lang", "en");
@@ -95,11 +99,12 @@ public class MINDSPORE {
             }
         } else if (path.startsWith("tutorials/")) {
             jsonMap.put("type", "tutorials");
+            jsonMap.put("components", "MindSpore");
             if (!parseHtml(jsonMap, fileContent)) {
                 return null;
             }
         } else if (path.startsWith("install/")) {
-            jsonMap.put("type", "install");
+            jsonMap.put("components", "MindSpore");
             if (!parseInstall(jsonMap, fileContent)) {
                 return null;
             }
@@ -304,7 +309,7 @@ public class MINDSPORE {
             }
 
 
-            path = String.format("https://www.mindspore.cn/selectNewsInfo?id=%d", id);
+            path = String.format(MINDSPORE_OFFICIAL + "/selectNewsInfo?id=%d", id);
 
             try {
                 connection = sendGET(path, "GET");
