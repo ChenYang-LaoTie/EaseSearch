@@ -34,8 +34,8 @@ public class MINDSPORE {
     private static final HashMap<String, String > COMPONENTS_MAP  = new HashMap<String, String>(){{
         put("docs", "MindSpore");
         put("lite", "MindSpore Lite");
-        put("mindinsight", "MindInsight");
-        put("mindarmour", "MindArmour");
+        put("mindinsight", "MindSpore Insight");
+        put("mindarmour", "MindSpore Armour");
         put("serving", "MindSpore Serving");
         put("federated", "MindSpore Federated");
         put("golden_stick", "MindSpore Golden Stick");
