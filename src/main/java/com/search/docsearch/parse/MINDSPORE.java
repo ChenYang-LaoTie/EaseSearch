@@ -34,7 +34,6 @@ public class MINDSPORE {
     private static final HashMap<String, String > COMPONENTS_MAP  = new HashMap<String, String>(){{
         put("docs", "MindSpore");
         put("lite", "MindSpore Lite");
-        put("mindpandas", "MindPandas");
         put("mindinsight", "MindInsight");
         put("mindarmour", "MindArmour");
         put("serving", "MindSpore Serving");
@@ -42,15 +41,16 @@ public class MINDSPORE {
         put("golden_stick", "MindSpore Golden Stick");
         put("xai", "MindSpore XAI");
         put("devtoolkit", "MindSpore Dev Toolkit");
+        put("recommender", "MindSpore Recommender");
         put("graphlearning", "MindSpore Graph Learning");
         put("reinforcement", "MindSpore Reinforcement");
         put("probability", "MindSpore Probability");
+        put("mindpandas", "MindSpore Pandas");
         put("hub", "MindSpore Hub");
-        put("mindelec", "MindElec");
-        put("mindsponge", "MindSPONGE");
-        put("mindflow", "MindFlow");
-        put("mindquantum", "MindQuantum");
-        put("recommender", "MindSpore Recommender");
+        put("mindelec", "MindSpore Elec");
+        put("mindsponge", "MindSpore SPONGE");
+        put("mindflow", "MindSpore Flow");
+        put("mindquantum", "MindSpore Quantum");
     }};
 
 
@@ -104,8 +104,10 @@ public class MINDSPORE {
                 return null;
             }
         } else if (path.startsWith("install/")) {
+            System.out.println(path);
             jsonMap.put("components", "MindSpore");
             if (!parseInstall(jsonMap, fileContent)) {
+                System.out.println("nnnnn++++++++++++");
                 return null;
             }
         } else {
