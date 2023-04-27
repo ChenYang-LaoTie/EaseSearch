@@ -104,10 +104,9 @@ public class MINDSPORE {
                 return null;
             }
         } else if (path.startsWith("install/")) {
-            System.out.println(path);
+            jsonMap.put("type", "install");
             jsonMap.put("components", "MindSpore");
             if (!parseInstall(jsonMap, fileContent)) {
-                System.out.println("nnnnn++++++++++++");
                 return null;
             }
         } else {
