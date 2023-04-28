@@ -284,5 +284,6 @@ class DocSearchApplicationTests {
         }
         System.out.println(title);
     }
+    public static final String MINDSPORE_OFFICIAL = "https://www.mindspore.cn";
 
 }
