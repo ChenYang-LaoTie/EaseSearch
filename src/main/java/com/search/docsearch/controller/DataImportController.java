@@ -45,7 +45,6 @@ public class DataImportController implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
-        System.out.println("begin");
         try {
             //导入es数据
             dataImportService.refreshDoc();
