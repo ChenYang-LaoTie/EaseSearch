@@ -29,11 +29,11 @@ scheduled:
 
 
 #openEuler    openGauss    openLookeng    mindSpore
-system: ${searchsystem:openEuler}
+#system: ${searchsystem:openEuler}
+system: openEuler
 
 #formal test
-#dep: ${depp:test}
-dep: test
+dep: ${depp:test}
 
 #异步配置
 asyncThreadPool:
