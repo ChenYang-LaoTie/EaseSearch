@@ -7,13 +7,13 @@ mkdir -p /usr/local/docs/target/zh/
 mkdir -p /usr/local/docs/target/en/
 mkdir -p /usr/local/docs/target/ru/
 
-# shellcheck disable=SC2164
-cd /usr/local/docs/source/openEuler-portal
-
 if [ ! -d "/usr/local/docs/source/openEuler-portal" ]; then
  rm -rf /usr/local/docs/target
  exit
 fi
+
+# shellcheck disable=SC2164
+cd /usr/local/docs/source/openEuler-portal
 
 cp -r /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/zh /usr/local/docs/target/
 cp -r /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/en /usr/local/docs/target/

@@ -6,13 +6,13 @@ fi
 mkdir -p /usr/local/docs/target/zh/
 mkdir -p /usr/local/docs/target/en/
 
-# shellcheck disable=SC2164
-cd /usr/local/docs/source/website
-
 if [ ! -d "/usr/local/docs/source/website" ]; then
  rm -rf /usr/local/docs/target
  exit
 fi
+
+# shellcheck disable=SC2164
+cd /usr/local/docs/source/website
 
 cp -r /usr/local/docs/source/website/app/.vitepress/dist/zh /usr/local/docs/target/
 cp -r /usr/local/docs/source/website/app/.vitepress/dist/en /usr/local/docs/target/
