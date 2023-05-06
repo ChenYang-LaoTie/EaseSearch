@@ -44,6 +44,8 @@ rm -rf statement
 rm -rf statics
 rm -rf tutorial
 rm -rf video
+rm -rf mindscience
+rm -rf vision
 
 rm -f *
 
