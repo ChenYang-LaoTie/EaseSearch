@@ -76,6 +76,7 @@ public class DataImportServiceImpl implements DataImportService {
             log.error("服务器开小差了");
             return;
         }
+        System.out.println("+++++++++++++++++" + indexFile.length());
         log.info("开始更新es文档");
         try {
             makeIndex(s.index + "_" + "zh");
