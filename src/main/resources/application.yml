@@ -32,7 +32,8 @@ scheduled:
 system: ${searchsystem:openEuler}
 
 #formal test
-dep: ${depp:test}
+#dep: ${depp:test}
+dep: test
 
 #异步配置
 asyncThreadPool:
