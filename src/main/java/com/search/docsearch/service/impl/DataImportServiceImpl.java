@@ -98,7 +98,7 @@ public class DataImportServiceImpl implements DataImportService {
                     if (map != null) {
                         Map<String, Object> d = (Map<String, Object>) map;
                         insert(d, s.getIndex() + "_" + d.get("lang"));
-                        idSet.add((String)d.get("path"));
+                        idSet.add((String) d.get("path"));
                     }
 
                 } catch (Exception e) {
@@ -113,14 +113,18 @@ public class DataImportServiceImpl implements DataImportService {
             Class<?> c = Class.forName(className);
             Method m = c.getMethod("customizeData");
             Object map = m.invoke(c.getDeclaredConstructor().newInstance());
-            if (map != null) {
-                List<Map<String, Object>> d = (List<Map<String, Object>>) map;
-                System.out.println("============== " + d.size());
-                for (Map<String, Object> lm : d) {
-                    insert(lm, s.getIndex() + "_" + lm.get("lang"));
-                    idSet.add((String) lm.get("path"));
-                }
+            if (map == null) {
+                log.error("自定义数据获取失效，不更新该部分");
+                return;
             }
+
+            List<Map<String, Object>> d = (List<Map<String, Object>>) map;
+            System.out.println("============== " + d.size());
+            for (Map<String, Object> lm : d) {
+                insert(lm, s.getIndex() + "_" + lm.get("lang"));
+                idSet.add((String) lm.get("path"));
+            }
+
         } catch (Exception e) {
             log.error("error: " + e.getMessage());
         }
