@@ -143,11 +143,11 @@ public class MINDSPORE {
                 return false;
             }
             title = title.replaceAll("¶", "");
+            textContent = one.text();
         } else {
             return false;
         }
 
-        textContent = sections.text();
         jsonMap.put("title", title);
         jsonMap.put("textContent", textContent);
         return true;
