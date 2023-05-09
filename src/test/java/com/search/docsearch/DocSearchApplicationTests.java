@@ -257,7 +257,7 @@ class DocSearchApplicationTests {
 
     @Test
     public void myTest() throws IOException {
-        File file = FileUtils.getFile("C:\\CYDev\\workspace\\mindspore.github.io\\webapp\\public\\docs\\zh-CN\\master\\api_python\\nn_probability\\mindspore.nn.probability.distribution.Geometric.html");
+        File file = FileUtils.getFile("C:\\CYDev\\workspace\\website-docs\\public\\docs\\zh-CN\\r2.0\\api_python\\mindspore.html");
         String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 //		System.out.println(fileContent);
 
@@ -265,24 +265,10 @@ class DocSearchApplicationTests {
 
         Elements sections = node.getElementsByClass("section");
 
-        Element one = sections.get(0);
-
-        Elements enTitle = one.getElementsByAttributeValue("title", "Permalink to this headline");
-        Elements zhTitle = one.getElementsByAttributeValue("title", "永久链接至标题");
-        String title = "";
-        if (enTitle.size() > 0) {
-            Element t = enTitle.get(0).parent();
-            title = t.text();
-            t.remove();
-        } else if (zhTitle.size() > 0) {
-            Element t = zhTitle.get(0).parent();
-            System.out.println(zhTitle.get(0).parent());
-            title = t.text();
-            t.remove();
-        } else {
-            System.out.println("https://www.mindspore.cn/");
+        if (sections.size() > 0) {
+            Element one = sections.get(0);
+            System.out.println(one.toString());
         }
-        System.out.println(title);
     }
     public static final String MINDSPORE_OFFICIAL = "https://www.mindspore.cn";
 
