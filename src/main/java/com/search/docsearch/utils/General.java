@@ -12,7 +12,7 @@ public class General {
     private static final HashMap<String, String > REPLACE_MAP  = new HashMap<String, String>(){{
         put("_", " ");
         put("&", " ");
-        put("+", " ");
+        put("\\+", " ");
         put(".", " ");
     }};
 
