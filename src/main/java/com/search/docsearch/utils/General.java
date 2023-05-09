@@ -9,11 +9,11 @@ import java.util.regex.Pattern;
 
 public class General {
     static final String REGEX_CHINESE = "[\u4e00-\u9fa5]";// 中文正则
-    private static final HashMap<String, String > REPLACE_MAP  = new HashMap<String, String>(){{
+    private static final HashMap<String, String> REPLACE_MAP = new HashMap<String, String>() {{
         put("_", " ");
         put("&", " ");
-        put("\\+", " ");
-        put("\\.", " ");
+        put("+", " ");
+        put(".", " ");
     }};
 
     public static String removeChinese(String str) {
@@ -29,12 +29,10 @@ public class General {
     }
 
     public static String replacementCharacter(String str) {
-        String reply = str;
         for (Map.Entry<String, String> entry : REPLACE_MAP.entrySet()) {
-            if (str.contains(entry.getKey())) {
-                reply = str.replaceAll(entry.getKey(), entry.getValue());
-            }
+            str = str.replace(entry.getKey(), entry.getValue());
         }
+        String reply = str;
         return reply;
     }
 
