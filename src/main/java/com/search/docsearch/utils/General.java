@@ -31,7 +31,9 @@ public class General {
     public static String replacementCharacter(String str) {
         String reply = str;
         for (Map.Entry<String, String> entry : REPLACE_MAP.entrySet()) {
-            reply = str.replaceAll(entry.getKey(), entry.getValue());
+            if (str.contains(entry.getKey())) {
+                reply = str.replaceAll(entry.getKey(), entry.getValue());
+            }
         }
         return reply;
     }
