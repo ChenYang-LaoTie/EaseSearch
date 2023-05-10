@@ -29,8 +29,7 @@ scheduled:
 
 
 #openEuler    openGauss    openLookeng    mindSpore
-#system: ${searchsystem:openEuler}
-system: openGauss
+system: ${searchsystem:openEuler}
 
 #formal test
 dep: ${depp:test}

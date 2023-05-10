@@ -18,7 +18,7 @@ RUN chmod 777 -R ./* \
     && chmod 777 -R script \
     && mkdir -p /usr/local/docs/source/ \
     && cd /usr/local/docs/source \
-    && git clone https://gitee.com/opengauss/website.git -b al-test  \
+    && git clone https://gitee.com/opengauss/website.git -b v2  \
     && cd website \
     && pnpm install \
     && pnpm build \
