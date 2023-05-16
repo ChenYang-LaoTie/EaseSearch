@@ -40,6 +40,7 @@ public class OPENEULER {
 
 
     public static final String FORUMDOMAIM = "https://forum.openeuler.org";
+    public static final String REPODOMAI = "https://repo.openeuler.org";
 
     public Map<String, Object> parse(File file) throws Exception {
         String originalPath = file.getPath();
@@ -51,7 +52,7 @@ public class OPENEULER {
                 .replace(".md", "")
                 .replace(".html", "");
 
-        String lang = path.substring(0,path.indexOf("/"));
+        String lang = path.substring(0, path.indexOf("/"));
 
         String type = path.substring(lang.length() + 1, path.indexOf("/", lang.length() + 1));
         if (!DOCS.equals(type)
@@ -199,7 +200,6 @@ public class OPENEULER {
     }
 
 
-
     public Map<String, Object> parseHook(String data) {
         int index = data.indexOf(" ");
         String parameter = data.substring(0, index);
@@ -234,7 +234,7 @@ public class OPENEULER {
 
         //验证是否为删除
         //为了清除http请求缓存所在请求路径上加了随机数
-        String p = FORUMDOMAIM + jsonMap.get("path") + "?ran=" + Math.random(); ;
+        String p = FORUMDOMAIM + jsonMap.get("path") + "?ran=" + Math.random();
         HttpURLConnection connection = null;
         try {
             connection = sendHTTP(p, "GET");
@@ -262,7 +262,7 @@ public class OPENEULER {
         String req = "";
         HttpURLConnection connection = null;
         String result;  // 返回结果字符串
-        for (int i = 0;;i ++) {
+        for (int i = 0; ; i++) {
             req = path + i;
             try {
                 connection = sendHTTP(req, "GET");
@@ -285,6 +285,8 @@ public class OPENEULER {
                 }
             }
         }
+
+
         return r;
     }
 
@@ -298,7 +300,7 @@ public class OPENEULER {
         String path = "";
         HttpURLConnection connection = null;
         String result;  // 返回结果字符串
-        for (int i = 0; i < jsonArray.size(); i ++) {
+        for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject topic = jsonArray.getJSONObject(i);
             String id = topic.getString("id");
             String slug = topic.getString("slug");
@@ -340,12 +342,70 @@ public class OPENEULER {
         return true;
     }
 
+
+//    public boolean setRepoData(String route, List<Map<String, Object>> r) {
+//        String path = REPODOMAI + route;
+//
+//        String req = "";
+//        HttpURLConnection connection = null;
+//        String result;  // 返回结果字符串
+//
+//        try {
+//            connection = sendHTTP(path, "GET");
+//
+//            if (connection.getResponseCode() != 200) {
+//                log.error("GET path  - " + path + "error:" + connection.getResponseMessage());
+//                return false;
+//            }
+//
+//            if (!connection.getContentType().equals("text/html")) {
+//                setOneRepo(path, r);
+//                return true;
+//            }
+//
+//            result = ReadInput(connection.getInputStream());
+//
+//            connection.disconnect();
+//
+//            Document node = Jsoup.parse(result);
+//
+//            Element table = node.getElementById("list");
+//            if (table == null) {
+//                return false;
+//            }
+//            Elements links = table.getElementsByClass("link");
+//            for (Element link : links) {
+//
+//                String text = link.text();
+//                if (text.equals("Parent directory/")) {
+//                    continue;
+//                }
+//                if (text.endsWith("/")) {
+//                    TimeUnit.SECONDS.sleep(5);
+//                    if (!setRepoData(route + text, r)) {
+//                        return false;
+//                    }
+//                } else {
+//                    setOneRepo(path + text, r);
+//                }
+//            }
+//        } catch (Exception e) {
+//            System.out.println("get " + path + "   error: " + e.getMessage());
+//            return false;
+//        }
+//        return true;
+//    }
+//
+//    private void setOneRepo(String path, List<Map<String, Object>> r) {
+//        System.out.println(path);
+//    }
+
     private HttpURLConnection sendHTTP(String path, String method) throws IOException {
         URL url = new URL(path);
         HttpURLConnection connection = null;
         connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method);
-        connection.setConnectTimeout(15000);
+        connection.setConnectTimeout(60000);
         connection.setReadTimeout(60000);
         connection.connect();
         return connection;

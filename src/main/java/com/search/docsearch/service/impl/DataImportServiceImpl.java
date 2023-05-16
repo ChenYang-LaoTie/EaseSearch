@@ -9,6 +9,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -23,6 +24,7 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.Index;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
@@ -60,6 +62,12 @@ public class DataImportServiceImpl implements DataImportService {
     @Override
     @Async("threadPoolTaskExecutor")
     public void refreshDoc() throws IOException {
+        if (!doRefresh()) {
+            //如果先行条件不成立则该服务启动不更新es
+            log.info("===============本次服务启动不更新文档=================");
+            return;
+        }
+
         log.info("===============开始运行bash脚本=================");
         ProcessBuilder pb = new ProcessBuilder(s.initDoc);
         Process p = pb.start();
@@ -74,18 +82,12 @@ public class DataImportServiceImpl implements DataImportService {
         if (!indexFile.exists()) {
             log.error(String.format("%s 文件夹不存在", indexFile.getPath()));
             log.error("服务器开小差了");
+            globalUnlock();
             return;
         }
 
         log.info("开始更新es文档");
-        try {
-            makeIndex(s.index + "_" + "zh");
-            makeIndex(s.index + "_" + "en");
-            makeIndex(s.index + "_" + "ru");
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return;
-        }
+
         Set<String> idSet = new HashSet<>();
         Collection<File> listFiles = FileUtils.listFiles(indexFile, new String[]{"md", "html"}, true);
         for (File paresFile : listFiles) {
@@ -115,6 +117,7 @@ public class DataImportServiceImpl implements DataImportService {
             Object map = m.invoke(c.getDeclaredConstructor().newInstance());
             if (map == null) {
                 log.error("自定义数据获取失效，不更新该部分");
+                globalUnlock();
                 return;
             }
 
@@ -132,6 +135,36 @@ public class DataImportServiceImpl implements DataImportService {
         deleteExpired(idSet);
 
         log.info("所有文档更新成功");
+        globalUnlock();
+    }
+
+
+    public boolean doRefresh() {
+        try {
+            //使用es实现本次全局锁，对本次操作加锁
+            globalLock();
+
+            //创建index
+            makeIndex(s.index + "_" + "zh");
+            makeIndex(s.index + "_" + "en");
+            makeIndex(s.index + "_" + "ru");
+            return true;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
+
+    }
+
+    public void globalLock() throws IOException {
+        IndexRequest indexRequest = new IndexRequest(s.index + "_" + "lock").id("global_lock").source("{}", XContentType.JSON);
+        indexRequest.opType(DocWriteRequest.OpType.CREATE);
+        IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+    }
+
+    public void globalUnlock() throws IOException {
+        DeleteRequest deleteRequest = new DeleteRequest(s.index + "_" + "lock", "global_lock");
+        DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
     }
 
     public void renew(Map<String, Object> data, String index) throws Exception {
