@@ -135,6 +135,8 @@ public class DataImportServiceImpl implements DataImportService {
 
         } catch (Exception e) {
             log.error("error: " + e.getMessage());
+            globalUnlock();
+            return;
         }
 
         deleteExpired(idSet);
