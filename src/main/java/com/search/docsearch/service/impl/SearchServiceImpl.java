@@ -209,7 +209,7 @@ public class SearchServiceImpl implements SearchService {
                         vBuilder.must(QueryBuilders.termQuery(key + ".keyword", value));
                     }
                 }
-               zBuilder.should(vBuilder);
+                zBuilder.should(vBuilder);
             }
             boolQueryBuilder.filter(zBuilder);
         }
