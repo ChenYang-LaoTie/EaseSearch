@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class OPENEULER {
+    public static final String BASEPATH = "/usr/local/docs/target/";
 
     public static final String BLOG = "blog";
     public static final String BLOGS = "blogs";
@@ -47,7 +48,7 @@ public class OPENEULER {
         String fileName = file.getName();
         String path = originalPath
                 .replace("\\", "/")
-                .replace(Constants.BASEPATH, "")
+                .replace(BASEPATH, "")
                 .replace("\\\\", "/")
                 .replace(".md", "")
                 .replace(".html", "");

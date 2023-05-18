@@ -3,7 +3,6 @@ package com.search.docsearch.parse;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.search.docsearch.constant.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.commonmark.node.Node;
@@ -26,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class MINDSPORE {
+    public static final String BASEPATH = "/usr/local/docs/target/";
 
     public static final String LANG_EN = "/en/";
     public static final String LANG_ZH = "/zh-CN/";
@@ -60,7 +60,7 @@ public class MINDSPORE {
         String fileName = file.getName();
         String path = originalPath
                 .replace("\\", "/")
-                .replace(Constants.BASEPATH, "")
+                .replace(BASEPATH, "")
                 .replace("\\\\", "/");
 
         Map<String, Object> jsonMap = new HashMap<>();

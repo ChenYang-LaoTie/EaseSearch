@@ -1,6 +1,5 @@
 package com.search.docsearch.parse;
 
-import com.search.docsearch.constant.Constants;
 import org.apache.commons.io.FileUtils;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -21,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OPENGAUSS {
+    public static final String BASEPATH = "/usr/local/docs/target/";
 
     public static final String BLOG = "blog";
     public static final String BLOGS = "blogs";
@@ -37,7 +37,7 @@ public class OPENGAUSS {
         String fileName = file.getName();
         String path = originalPath
                 .replace("\\", "/")
-                .replace(Constants.BASEPATH, "")
+                .replace(BASEPATH, "")
                 .replace("\\\\", "/")
                 .replace(".md", "")
                 .replace(".html", "");

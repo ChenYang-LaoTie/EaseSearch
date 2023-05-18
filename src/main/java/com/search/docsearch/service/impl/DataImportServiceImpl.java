@@ -9,9 +9,12 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import com.search.docsearch.constant.Constants;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.ClearScrollRequest;
@@ -24,7 +27,6 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.Index;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
@@ -33,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,6 +43,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.*;
 
@@ -58,6 +62,7 @@ public class DataImportServiceImpl implements DataImportService {
     @Qualifier("initKafka")
     private KafkaConfig kafkaConfig;
 
+    private static final String GLOBAL_LOCK_ID = "global_lock";
 
     @Override
     @Async("threadPoolTaskExecutor")
@@ -141,13 +146,27 @@ public class DataImportServiceImpl implements DataImportService {
 
     public boolean doRefresh() {
         try {
+            makeIndex(s.index + "_" + "lock", null);
+            //如果检测到有超时锁，先删除锁
+            GetRequest getRequest = new GetRequest(s.index + "_" + "lock", GLOBAL_LOCK_ID);
+            GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
+            if (getResponse.isExists()) {
+                String postDate = (String) getResponse.getSource().get("postDate");
+                SimpleDateFormat bjSdf = new SimpleDateFormat(Constants.DATE_FORMAT);
+                bjSdf.setTimeZone(TimeZone.getTimeZone(Constants.SHANGHAI_TIME_ZONE));
+                Date date = bjSdf.parse(postDate);
+                if ((new Date().getTime() - date.getTime()) > Constants.MILLISECONDS_OF_A_DAY) {
+                    globalUnlock();
+                }
+            }
+
             //使用es实现本次全局锁，对本次操作加锁
             globalLock();
 
             //创建index
-            makeIndex(s.index + "_" + "zh");
-            makeIndex(s.index + "_" + "en");
-            makeIndex(s.index + "_" + "ru");
+            makeIndex(s.index + "_" + "zh", s.mappingPath);
+            makeIndex(s.index + "_" + "en", s.mappingPath);
+            makeIndex(s.index + "_" + "ru", s.mappingPath);
             return true;
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -157,13 +176,19 @@ public class DataImportServiceImpl implements DataImportService {
     }
 
     public void globalLock() throws IOException {
-        IndexRequest indexRequest = new IndexRequest(s.index + "_" + "lock").id("global_lock").source("{}", XContentType.JSON);
+        Map<String, Object> jsonMap = new HashMap<>();
+        Date date = new Date();
+        SimpleDateFormat bjSdf = new SimpleDateFormat(Constants.DATE_FORMAT);
+        bjSdf.setTimeZone(TimeZone.getTimeZone(Constants.SHANGHAI_TIME_ZONE));
+        jsonMap.put("postDate", bjSdf.format(date));
+
+        IndexRequest indexRequest = new IndexRequest(s.index + "_" + "lock").id(GLOBAL_LOCK_ID).source(jsonMap);
         indexRequest.opType(DocWriteRequest.OpType.CREATE);
         IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
     }
 
     public void globalUnlock() throws IOException {
-        DeleteRequest deleteRequest = new DeleteRequest(s.index + "_" + "lock", "global_lock");
+        DeleteRequest deleteRequest = new DeleteRequest(s.index + "_" + "lock", GLOBAL_LOCK_ID);
         DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
     }
 
@@ -185,7 +210,7 @@ public class DataImportServiceImpl implements DataImportService {
         IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
     }
 
-    public void makeIndex(String index) throws IOException {
+    public void makeIndex(String index, String mappingPath) throws IOException {
         GetIndexRequest request = new GetIndexRequest(index);
         request.local(false);
         request.humanReadable(true);
@@ -196,12 +221,13 @@ public class DataImportServiceImpl implements DataImportService {
         }
 
         CreateIndexRequest request1 = new CreateIndexRequest(index);
-        File mappingJson = FileUtils.getFile(s.mappingPath);
-        String mapping = FileUtils.readFileToString(mappingJson, StandardCharsets.UTF_8);
+        if (StringUtils.hasText(mappingPath)) {
+            File mappingJson = FileUtils.getFile(mappingPath);
+            String mapping = FileUtils.readFileToString(mappingJson, StandardCharsets.UTF_8);
 
-        request1.mapping(mapping, XContentType.JSON);
-        request1.setTimeout(TimeValue.timeValueMillis(1));
-
+            request1.mapping(mapping, XContentType.JSON);
+            request1.setTimeout(TimeValue.timeValueMillis(1));
+        }
         restHighLevelClient.indices().create(request1, RequestOptions.DEFAULT);
     }
 
