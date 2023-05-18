@@ -344,63 +344,6 @@ public class OPENEULER {
     }
 
 
-//    public boolean setRepoData(String route, List<Map<String, Object>> r) {
-//        String path = REPODOMAI + route;
-//
-//        String req = "";
-//        HttpURLConnection connection = null;
-//        String result;  // 返回结果字符串
-//
-//        try {
-//            connection = sendHTTP(path, "GET");
-//
-//            if (connection.getResponseCode() != 200) {
-//                log.error("GET path  - " + path + "error:" + connection.getResponseMessage());
-//                return false;
-//            }
-//
-//            if (!connection.getContentType().equals("text/html")) {
-//                setOneRepo(path, r);
-//                return true;
-//            }
-//
-//            result = ReadInput(connection.getInputStream());
-//
-//            connection.disconnect();
-//
-//            Document node = Jsoup.parse(result);
-//
-//            Element table = node.getElementById("list");
-//            if (table == null) {
-//                return false;
-//            }
-//            Elements links = table.getElementsByClass("link");
-//            for (Element link : links) {
-//
-//                String text = link.text();
-//                if (text.equals("Parent directory/")) {
-//                    continue;
-//                }
-//                if (text.endsWith("/")) {
-//                    TimeUnit.SECONDS.sleep(5);
-//                    if (!setRepoData(route + text, r)) {
-//                        return false;
-//                    }
-//                } else {
-//                    setOneRepo(path + text, r);
-//                }
-//            }
-//        } catch (Exception e) {
-//            System.out.println("get " + path + "   error: " + e.getMessage());
-//            return false;
-//        }
-//        return true;
-//    }
-//
-//    private void setOneRepo(String path, List<Map<String, Object>> r) {
-//        System.out.println(path);
-//    }
-
     private HttpURLConnection sendHTTP(String path, String method) throws IOException {
         URL url = new URL(path);
         HttpURLConnection connection = null;
