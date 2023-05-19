@@ -83,6 +83,7 @@ public class DataImportServiceImpl implements DataImportService {
                 log.info(line);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             globalUnlock();
             return;
         }
