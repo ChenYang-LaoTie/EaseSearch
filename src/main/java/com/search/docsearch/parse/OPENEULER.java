@@ -385,7 +385,7 @@ public class OPENEULER {
                     jsonMap.put("path", path);
                     jsonMap.put("type", "service");
                     jsonMap.put("lang", "zh");
-
+                    System.out.println("add");
                     r.add(jsonMap);
                 }
             }
@@ -410,13 +410,16 @@ public class OPENEULER {
             return false;
         }
         String url = row.getCell(2).getStringCellValue();
+        System.out.println(url);
         HttpURLConnection connection = null;
         try {
             connection = sendHTTP(url, "GET");
             if (connection.getResponseCode() != 200) {
+                System.out.println("no 200");
                 return false;
             }
             if (!connection.getContentType().contains("text/html")) {
+                System.out.println("no html");
                 return false;
             }
         } catch (Exception e) {

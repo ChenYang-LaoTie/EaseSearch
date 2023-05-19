@@ -59,7 +59,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class DocSearchApplicationTests {
@@ -276,7 +279,8 @@ class DocSearchApplicationTests {
     @Test
     public void myT() {
         OPENEULER openeuler = new OPENEULER();
-        openeuler.serviceInfo(null);
+        List<Map<String, Object>> r = new ArrayList<>();
+        openeuler.serviceInfo(r);
     }
 
 }
