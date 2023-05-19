@@ -420,7 +420,7 @@ public class OPENEULER {
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("get - " + url + " error: " + e.getMessage());
             //有些服务经常访问超时，但是不代表服务本身不可访问。
             return e.getMessage().contains("Connection timed out");
         } finally {
