@@ -3,9 +3,11 @@ package com.search.docsearch.parse;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.search.docsearch.constant.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -286,7 +288,10 @@ public class OPENEULER {
                 }
             }
         }
-
+        if (!serviceInfo(r)) {
+            log.error("服务数据添加失败");
+            return null;
+        }
 
         return r;
     }
@@ -343,6 +348,80 @@ public class OPENEULER {
         return true;
     }
 
+
+    public boolean serviceInfo(List<Map<String, Object>> r) {
+        String url = "https://ops.osinfra.cn/api/app_resources/sla_export";
+        HttpURLConnection connection = null;
+        String result;  // 返回结果字符串
+        try {
+            connection = sendHTTP(url, "GET");
+            if (connection.getResponseCode() != 200) {
+                return false;
+            }
+
+            XSSFWorkbook workbook = new XSSFWorkbook(connection.getInputStream());
+            XSSFSheet sheet = workbook.getSheet("Sla");
+            int lastRowIndex = sheet.getLastRowNum();
+            for (int i = 1; i <= lastRowIndex; i++) {
+                XSSFRow row = sheet.getRow(i);
+                if (row.getCell(3) == null || !row.getCell(3).getStringCellValue().toLowerCase(Locale.ROOT).equals("openeuler")) {
+                    continue;
+                }
+                if (canBeEntered(row)) {
+                    Map<String, Object> jsonMap = new HashMap<>();
+
+                    String title = row.getCell(1).getStringCellValue();
+                    String path = row.getCell(2).getStringCellValue();
+                    jsonMap.put("title", title);
+                    jsonMap.put("path", path);
+                    jsonMap.put("type", "service");
+                    jsonMap.put("lang", "zh");
+
+                    r.add(jsonMap);
+                }
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != connection) {
+                connection.disconnect();
+            }
+        }
+        return true;
+    }
+
+
+    private boolean canBeEntered(XSSFRow row) {
+        if (row.getCell(1).getStringCellValue() == null) {
+            return false;
+        }
+        if (row.getCell(2).getStringCellValue() == null) {
+            return false;
+        }
+        String url = row.getCell(2).getStringCellValue();
+        HttpURLConnection connection = null;
+        try {
+            connection = sendHTTP(url, "GET");
+            if (connection.getResponseCode() != 200) {
+                return false;
+            }
+            if (!connection.getContentType().contains("text/html")) {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            //有些服务经常访问超时，但是不代表服务本身不可访问。
+            return e.getMessage().contains("Connection timed out");
+        } finally {
+            if (null != connection) {
+                connection.disconnect();
+            }
+        }
+
+        return true;
+    }
 
     private HttpURLConnection sendHTTP(String path, String method) throws IOException {
         URL url = new URL(path);

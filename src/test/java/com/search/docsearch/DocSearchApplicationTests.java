@@ -2,6 +2,7 @@ package com.search.docsearch;
 
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.parse.MINDSPORE;
+import com.search.docsearch.parse.OPENEULER;
 import com.search.docsearch.service.DataImportService;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpHost;
@@ -271,5 +272,11 @@ class DocSearchApplicationTests {
         }
     }
     public static final String MINDSPORE_OFFICIAL = "https://www.mindspore.cn";
+
+    @Test
+    public void myT() {
+        OPENEULER openeuler = new OPENEULER();
+        openeuler.serviceInfo(null);
+    }
 
 }
