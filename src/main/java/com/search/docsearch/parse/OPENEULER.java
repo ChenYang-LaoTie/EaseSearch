@@ -258,9 +258,23 @@ public class OPENEULER {
     }
 
     public List<Map<String, Object>> customizeData() {
-        String path = FORUMDOMAIM + "/latest.json?no_definitions=true&page=";
-
         List<Map<String, Object>> r = new ArrayList<>();
+
+        if (!setForum(r)) {
+            log.error("博客数据添加失败");
+            return null;
+        }
+
+        if (!serviceInfo(r)) {
+            log.error("服务数据添加失败");
+            return null;
+        }
+
+        return r;
+    }
+
+    private boolean setForum(List<Map<String, Object>> r) {
+        String path = FORUMDOMAIM + "/latest.json?no_definitions=true&page=";
 
         String req = "";
         HttpURLConnection connection = null;
@@ -277,23 +291,18 @@ public class OPENEULER {
                     }
                 } else {
                     log.error(req + " - ", connection.getResponseCode());
-                    return null;
+                    return false;
                 }
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
-                return null;
+                return false;
             } finally {
                 if (null != connection) {
                     connection.disconnect();
                 }
             }
         }
-        if (!serviceInfo(r)) {
-            log.error("服务数据添加失败");
-            return null;
-        }
-
-        return r;
+        return true;
     }
 
     private boolean setData(String data, List<Map<String, Object>> r) {
