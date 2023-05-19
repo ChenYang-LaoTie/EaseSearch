@@ -5,11 +5,15 @@ import java.util.Set;
 
 public interface DataImportService {
 
-    void refreshDoc() throws IOException;
+    void refreshDoc();
 
     void sendKafka(String data, String parameter);
 
     void listenKafka();
 
     void deleteExpired(Set<String> idSet);
+
+    public void globalLock();
+
+    public void globalUnlock();
 }

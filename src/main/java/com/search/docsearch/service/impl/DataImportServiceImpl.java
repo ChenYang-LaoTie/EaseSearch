@@ -66,7 +66,7 @@ public class DataImportServiceImpl implements DataImportService {
 
     @Override
     @Async("threadPoolTaskExecutor")
-    public void refreshDoc() throws IOException {
+    public void refreshDoc() {
         if (!doRefresh()) {
             //如果先行条件不成立则该服务启动不更新es
             log.info("===============本次服务启动不更新文档=================");
@@ -74,13 +74,19 @@ public class DataImportServiceImpl implements DataImportService {
         }
 
         log.info("===============开始运行bash脚本=================");
-        ProcessBuilder pb = new ProcessBuilder(s.initDoc);
-        Process p = pb.start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            log.info(line);
+        try {
+            ProcessBuilder pb = new ProcessBuilder(s.initDoc);
+            Process p = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                log.info(line);
+            }
+        } catch (Exception e) {
+            globalUnlock();
+            return;
         }
+
         log.info("===============bash脚本运行完成=================");
 
         File indexFile = new File(s.basePath);
@@ -174,24 +180,31 @@ public class DataImportServiceImpl implements DataImportService {
             log.error(e.getMessage());
             return false;
         }
-
     }
 
-    public void globalLock() throws IOException {
+    public void globalLock() {
         Map<String, Object> jsonMap = new HashMap<>();
         Date date = new Date();
         SimpleDateFormat bjSdf = new SimpleDateFormat(Constants.DATE_FORMAT);
         bjSdf.setTimeZone(TimeZone.getTimeZone(Constants.SHANGHAI_TIME_ZONE));
         jsonMap.put("postDate", bjSdf.format(date));
 
-        IndexRequest indexRequest = new IndexRequest(s.index + "_" + "lock").id(GLOBAL_LOCK_ID).source(jsonMap);
-        indexRequest.opType(DocWriteRequest.OpType.CREATE);
-        IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+        try {
+            IndexRequest indexRequest = new IndexRequest(s.index + "_" + "lock").id(GLOBAL_LOCK_ID).source(jsonMap);
+            indexRequest.opType(DocWriteRequest.OpType.CREATE);
+            IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void globalUnlock() throws IOException {
-        DeleteRequest deleteRequest = new DeleteRequest(s.index + "_" + "lock", GLOBAL_LOCK_ID);
-        DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
+    public void globalUnlock() {
+        try {
+            DeleteRequest deleteRequest = new DeleteRequest(s.index + "_" + "lock", GLOBAL_LOCK_ID);
+            DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void renew(Map<String, Object> data, String index) throws Exception {
