@@ -403,10 +403,10 @@ public class OPENEULER {
 
 
     private boolean canBeEntered(XSSFRow row) {
-        if (row.getCell(1).getStringCellValue() == null) {
+        if (row.getCell(1) == null) {
             return false;
         }
-        if (row.getCell(2).getStringCellValue() == null) {
+        if (row.getCell(2) == null) {
             return false;
         }
         String url = row.getCell(2).getStringCellValue();
