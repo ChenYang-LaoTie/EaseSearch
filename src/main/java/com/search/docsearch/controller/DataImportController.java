@@ -51,20 +51,16 @@ public class DataImportController implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
-//        try {
-//            //导入es数据
-//            dataImportService.refreshDoc();
-//            //如果配置钟需要kafka则启动监听
-//            if (needKafka) {
-//                dataImportService.listenKafka();
-//            }
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//        }
-        OPENEULER openeuler = new OPENEULER();
-        List<Map<String, Object>> r = new ArrayList<>();
-        openeuler.serviceInfo(r);
-
+        try {
+            //导入es数据
+            dataImportService.refreshDoc();
+            //如果配置钟需要kafka则启动监听
+            if (needKafka) {
+                dataImportService.listenKafka();
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     /**
