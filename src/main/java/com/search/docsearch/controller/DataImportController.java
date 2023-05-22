@@ -2,6 +2,7 @@ package com.search.docsearch.controller;
 
 
 import com.search.docsearch.config.MySystem;
+import com.search.docsearch.parse.OPENEULER;
 import com.search.docsearch.service.DataImportService;
 import com.search.docsearch.service.SearchService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -57,22 +61,9 @@ public class DataImportController implements ApplicationRunner {
 //        } catch (Exception e) {
 //            log.error(e.getMessage());
 //        }
-//        OPENEULER openeuler = new OPENEULER();
-//        List<Map<String, Object>> r = new ArrayList<>();
-//        openeuler.serviceInfo(r);
-        try {
-            String path = "https://datastat.openeuler.org/query/all?community=openeuler";
-            URL url = new URL(path);
-            HttpURLConnection connection = null;
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(60000);
-            connection.setReadTimeout(60000);
-            connection.connect();
-            System.out.println(connection.getContentType());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        OPENEULER openeuler = new OPENEULER();
+        List<Map<String, Object>> r = new ArrayList<>();
+        openeuler.serviceInfo(r);
 
     }
 
