@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 @Component
 @Slf4j
@@ -45,16 +47,33 @@ public class DataImportController implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
+//        try {
+//            //导入es数据
+//            dataImportService.refreshDoc();
+//            //如果配置钟需要kafka则启动监听
+//            if (needKafka) {
+//                dataImportService.listenKafka();
+//            }
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//        }
+//        OPENEULER openeuler = new OPENEULER();
+//        List<Map<String, Object>> r = new ArrayList<>();
+//        openeuler.serviceInfo(r);
         try {
-            //导入es数据
-            dataImportService.refreshDoc();
-            //如果配置钟需要kafka则启动监听
-            if (needKafka) {
-                dataImportService.listenKafka();
-            }
+            String path = "https://datastat.openeuler.org/query/all?community=openeuler";
+            URL url = new URL(path);
+            HttpURLConnection connection = null;
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(60000);
+            connection.setReadTimeout(60000);
+            connection.connect();
+            System.out.println(connection.getContentType());
         } catch (Exception e) {
-            log.error(e.getMessage());
+            e.printStackTrace();
         }
+
     }
 
     /**

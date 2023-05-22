@@ -43,7 +43,6 @@ public class OPENEULER {
 
 
     public static final String FORUMDOMAIM = "https://forum.openeuler.org";
-    public static final String REPODOMAI = "https://repo.openeuler.org";
 
     public Map<String, Object> parse(File file) throws Exception {
         String originalPath = file.getPath();
@@ -414,12 +413,14 @@ public class OPENEULER {
         HttpURLConnection connection = null;
         try {
             connection = sendHTTP(url, "GET");
+            System.out.println(connection.getResponseCode());
+            System.out.println(connection.getContentType());
+            String result = ReadInput(connection.getInputStream());
+            System.out.println(result);
             if (connection.getResponseCode() != 200) {
-                System.out.println("no 200");
                 return false;
             }
             if (!connection.getContentType().contains("text/html")) {
-                System.out.println("no html");
                 return false;
             }
         } catch (Exception e) {
@@ -448,7 +449,7 @@ public class OPENEULER {
 
     private String ReadInput(InputStream is) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-        StringBuffer sbf = new StringBuffer();
+        StringBuilder sbf = new StringBuilder();
         String temp = null;
         while ((temp = br.readLine()) != null) {
             sbf.append(temp);

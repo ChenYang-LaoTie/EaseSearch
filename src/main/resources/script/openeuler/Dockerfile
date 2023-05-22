@@ -5,10 +5,13 @@ ENV LC_ALL C.UTF-8
 ENV LANGUAGE C.UTF-8
 ENV searchsystem openEuler
 
-RUN mkdir -p /EaseSearch \
-    && apt update \
-    && apt-get install -y openjdk-17-jdk \
-    && npm i pnpm -g
+RUN cd /root \
+    &&
+
+#RUN mkdir -p /EaseSearch \
+#    && apt update \
+#    && apt-get install -y openjdk-17-jdk \
+#    && npm i pnpm -g
 
 WORKDIR /EaseSearch
 COPY . /EaseSearch
