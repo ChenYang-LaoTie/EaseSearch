@@ -2,7 +2,6 @@ package com.search.docsearch.controller;
 
 
 import com.search.docsearch.config.MySystem;
-import com.search.docsearch.parse.OPENEULER;
 import com.search.docsearch.service.DataImportService;
 import com.search.docsearch.service.SearchService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Component
 @Slf4j
