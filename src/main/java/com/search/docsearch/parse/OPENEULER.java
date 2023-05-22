@@ -384,7 +384,6 @@ public class OPENEULER {
                     jsonMap.put("path", path);
                     jsonMap.put("type", "service");
                     jsonMap.put("lang", "zh");
-                    System.out.println("add");
                     r.add(jsonMap);
                 }
             }
@@ -413,10 +412,6 @@ public class OPENEULER {
         HttpURLConnection connection = null;
         try {
             connection = sendHTTP(url, "GET");
-            System.out.println(connection.getResponseCode());
-            System.out.println(connection.getContentType());
-            String result = ReadInput(connection.getInputStream());
-            System.out.println(result);
             if (connection.getResponseCode() != 200) {
                 return false;
             }
