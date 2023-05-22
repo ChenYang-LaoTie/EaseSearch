@@ -47,8 +47,7 @@ public class SearchController {
             }
             return SysResult.ok("查询成功", result);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
+            log.error("searchByCondition error is: " + e.getMessage());
         }
         return SysResult.fail("查询失败", null);
     }
@@ -66,8 +65,7 @@ public class SearchController {
             }
             return SysResult.ok("查询成功", result);
         } catch (IOException e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
+            log.error("getSuggestion error is: " + e.getMessage());
         }
         return SysResult.fail("查询失败", null);
     }
@@ -82,8 +80,7 @@ public class SearchController {
             }
             return SysResult.ok("查询成功", result);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
+            log.error("getCount error is: " + e.getMessage());
         }
         return SysResult.fail("查询失败", null);
     }
@@ -100,8 +97,7 @@ public class SearchController {
 
             return SysResult.ok("查询成功", result);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
+            log.error("getPop error is: " + e.getMessage());
         }
         return SysResult.fail("查询失败", null);
     }
@@ -117,7 +113,7 @@ public class SearchController {
             }
             return SysResult.ok("查询成功", result);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("advancedSearch error is: " + e.getMessage());
         }
 
 
@@ -133,7 +129,7 @@ public class SearchController {
             }
             return SysResult.ok("查询成功", result);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("getTags error is: " + e.getMessage());
         }
 
 

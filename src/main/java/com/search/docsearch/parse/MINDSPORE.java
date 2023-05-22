@@ -226,7 +226,7 @@ public class MINDSPORE {
                     return null;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Connection failed, error is: " + e.getMessage());
             } finally {
                 if (null != connection) {
                     connection.disconnect();
@@ -278,12 +278,12 @@ public class MINDSPORE {
         try {
             br.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("read input failed, error is: " + e.getMessage());
         }
         try {
             is.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("close stream failed, error is: " + e.getMessage());
         }
         return sbf.toString();
 
@@ -340,7 +340,7 @@ public class MINDSPORE {
                     log.error(path + " - ", connection.getResponseCode());
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Connection failed, error is: " + e.getMessage());
             } finally {
                 if (null != connection) {
                     connection.disconnect();

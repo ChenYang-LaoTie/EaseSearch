@@ -29,7 +29,7 @@ public class DivideController {
             }
             return SysResult.ok("查询成功", result);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("advancedSearch error is: " + e.getMessage());
         }
 
 
@@ -45,7 +45,7 @@ public class DivideController {
             }
             return SysResult.ok("查询成功", result);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("docsSearch error is: " + e.getMessage());
         }
 
 

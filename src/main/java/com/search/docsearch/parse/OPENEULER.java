@@ -245,7 +245,7 @@ public class OPENEULER {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Connection failed, error is: " + e.getMessage());
         } finally {
             if (null != connection) {
                 connection.disconnect();
@@ -293,7 +293,7 @@ public class OPENEULER {
                     return false;
                 }
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                log.error("Connection failed, error is: " + e.getMessage());
                 return false;
             } finally {
                 if (null != connection) {
@@ -346,7 +346,7 @@ public class OPENEULER {
                     log.error(path + " - ", connection.getResponseCode());
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Connection failed, error is: " + e.getMessage());
             } finally {
                 if (null != connection) {
                     connection.disconnect();
@@ -390,7 +390,7 @@ public class OPENEULER {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Connection failed, error is: " + e.getMessage());
         } finally {
             if (null != connection) {
                 connection.disconnect();
@@ -452,12 +452,12 @@ public class OPENEULER {
         try {
             br.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("read input failed, error is: " + e.getMessage());
         }
         try {
             is.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("close stream failed, error is: " + e.getMessage());
         }
         return sbf.toString();
 

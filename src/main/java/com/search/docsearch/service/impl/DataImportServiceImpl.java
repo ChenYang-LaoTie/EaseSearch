@@ -83,7 +83,7 @@ public class DataImportServiceImpl implements DataImportService {
                 log.info(line);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("The script fails to run with the error: " + e.getMessage());
             globalUnlock();
             return;
         }
@@ -195,7 +195,7 @@ public class DataImportServiceImpl implements DataImportService {
             indexRequest.opType(DocWriteRequest.OpType.CREATE);
             IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to lock index, the error is: " + e.getMessage());
         }
     }
 
@@ -204,7 +204,7 @@ public class DataImportServiceImpl implements DataImportService {
             DeleteRequest deleteRequest = new DeleteRequest(s.index + "_" + "lock", GLOBAL_LOCK_ID);
             DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to unlock index, the error is: " + e.getMessage());
         }
     }
 
