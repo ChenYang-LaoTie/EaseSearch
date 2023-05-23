@@ -358,6 +358,7 @@ public class OPENEULER {
 
 
     public boolean serviceInfo(List<Map<String, Object>> r) {
+        //从ops中获取数据
         String url = "https://ops.osinfra.cn/api/app_resources/sla_export";
         HttpURLConnection connection = null;
         String result;  // 返回结果字符串
@@ -414,6 +415,7 @@ public class OPENEULER {
             if (connection.getResponseCode() != 200) {
                 return false;
             }
+            //如果接口未返回html界面说明是后端数据服务，不加入搜索。
             if (!connection.getContentType().contains("text/html")) {
                 return false;
             }
