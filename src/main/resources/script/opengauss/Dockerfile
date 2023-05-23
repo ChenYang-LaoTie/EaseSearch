@@ -8,12 +8,12 @@ ENV searchsystem openGauss
 RUN cd /root \
     && wget https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-19.0.2_linux-x64_bin.tar.gz \
     && tar -zxvf openjdk-19.0.2_linux-x64_bin.tar.gz \
-    && sed -i '$a export JAVA_HOME=/root/jdk-19.0.2' /etc/profile \
-    && sed -i '$a export PATH=${JAVA_HOME}/bin:$PATH' /etc/profile \
-    && /bin/bash -c "source /etc/profile" \
     && mkdir -p /EaseSearch \
     && apt update \
     && npm i pnpm -g
+
+ENV JAVA_HOME=/root/jdk-19.0.2
+ENV PATH=${JAVA_HOME}/bin:$PATH
 
 WORKDIR /EaseSearch
 COPY . /EaseSearch
