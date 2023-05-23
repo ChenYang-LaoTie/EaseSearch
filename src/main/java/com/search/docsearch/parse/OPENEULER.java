@@ -408,7 +408,6 @@ public class OPENEULER {
             return false;
         }
         String url = row.getCell(2).getStringCellValue();
-        System.out.println(url);
         HttpURLConnection connection = null;
         try {
             connection = sendHTTP(url, "GET");
