@@ -1,9 +1,13 @@
 package com.search.docsearch;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.parse.MINDSPORE;
 import com.search.docsearch.parse.OPENEULER;
 import com.search.docsearch.service.DataImportService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -16,6 +20,9 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -52,19 +59,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.StringUtils;
 
 import javax.net.ssl.SSLContext;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
+@Slf4j
 class DocSearchApplicationTests {
     @Autowired
     @Qualifier("restHighLevelClient")
@@ -283,4 +291,186 @@ class DocSearchApplicationTests {
         openeuler.serviceInfo(r);
     }
 
+
+
+
+
+
+
+
+
+    public static final String FORUMDOMAIM = "https://forum.openeuler.org";
+    @Test
+    public void exportForum() throws IOException {
+        File file = new File("export.jsonl");
+
+        if (!file.exists()) {	//文件不存在则创建文件，先创建目录
+            file.createNewFile();
+        }
+
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file.getPath()));
+
+        List<Map<String, Object>> r = new ArrayList<>();
+        String path = FORUMDOMAIM + "/latest.json?no_definitions=true&page=";
+
+        String req = "";
+        HttpURLConnection connection = null;
+        String result;  // 返回结果字符串
+
+        for (int i = 0; ; i++) {
+            req = path + i;
+            try {
+                connection = sendHTTP(req, "GET", null, null);
+                TimeUnit.SECONDS.sleep(30);
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    result = ReadInput(connection.getInputStream());
+                    if (!setData(result, r, bufferedWriter)) {
+                        break;
+                    }
+                } else {
+                    log.error(req + " - ", connection.getResponseCode());
+                    return;
+                }
+            } catch (IOException | InterruptedException e) {
+                log.error("Connection failed, error is: " + e.getMessage());
+                return;
+            } finally {
+                if (null != connection) {
+                    connection.disconnect();
+                }
+            }
+        }
+        bufferedWriter.close();
+    }
+
+    private boolean setData(String data, List<Map<String, Object>> r, BufferedWriter bw) {
+
+        JSONObject post = JSON.parseObject(data);
+        JSONObject topicList = post.getJSONObject("topic_list");
+        JSONArray jsonArray = topicList.getJSONArray("topics");
+        if (jsonArray.size() <= 0) {
+            return false;
+        }
+
+        String path = "";
+        HttpURLConnection connection = null;
+        String result;  // 返回结果字符串
+
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject topic = jsonArray.getJSONObject(i);
+            String id = topic.getString("id");
+            String slug = topic.getString("slug");
+            path = String.format("%s/t/%s/%s.json?track_visit=true&forceLoad=true", FORUMDOMAIM, slug, id);
+            try {
+                connection = sendHTTP(path, "GET", null, null);
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    result = ReadInput(connection.getInputStream());
+                    JSONObject st = JSON.parseObject(result);
+                    JSONObject postStream = st.getJSONObject("post_stream");
+                    JSONArray posts = postStream.getJSONArray("posts");
+
+                    String pu = st.getString("title");
+
+                    for (int j = 0; j < posts.size(); j ++) {
+                        JSONObject pt = posts.getJSONObject(j);
+                        String cooked = pt.getString("cooked");
+                        Parser parser = Parser.builder().build();
+                        HtmlRenderer renderer = HtmlRenderer.builder().build();
+                        Node document = parser.parse(cooked);
+                        Document node = Jsoup.parse(renderer.render(document));
+
+                        if (!StringUtils.hasText(node.text())) {
+                            continue;
+                        }
+
+                        JSONObject json = new JSONObject();
+                        json.put("prompt", pu);
+                        json.put("completion", node.text());
+                        String zzz = json.toJSONString();
+                        System.out.println(zzz);
+
+                        bw.write(zzz + "\n");
+
+
+
+                    }
+                } else {
+                    log.error(path + " - ", connection.getResponseCode());
+                }
+            } catch (IOException e) {
+                log.error("Connection failed, error is: " + e.getMessage());
+            } finally {
+                if (null != connection) {
+                    connection.disconnect();
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private HttpURLConnection sendHTTP(String path, String method, Map<String, String> header, String body) throws IOException {
+        URL url = new URL(path);
+        HttpURLConnection connection = null;
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod(method);
+
+        if (header != null) {
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                connection.setRequestProperty(entry.getKey(), entry.getValue());
+            }
+        }
+
+        if (StringUtils.hasText(body)) {
+            connection.setDoOutput(true);
+            OutputStream outputStream = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+            writer.write(body);
+            writer.close();
+        }
+
+        connection.setConnectTimeout(60000);
+        connection.setReadTimeout(60000);
+        connection.connect();
+        return connection;
+    }
+
+    private String ReadInput(InputStream is) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        StringBuilder sbf = new StringBuilder();
+        String temp = null;
+        while ((temp = br.readLine()) != null) {
+            sbf.append(temp);
+        }
+        try {
+            br.close();
+        } catch (IOException e) {
+            log.error("read input failed, error is: " + e.getMessage());
+        }
+        try {
+            is.close();
+        } catch (IOException e) {
+            log.error("close stream failed, error is: " + e.getMessage());
+        }
+        return sbf.toString();
+
+    }
+
+
+
+    @Test
+    public void DDd() throws IOException {
+        File file = new File("export.jsonl");
+
+        if (!file.exists()) {	//文件不存在则创建文件，先创建目录
+            file.createNewFile();
+        }
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file.getPath()));
+        bufferedWriter.write("111");
+        bufferedWriter.write("222");
+        bufferedWriter.close();
+        BufferedWriter aaa = new BufferedWriter(new FileWriter(file.getPath()));
+        aaa.write("zzz");
+        aaa.close();
+    }
 }

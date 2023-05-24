@@ -15,12 +15,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.util.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLSyntaxErrorException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +45,7 @@ public class OPENEULER {
 
 
     public static final String FORUMDOMAIM = "https://forum.openeuler.org";
+    public static final String OPS_DOMAIN = "https://ops.osinfra.cn";
 
     public Map<String, Object> parse(File file) throws Exception {
         String originalPath = file.getPath();
@@ -207,7 +210,6 @@ public class OPENEULER {
         String parameter = data.substring(0, index);
         String value = data.substring(index);
 
-
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("type", "forum");
         jsonMap.put("lang", "zh");
@@ -239,8 +241,8 @@ public class OPENEULER {
         String p = FORUMDOMAIM + jsonMap.get("path") + "?ran=" + Math.random();
         HttpURLConnection connection = null;
         try {
-            connection = sendHTTP(p, "GET");
-            if (connection.getResponseCode() != 200) {
+            connection = sendHTTP(p, "GET", null, null);
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 jsonMap.put("delete", "true");
             }
 
@@ -281,9 +283,9 @@ public class OPENEULER {
         for (int i = 0; ; i++) {
             req = path + i;
             try {
-                connection = sendHTTP(req, "GET");
+                connection = sendHTTP(req, "GET", null, null);
                 TimeUnit.SECONDS.sleep(30);
-                if (connection.getResponseCode() == 200) {
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     result = ReadInput(connection.getInputStream());
                     if (!setData(result, r)) {
                         break;
@@ -320,8 +322,8 @@ public class OPENEULER {
             String slug = topic.getString("slug");
             path = String.format("%s/t/%s/%s.json?track_visit=true&forceLoad=true", FORUMDOMAIM, slug, id);
             try {
-                connection = sendHTTP(path, "GET");
-                if (connection.getResponseCode() == 200) {
+                connection = sendHTTP(path, "GET", null, null);
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     result = ReadInput(connection.getInputStream());
                     JSONObject st = JSON.parseObject(result);
                     JSONObject postStream = st.getJSONObject("post_stream");
@@ -358,13 +360,19 @@ public class OPENEULER {
 
 
     public boolean serviceInfo(List<Map<String, Object>> r) {
+        String token = getOpsToken();
+        if (!StringUtils.hasText(token)) {
+            return false;
+        }
         //从ops中获取数据
-        String url = "https://ops.osinfra.cn/api/app_resources/sla_export";
+        String url = OPS_DOMAIN + "/api/app_resources/sla_export";
         HttpURLConnection connection = null;
         String result;  // 返回结果字符串
         try {
-            connection = sendHTTP(url, "GET");
-            if (connection.getResponseCode() != 200) {
+            Map<String, String> header = new HashMap<>();
+            header.put("Authorization", "Bearer " + token);
+            connection = sendHTTP(url, "GET", header, null);
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 return false;
             }
 
@@ -389,16 +397,46 @@ public class OPENEULER {
                     r.add(jsonMap);
                 }
             }
-
-
         } catch (Exception e) {
             log.error("Connection failed, error is: " + e.getMessage());
+            return false;
         } finally {
             if (null != connection) {
                 connection.disconnect();
             }
         }
         return true;
+    }
+
+    private String getOpsToken() {
+        //ops有jwt认证，需要先获取到token
+        String opsUsername = System.getenv("OPS_USERNAME");
+        String opsPassword = System.getenv("OPS_PASSWORD");
+
+        JSONObject tokenCheck = new JSONObject();
+        tokenCheck.put("username", opsUsername);
+        tokenCheck.put("password", opsPassword);
+
+        Map<String, String> tokenHeader = new HashMap<>();
+        tokenHeader.put("Content-Type", "application/json");
+        tokenHeader.put("Accept", "*/*");
+        String tokenUrl = OPS_DOMAIN + "/api/users/login";
+        HttpURLConnection tokenConnection = null;
+        String token = "";
+        try {
+            tokenConnection = sendHTTP(tokenUrl, "POST", tokenHeader, tokenCheck.toJSONString());
+            String result = ReadInput(tokenConnection.getInputStream());
+            JSONObject st = JSON.parseObject(result);
+            token = st.getString("token");
+        } catch (Exception e) {
+            log.error("Connection failed, error is: " + e.getMessage());
+            return "";
+        } finally {
+            if (null != tokenConnection) {
+                tokenConnection.disconnect();
+            }
+        }
+        return token;
     }
 
 
@@ -415,8 +453,8 @@ public class OPENEULER {
         String url = row.getCell(2).getStringCellValue();
         HttpURLConnection connection = null;
         try {
-            connection = sendHTTP(url, "GET");
-            if (connection.getResponseCode() != 200) {
+            connection = sendHTTP(url, "GET", null, null);
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 return false;
             }
             //如果接口未返回html界面说明是后端数据服务，不加入搜索。
@@ -436,11 +474,24 @@ public class OPENEULER {
         return true;
     }
 
-    private HttpURLConnection sendHTTP(String path, String method) throws IOException {
+    private HttpURLConnection sendHTTP(String path, String method, Map<String, String> header, String body) throws IOException {
         URL url = new URL(path);
         HttpURLConnection connection = null;
         connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method);
+        if (header != null) {
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                connection.setRequestProperty(entry.getKey(), entry.getValue());
+            }
+        }
+
+        if (StringUtils.hasText(body)) {
+            connection.setDoOutput(true);
+            OutputStream outputStream = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+            writer.write(body);
+            writer.close();
+        }
         connection.setConnectTimeout(60000);
         connection.setReadTimeout(60000);
         connection.connect();
