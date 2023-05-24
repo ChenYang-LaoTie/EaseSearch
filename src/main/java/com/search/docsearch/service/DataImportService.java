@@ -1,5 +1,6 @@
 package com.search.docsearch.service;
 
+import java.io.IOException;
 import java.util.Set;
 
 public interface DataImportService {
@@ -12,7 +13,7 @@ public interface DataImportService {
 
     void deleteExpired(Set<String> idSet);
 
-    void globalLock();
+    void globalLock() throws IOException;
 
     void globalUnlock();
 }

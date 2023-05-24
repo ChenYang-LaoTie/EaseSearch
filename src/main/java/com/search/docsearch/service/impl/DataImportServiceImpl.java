@@ -183,20 +183,16 @@ public class DataImportServiceImpl implements DataImportService {
         }
     }
 
-    public void globalLock() {
+    public void globalLock() throws IOException {
         Map<String, Object> jsonMap = new HashMap<>();
         Date date = new Date();
         SimpleDateFormat bjSdf = new SimpleDateFormat(Constants.DATE_FORMAT);
         bjSdf.setTimeZone(TimeZone.getTimeZone(Constants.SHANGHAI_TIME_ZONE));
         jsonMap.put("postDate", bjSdf.format(date));
 
-        try {
-            IndexRequest indexRequest = new IndexRequest(s.index + "_" + "lock").id(GLOBAL_LOCK_ID).source(jsonMap);
-            indexRequest.opType(DocWriteRequest.OpType.CREATE);
-            IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
-        } catch (Exception e) {
-            log.error("Failed to lock index, the error is: " + e.getMessage());
-        }
+        IndexRequest indexRequest = new IndexRequest(s.index + "_" + "lock").id(GLOBAL_LOCK_ID).source(jsonMap);
+        indexRequest.opType(DocWriteRequest.OpType.CREATE);
+        IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
     }
 
     public void globalUnlock() {
