@@ -20,6 +20,12 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
+import org.apache.poi.ss.formula.functions.T;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -68,6 +74,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -302,15 +309,11 @@ class DocSearchApplicationTests {
     public static final String FORUMDOMAIM = "https://forum.openeuler.org";
     @Test
     public void exportForum() throws IOException {
-        File file = new File("export.jsonl");
+        List<String[]> aal = new ArrayList<>();
 
-        if (!file.exists()) {	//文件不存在则创建文件，先创建目录
-            file.createNewFile();
-        }
+        String[] bt = {"TopicID", "TopicAuthorID", "TopicDescription", "TopicTag/Category", "TopicCreateTime", "TopicLink", "PostID", "PostAuthorID", "PostTo", "PostBody", "PostCreateTime", "PostReaction"};
+        aal.add(bt);
 
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file.getPath()));
-
-        List<Map<String, Object>> r = new ArrayList<>();
         String path = FORUMDOMAIM + "/latest.json?no_definitions=true&page=";
 
         String req = "";
@@ -324,7 +327,7 @@ class DocSearchApplicationTests {
                 TimeUnit.SECONDS.sleep(30);
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     result = ReadInput(connection.getInputStream());
-                    if (!setData(result, r, bufferedWriter)) {
+                    if (!setData(result, aal)) {
                         break;
                     }
                 } else {
@@ -340,10 +343,33 @@ class DocSearchApplicationTests {
                 }
             }
         }
-        bufferedWriter.close();
+        //创建excel工作簿
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        //创建工作表sheet
+        XSSFSheet sheet = workbook.createSheet();
+        for (int i = 0; i < aal.size(); i ++) {
+            XSSFRow row = sheet.createRow(i);
+            String[] zz = aal.get(i);
+            for (int j = 0; j < zz.length; j ++) {
+                XSSFCell cell = row.createCell(j);
+                cell.setCellValue(zz[j]);
+            }
+        }
+        String filePath = "export.xlsx";
+        File file=new File(filePath);
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        FileOutputStream fileOut = new FileOutputStream(file);
+        workbook.write(fileOut);
+
+        fileOut.flush();
+
+        fileOut.close();
+        workbook.close();
     }
 
-    private boolean setData(String data, List<Map<String, Object>> r, BufferedWriter bw) {
+    private boolean setData(String data,  List<String[]> aal) {
 
         JSONObject post = JSON.parseObject(data);
         JSONObject topicList = post.getJSONObject("topic_list");
@@ -369,9 +395,29 @@ class DocSearchApplicationTests {
                     JSONObject postStream = st.getJSONObject("post_stream");
                     JSONArray posts = postStream.getJSONArray("posts");
 
-                    String pu = st.getString("title");
+                    String TopicID = id;
+                    String TopicAuthorID = st.getJSONObject("details").getJSONObject("created_by").getString("username");
+                    String TopicTitle = st.getString("title");
 
-                    for (int j = 0; j < posts.size(); j ++) {
+                    JSONObject td = posts.getJSONObject(0);
+                    String tdc = td.getString("cooked");
+                    Parser aparser = Parser.builder().build();
+                    HtmlRenderer rendererzz = HtmlRenderer.builder().build();
+                    Node documentzzz = aparser.parse(tdc);
+                    Document znode = Jsoup.parse(rendererzz.render(documentzzz));
+
+                    String TopicDescription = znode.text();
+
+                    JSONArray tags = st.getJSONArray("tags");
+
+                    List<String> list = JSON.parseArray(tags.toString(), String.class);
+                    String TopicTag = String.join(",", list);
+                    String created_at = st.getString("created_at");
+                    String TopicCreateTime = ford(created_at);
+
+                    String TopicLink = String.format("%s/t/%s/%s", FORUMDOMAIM, slug, id);
+
+                    for (int j = 1; j < posts.size(); j ++) {
                         JSONObject pt = posts.getJSONObject(j);
                         String cooked = pt.getString("cooked");
                         Parser parser = Parser.builder().build();
@@ -382,16 +428,27 @@ class DocSearchApplicationTests {
                         if (!StringUtils.hasText(node.text())) {
                             continue;
                         }
+                        String PostID = String.valueOf(pt.getInteger("post_number") - 1);
+                        String PostAuthorID = pt.getString("username");
+                        String PostTo = "0";
+                        if (pt.getInteger("reply_to_post_number") != null) {
+                            PostTo = String.valueOf(pt.getInteger("reply_to_post_number") - 1);
+                        }
 
-                        JSONObject json = new JSONObject();
-                        json.put("prompt", pu);
-                        json.put("completion", node.text());
-                        String zzz = json.toJSONString();
-                        System.out.println(zzz);
+                        String PostBody = node.text();
 
-                        bw.write(zzz + "\n");
+                        String PostCreateTime = ford(pt.getString("created_at"));
 
+                        String PostReaction = "0";
+                        JSONArray actions_summary = pt.getJSONArray("actions_summary");
+                        if (actions_summary.size() > 0) {
+                            PostReaction = String.valueOf(actions_summary.getJSONObject(0).getInteger("count"));
+                        }
 
+                        String[] lie = {TopicID, TopicAuthorID, TopicDescription, TopicTag, TopicCreateTime, TopicLink, PostID, PostAuthorID, PostTo, PostBody, PostCreateTime, PostReaction};
+
+                        System.out.println(Arrays.toString(lie));
+                        aal.add(lie);
 
                     }
                 } else {
@@ -408,6 +465,7 @@ class DocSearchApplicationTests {
 
         return true;
     }
+
 
     private HttpURLConnection sendHTTP(String path, String method, Map<String, String> header, String body) throws IOException {
         URL url = new URL(path);
@@ -458,19 +516,28 @@ class DocSearchApplicationTests {
 
 
 
+    public String ford(String dateTime) {
+        dateTime = dateTime.replace("Z", " UTC");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+        SimpleDateFormat defaultFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        try {
+            Date time = format.parse(dateTime);
+            String result = defaultFormat.format(time);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return dateTime;
+        }
+    }
+
     @Test
     public void DDd() throws IOException {
-        File file = new File("export.jsonl");
+        String json = "{\n" +
+                "    \"flair_name\":null\n" +
+                "}";
 
-        if (!file.exists()) {	//文件不存在则创建文件，先创建目录
-            file.createNewFile();
-        }
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file.getPath()));
-        bufferedWriter.write("111");
-        bufferedWriter.write("222");
-        bufferedWriter.close();
-        BufferedWriter aaa = new BufferedWriter(new FileWriter(file.getPath()));
-        aaa.write("zzz");
-        aaa.close();
+        JSONObject st = JSON.parseObject(json);
+        System.out.println(st.getInteger("flair_name")>0);
     }
+
 }
