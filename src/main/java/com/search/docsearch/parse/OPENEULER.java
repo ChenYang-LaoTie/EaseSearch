@@ -386,11 +386,9 @@ public class OPENEULER {
                 }
                 if (canBeEntered(row)) {
                     Map<String, Object> jsonMap = new HashMap<>();
-                    String title = row.getCell(0).getStringCellValue();
-                    String textContent = row.getCell(1).getStringCellValue();
+                    String title = row.getCell(1).getStringCellValue();
                     String path = row.getCell(2).getStringCellValue();
                     jsonMap.put("title", title);
-                    jsonMap.put("textContent", textContent);
                     jsonMap.put("path", path);
                     jsonMap.put("type", "service");
                     jsonMap.put("lang", "zh");
@@ -441,9 +439,6 @@ public class OPENEULER {
 
 
     private boolean canBeEntered(XSSFRow row) {
-        if (row.getCell(0) == null) {
-            return false;
-        }
         if (row.getCell(1) == null) {
             return false;
         }
