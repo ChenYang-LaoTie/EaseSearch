@@ -53,7 +53,7 @@ rm -f *
 cd /usr/local/docs/target/lite/api/zh-CN/master/generate
 
 rm -f file_include_*
-rm -rf program_listing_file_include_*
+rm -f program_listing_file_include_*
 
 # shellcheck disable=SC2038
 find ./ -name _images |xargs rm -rf
