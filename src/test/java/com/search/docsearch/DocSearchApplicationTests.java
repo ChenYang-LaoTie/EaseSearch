@@ -7,6 +7,7 @@ import com.search.docsearch.config.MySystem;
 import com.search.docsearch.parse.MINDSPORE;
 import com.search.docsearch.parse.OPENEULER;
 import com.search.docsearch.service.DataImportService;
+import com.search.docsearch.utils.General;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpHost;
@@ -532,12 +533,13 @@ class DocSearchApplicationTests {
 
     @Test
     public void DDd() throws IOException {
-        String json = "{\n" +
-                "    \"flair_name\":null\n" +
-                "}";
+        String str = "mind.set_context.33.34";
 
-        JSONObject st = JSON.parseObject(json);
-        System.out.println(st.getInteger("flair_name")>0);
+        String d = General.replacementCharacter(str);
+
+
+
+        System.out.println(d);
     }
 
 }
