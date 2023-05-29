@@ -4,10 +4,8 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.search.docsearch.config.MySystem;
-import com.search.docsearch.parse.MINDSPORE;
 import com.search.docsearch.parse.OPENEULER;
 import com.search.docsearch.service.DataImportService;
-import com.search.docsearch.utils.General;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpHost;
@@ -21,8 +19,6 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
-import org.apache.poi.ss.formula.functions.T;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -292,19 +288,6 @@ class DocSearchApplicationTests {
     }
     public static final String MINDSPORE_OFFICIAL = "https://www.mindspore.cn";
 
-    @Test
-    public void myT() {
-        OPENEULER openeuler = new OPENEULER();
-        List<Map<String, Object>> r = new ArrayList<>();
-        openeuler.serviceInfo(r);
-    }
-
-
-
-
-
-
-
 
 
     public static final String FORUMDOMAIM = "https://forum.openeuler.org";
@@ -533,13 +516,13 @@ class DocSearchApplicationTests {
 
     @Test
     public void DDd() throws IOException {
-        String str = "mind.set_context.33.34";
+        List<Map<String, Object>> r = new ArrayList<>();
+        OPENEULER openeuler = new OPENEULER();
 
-        String d = General.replacementCharacter(str);
-
-
-
-        System.out.println(d);
     }
+
+
+
+
 
 }
