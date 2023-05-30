@@ -360,95 +360,12 @@ public class OPENEULER {
     }
 
     public boolean setService(List<Map<String, Object>> r) {
-        for (Map.Entry<String, String> entry : SERVICE_INFO.entrySet()) {
-            HttpURLConnection connection = null;
-            String result;  // 返回结果字符串
-            try {
-                connection = sendHTTP(entry.getValue(), "GET", null, null);
-                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    return false;
-                }
-                result = ReadInput(connection.getInputStream());
-                serviceInfo(r, entry.getKey(), result);
+        List<Map<String, String>> data = new ArrayList<>();
+
+        Yaml yaml = new Yaml();
 
 
-            } catch (Exception e) {
-                log.error("Connection failed, error is: " + e.getMessage());
-                return false;
-            } finally {
-                if (null != connection) {
-                    connection.disconnect();
-                }
-            }
-        }
-        ;
         return true;
-    }
-
-    public void serviceInfo(List<Map<String, Object>> r, String lang, String result) {
-        if (null == result) {
-            return;
-        }
-        if (!result.contains("NAV_ROUTER_CONFIG_NEW")) {
-            return;
-        }
-        String nav = result.substring(result.indexOf("NAV_ROUTER_CONFIG_NEW"));
-
-        Stack<Integer> stack = new Stack<>();
-        int endIndex = nav.length();
-        boolean isOne = false;
-        for (int i = 0; i < nav.length(); i++) {
-            char c = nav.charAt(i);
-            if ('[' == c) {
-                stack.push(i);
-                isOne = true;
-            }
-            if (']' == c) {
-                stack.pop();
-            }
-
-            if (stack.size() == 0 && isOne) {
-                endIndex = i;
-                break;
-            }
-        }
-        nav = nav.substring(0, endIndex + 1);
-
-        String key = "https://";
-        int a = nav.indexOf(key);
-        while (a != -1) {
-            int begin = nav.lastIndexOf("{", a);
-            int end = nav.indexOf("}", a);
-
-            String info = nav.substring(begin + 1, end);
-            Pattern pattern = Pattern.compile("(?<=NAME\\s{0,10}:\\s{0,10}')[^']*(?=')");
-            Matcher matcher = pattern.matcher(info);
-            if (!matcher.find()) {
-                continue;
-            }
-            String title = matcher.group();
-            pattern = Pattern.compile("(?<=PATH\\s{0,10}:\\s{0,10}')[^']*(?=')");
-            matcher = pattern.matcher(info);
-            if (!matcher.find()) {
-                continue;
-            }
-            String path = matcher.group();
-            pattern = Pattern.compile("(?<=LABEL\\s{0,10}:\\s{0,10}')[^']*(?=')");
-            matcher = pattern.matcher(info);
-            String textContent = "";
-            if (matcher.find()) {
-                textContent = matcher.group();
-            }
-            Map<String, Object> jsonMap = new HashMap<>();
-            jsonMap.put("title", title);
-            jsonMap.put("textContent", textContent);
-            jsonMap.put("type", "service");
-            jsonMap.put("lang", lang);
-            jsonMap.put("path", path);
-            r.add(jsonMap);
-            a = nav.indexOf(key, a + 8);
-        }
-
     }
 
 
