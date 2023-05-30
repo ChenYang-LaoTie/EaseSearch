@@ -367,9 +367,8 @@ public class OPENEULER {
         String result;  // 返回结果字符串
         try {
             connection = sendHTTP(path, "GET", null, null);
-            result = ReadInput(connection.getInputStream());
             Yaml yaml = new Yaml();
-            List<Map<String, String>> data = yaml.load(result);
+            List<Map<String, String>> data = yaml.load(connection.getInputStream());
             for (Map<String, String> datum : data) {
                 System.out.println(datum);
             }
