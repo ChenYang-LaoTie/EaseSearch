@@ -1,8 +1,11 @@
-- title: 兼容性技术测评
-  textContent: 帮助企业快速申请兼容性技术测评
-  path: https://certification.openeuler.org/
-  lang: zh
-- title: 兼容性技术测评
-  textContent: 帮助企业快速申请兼容性技术测评
-  path: https://certification.openeuler.org/
-  lang: zh
+service:
+  -
+    title: 兼容性技术测评
+    textContent: 帮助企业快速申请兼容性技术测评
+    path: https://certification.openeuler.org/
+    lang: zh
+  -
+    title: 兼容性技术测评
+    textContent: 帮助企业快速申请兼容性技术测评
+    path: https://certification.openeuler.org/
+    lang: zh
