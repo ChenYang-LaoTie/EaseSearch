@@ -518,6 +518,7 @@ class DocSearchApplicationTests {
     public void DDd() throws IOException {
         List<Map<String, Object>> r = new ArrayList<>();
         OPENEULER openeuler = new OPENEULER();
+        openeuler.setService(r);
 
     }
 

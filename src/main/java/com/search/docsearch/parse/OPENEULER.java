@@ -360,7 +360,27 @@ public class OPENEULER {
     }
 
     public boolean setService(List<Map<String, Object>> r) {
-        List<Map<String, String>> data = new ArrayList<>();
+        String path = "https://raw.githubusercontent.com/ChenYang-LaoTie/EaseSearch/main/src/main/resources/script/openeuler/service.yml";
+
+
+        HttpURLConnection connection = null;
+        String result;  // 返回结果字符串
+        try {
+            connection = sendHTTP(path, "GET", null, null);
+            result = ReadInput(connection.getInputStream());
+            Yaml yaml = new Yaml();
+            List<Map<String, String>> data = yaml.load(result);
+            for (Map<String, String> datum : data) {
+                System.out.println(datum);
+            }
+
+        }catch (IOException e) {
+            log.error("Connection failed, error is: " + e.getMessage());
+        } finally {
+            if (null != connection) {
+                connection.disconnect();
+            }
+        }
 
         Yaml yaml = new Yaml();
 
