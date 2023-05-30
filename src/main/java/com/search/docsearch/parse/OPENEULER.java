@@ -421,7 +421,6 @@ public class OPENEULER {
             int end = nav.indexOf("}", a);
 
             String info = nav.substring(begin + 1, end);
-            System.out.println(info);
             Pattern pattern = Pattern.compile("(?<=NAME\\s{0,10}:\\s{0,10}')[^']*(?=')");
             Matcher matcher = pattern.matcher(info);
             if (!matcher.find()) {
@@ -446,122 +445,12 @@ public class OPENEULER {
             jsonMap.put("type", "service");
             jsonMap.put("lang", lang);
             jsonMap.put("path", path);
-            System.out.println(jsonMap);
             r.add(jsonMap);
             a = nav.indexOf(key, a + 8);
         }
 
     }
 
-//    public boolean serviceInfo(List<Map<String, Object>> r) {
-//        String token = getOpsToken();
-//        if (!StringUtils.hasText(token)) {
-//            return false;
-//        }
-//        //从ops中获取数据
-//        String url = OPS_DOMAIN + "/api/app_resources/sla_export";
-//        HttpURLConnection connection = null;
-//        String result;  // 返回结果字符串
-//        try {
-//            Map<String, String> header = new HashMap<>();
-//            header.put("Authorization", "Bearer " + token);
-//            connection = sendHTTP(url, "GET", header, null);
-//            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-//                return false;
-//            }
-//
-//            XSSFWorkbook workbook = new XSSFWorkbook(connection.getInputStream());
-//            XSSFSheet sheet = workbook.getSheet("Sla");
-//            int lastRowIndex = sheet.getLastRowNum();
-//            for (int i = 1; i <= lastRowIndex; i++) {
-//                XSSFRow row = sheet.getRow(i);
-//                if (row.getCell(3) == null || !row.getCell(3).getStringCellValue().toLowerCase(Locale.ROOT).equals("openeuler")) {
-//                    continue;
-//                }
-//                if (canBeEntered(row)) {
-//                    Map<String, Object> jsonMap = new HashMap<>();
-//                    String title = row.getCell(1).getStringCellValue();
-//                    String path = row.getCell(2).getStringCellValue();
-//                    jsonMap.put("title", title);
-//                    jsonMap.put("path", path);
-//                    jsonMap.put("type", "service");
-//                    jsonMap.put("lang", "zh");
-//                    r.add(jsonMap);
-//                }
-//            }
-//        } catch (Exception e) {
-//            log.error("Connection failed, error is: " + e.getMessage());
-//            return false;
-//        } finally {
-//            if (null != connection) {
-//                connection.disconnect();
-//            }
-//        }
-//        return true;
-//    }
-//
-//    private String getOpsToken() {
-//        //ops有jwt认证，需要先获取到token
-//        String opsUsername = System.getenv("OPS_USERNAME");
-//        String opsPassword = System.getenv("OPS_PASSWORD");
-//
-//        JSONObject tokenCheck = new JSONObject();
-//        tokenCheck.put("username", opsUsername);
-//        tokenCheck.put("password", opsPassword);
-//
-//        Map<String, String> tokenHeader = new HashMap<>();
-//        tokenHeader.put("Content-Type", "application/json");
-//        tokenHeader.put("Accept", "*/*");
-//        String tokenUrl = OPS_DOMAIN + "/api/users/login";
-//        HttpURLConnection tokenConnection = null;
-//        String token = "";
-//        try {
-//            tokenConnection = sendHTTP(tokenUrl, "POST", tokenHeader, tokenCheck.toJSONString());
-//            String result = ReadInput(tokenConnection.getInputStream());
-//            JSONObject st = JSON.parseObject(result);
-//            token = st.getString("token");
-//        } catch (Exception e) {
-//            log.error("Connection failed, error is: " + e.getMessage());
-//            return "";
-//        } finally {
-//            if (null != tokenConnection) {
-//                tokenConnection.disconnect();
-//            }
-//        }
-//        return token;
-//    }
-//
-//
-//    private boolean canBeEntered(XSSFRow row) {
-//        if (row.getCell(1) == null) {
-//            return false;
-//        }
-//        if (row.getCell(2) == null) {
-//            return false;
-//        }
-//        String url = row.getCell(2).getStringCellValue();
-//        HttpURLConnection connection = null;
-//        try {
-//            connection = sendHTTP(url, "GET", null, null);
-//            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-//                return false;
-//            }
-//            //如果接口未返回html界面说明是后端数据服务，不加入搜索。
-//            if (!connection.getContentType().contains("text/html")) {
-//                return false;
-//            }
-//        } catch (Exception e) {
-//            log.error("get - " + url + " error: " + e.getMessage());
-//            //有些服务经常访问超时，但是不代表服务本身不可访问。
-//            return e.getMessage().contains("Connection timed out");
-//        } finally {
-//            if (null != connection) {
-//                connection.disconnect();
-//            }
-//        }
-//
-//        return true;
-//    }
 
     private HttpURLConnection sendHTTP(String path, String method, Map<String, String> header, String body) throws IOException {
         URL url = new URL(path);
