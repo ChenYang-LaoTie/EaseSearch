@@ -367,23 +367,24 @@ public class OPENEULER {
         String result;  // 返回结果字符串
         try {
             connection = sendHTTP(path, "GET", null, null);
-            Yaml yaml = new Yaml();
-            List<Map<String, String>> data = yaml.load(connection.getInputStream());
-            for (Map<String, String> datum : data) {
-                System.out.println(datum);
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK){
+                return false;
             }
+            Yaml yaml = new Yaml();
 
-        }catch (IOException e) {
+            List<Map<String, Object>> data = yaml.load(connection.getInputStream());
+
+            for (Map<String, Object> datum : data) {
+                datum.put("type", "service");
+                r.add(datum);
+            }
+        } catch (IOException e) {
             log.error("Connection failed, error is: " + e.getMessage());
         } finally {
             if (null != connection) {
                 connection.disconnect();
             }
         }
-
-        Yaml yaml = new Yaml();
-
-
         return true;
     }
 
