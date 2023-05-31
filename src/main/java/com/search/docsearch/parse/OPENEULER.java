@@ -375,7 +375,13 @@ public class OPENEULER {
             List<Map<String, Object>> data = yaml.load(connection.getInputStream());
 
             for (Map<String, Object> datum : data) {
-                datum.put("type", "service");
+                Map<String, Object> jsonMap = new HashMap<>();
+                jsonMap.put("title", datum.get("name"));
+                jsonMap.put("textContent", datum.get("introduce"));
+                jsonMap.put("lang", datum.get("lang"));
+                jsonMap.put("path", datum.get("path"));
+                jsonMap.put("type", "service");
+                System.out.println(jsonMap);
                 r.add(datum);
             }
         } catch (IOException e) {

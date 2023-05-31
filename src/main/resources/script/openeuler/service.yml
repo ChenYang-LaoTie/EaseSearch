@@ -1,8 +1,60 @@
-- title: 兼容性技术测评
-  textContent: 帮助企业快速申请兼容性技术测评
+-
+  name: 兼容性技术测评
+  introduce: 帮助企业快速申请兼容性技术测评
   path: https://certification.openeuler.org/
   lang: zh
-- title: 兼容性技术测评
-  textContent: 帮助企业快速申请兼容性技术测评
+-
+  name: QuickIssue
+  introduce: 简易快捷地查询、提交社区Issues
+  path: https://quickissue.openeuler.org/zh/
+  lang: zh
+-
+  name: Pkgship
+  introduce: 管理操作系统软件包信息和依赖项的查询工具
+  path: https://pkgmanage.openeuler.org
+  lang: zh
+-
+  name: 软件包贡献
+  introduce: 简单高效地贡献软件包
+  path: https://software-pkg.openeuler.org/zh/package
+  lang: zh
+-
+  name: License兼容性检查工具
+  introduce: 帮助快速检测License兼容性
+  path: https://compliance.openeuler.org/
+  lang: zh
+-
+  name: EulerTest
+  introduce: 基于openEuler环境开发的测试管理平台
+  path: https://radiatest.openeuler.org
+  lang: zh
+-
+  name: QuickIssue
+  introduce: 简易快捷地查询、提交社区Issues
+  path: https://quickissue.openeuler.org/zh/
+  lang: zh
+-
+  name: QuickIssue
+  introduce: 简易快捷地查询、提交社区Issues
+  path: https://quickissue.openeuler.org/zh/
+  lang: zh
+-
+  name: 兼容性技术测评
+  introduce: 帮助企业快速申请兼容性技术测评
   path: https://certification.openeuler.org/
+  lang: zh
+-
+  name: QuickIssue
+  introduce: 简易快捷地查询、提交社区Issues
+  path: https://quickissue.openeuler.org/zh/
+  lang: zh
+-
+  name: QuickIssue
+  introduce: 简易快捷地查询、提交社区Issues
+  path: https://quickissue.openeuler.org/zh/
+  lang: zh
+-
+  name: QuickIssue
+  introduce: 简易快捷地查询、提交社区Issues
+  path: https://quickissue.openeuler.org/zh/
   lang: zh
