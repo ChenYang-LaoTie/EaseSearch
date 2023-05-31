@@ -29,32 +29,57 @@
   path: https://radiatest.openeuler.org
   lang: zh
 -
-  name: QuickIssue
-  introduce: 简易快捷地查询、提交社区Issues
-  path: https://quickissue.openeuler.org/zh/
+  name: x2openEuler
+  introduce: 将原有业务迁移到openEuler的工具套件
+  path: https://docs.openeuler.org/zh/docs/20.03_LTS_SP1/docs/thirdparty_migration/x2openEuler-Userguide.html
   lang: zh
 -
-  name: QuickIssue
-  introduce: 简易快捷地查询、提交社区Issues
-  path: https://quickissue.openeuler.org/zh/
+  name: Compass-CI
+  introduce: 开放式测试服务平台
+  path: https://compass-ci.openeuler.org/
   lang: zh
 -
-  name: 兼容性技术测评
-  introduce: 帮助企业快速申请兼容性技术测评
-  path: https://certification.openeuler.org/
+  name: OEPKGS
+  introduce: oepkgs软件托管平台
+  path: https://oepkgs.net/
   lang: zh
 -
-  name: QuickIssue
-  introduce: 简易快捷地查询、提交社区Issues
-  path: https://quickissue.openeuler.org/zh/
+  name: EulerLauncher
+  introduce: 跨平台openEuler虚拟机管理工具
+  path: https://gitee.com/openeuler/eulerlauncher
   lang: zh
 -
-  name: QuickIssue
-  introduce: 简易快捷地查询、提交社区Issues
-  path: https://quickissue.openeuler.org/zh/
+  name: 代码仓
+  introduce:
+  path: https://gitee.com/openeuler
   lang: zh
 -
-  name: QuickIssue
-  introduce: 简易快捷地查询、提交社区Issues
-  path: https://quickissue.openeuler.org/zh/
+  name: 软件包仓
+  introduce:
+  path: https://gitee.com/src-openeuler
+  lang: zh
+-
+  name: Github镜像仓
+  introduce:
+  path: https://github.com/openeuler-mirror
+  lang: zh
+-
+  name: 贡献看板
+  introduce: 查看openEuler社区数据
+  path: https://datastat.openeuler.org/zh/overview
+  lang: zh
+-
+  name: 文档
+  introduce:
+  path: https://docs.openeuler.org/zh/
+  lang: zh
+-
+  name: 人才评定
+  introduce:
+  path: https://talent-assessment.openeuler.org/
+  lang: zh
+-
+  name: NestOS
+  introduce: 基于欧拉开源操作系统的云底座操作系统
+  path: https://nestos.openeuler.org/
   lang: zh

@@ -381,8 +381,7 @@ public class OPENEULER {
                 jsonMap.put("lang", datum.get("lang"));
                 jsonMap.put("path", datum.get("path"));
                 jsonMap.put("type", "service");
-                System.out.println(jsonMap);
-                r.add(datum);
+                r.add(jsonMap);
             }
         } catch (IOException e) {
             log.error("Connection failed, error is: " + e.getMessage());
