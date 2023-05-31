@@ -83,3 +83,118 @@
   introduce: 基于欧拉开源操作系统的云底座操作系统
   path: https://nestos.openeuler.org/
   lang: zh
+-
+  name: 社区用户中心
+  introduce: openeuler社区个人用户中心
+  path: https://id.openeuler.org/
+  lang: zh
+-
+  name: 社区OBS
+  introduce:
+  path: https://build.openeuler.org/
+  lang: zh
+-
+  name: 论坛
+  introduce:
+  path: https://forum.openeuler.org/
+  lang: zh
+-
+  name: Shell命令解释
+  introduce:
+  path: https://explainshell.openeuler.sh
+  lang: zh
+-
+  name: 欧拉小智
+  introduce: 社区客服机器人欧拉小智
+  path: https://qa-robot.openeuler.org/
+  lang: zh
+-
+  name: 镜像下载网站
+  introduce:
+  path: https://repo.openeuler.org/
+  lang: zh
+-
+  name: 可重复构建
+  introduce:
+  path: https://reproducible-builds.openeuler.org
+  lang: zh
+-
+  name: EasyEditor
+  introduce: 模板页面自编辑发布平台
+  path: https://easyeditor.openeuler.org/
+  lang: zh
+-
+  name: openEuler镜像构建Jenkins服务
+  introduce:
+  path: https://openeulerjenkins.osinfra.cn/computer/
+  lang: zh
+-
+  name: QuickIssue
+  introduce: Query and submit issues
+  path: https://quickissue.openeuler.org/en/issues/
+  lang: en
+-
+  name: Pkgship
+  introduce: Query software packages and dependencies
+  path: https://pkgmanage.openeuler.org
+  lang: en
+-
+  name: Contribute Software Package"
+  introduce:
+  path: https://software-pkg.openeuler.org/en/package
+  lang: en
+-
+  name: Compliance
+  introduce: Detect license compatibility and compliance
+  path: https://compliance.openeuler.org/
+  lang: en
+-
+  name: EulerTest
+  introduce: Testing management platform developed based on openEuler
+  path: https://radiatest.openeuler.org
+  lang: en
+-
+  name: Compass-CI
+  introduce: Open test service platform
+  path: https://compass-ci.openeuler.org/
+  lang: en
+-
+  name: openEuler User Repo
+  introduce:
+  path: https://eur.openeuler.openatom.cn/coprs/
+  lang: en
+-
+  name: Code Sources
+  introduce:
+  path: https://gitee.com/openeuler
+  lang: en
+-
+  name: Package Sources
+  introduce:
+  path: https://gitee.com/src-openeuler
+  lang: en
+-
+  name: GitHub Mirror
+  introduce:
+  path: https://github.com/openeuler-mirror
+  lang: en
+-
+  name: Statistics
+  introduce: Community statistics
+  path: https://datastat.openeuler.org/en/overview
+  lang: en
+-
+  name: Documentation
+  introduce:
+  path: https://docs.openeuler.org/en/
+  lang: en
+-
+  name: Certification
+  introduce:
+  path: https://talent-assessment.openeuler.org/
+  lang: en
+-
+  name: Open Build Service
+  introduce:
+  path: https://build.openeuler.org/
+  lang: en
