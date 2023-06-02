@@ -49,11 +49,8 @@ rm -rf vision
 
 rm -f *
 
-# shellcheck disable=SC2164
-cd /usr/local/docs/target/lite/api/zh-CN/master/generate
-
-rm -f file_include_*
-rm -f program_listing_file_include_*
+find . -type f -name file_include_\* -exec rm {} \;
+find . -type f -name program_listing_file_include_\* -exec rm {} \;
 
 # shellcheck disable=SC2038
 find ./ -name _images |xargs rm -rf
