@@ -286,11 +286,12 @@ class DocSearchApplicationTests {
             System.out.println(one.toString());
         }
     }
+
     public static final String MINDSPORE_OFFICIAL = "https://www.mindspore.cn";
 
 
-
     public static final String FORUMDOMAIM = "https://forum.openeuler.org";
+
     @Test
     public void exportForum() throws IOException {
         List<String[]> aal = new ArrayList<>();
@@ -331,16 +332,16 @@ class DocSearchApplicationTests {
         XSSFWorkbook workbook = new XSSFWorkbook();
         //创建工作表sheet
         XSSFSheet sheet = workbook.createSheet();
-        for (int i = 0; i < aal.size(); i ++) {
+        for (int i = 0; i < aal.size(); i++) {
             XSSFRow row = sheet.createRow(i);
             String[] zz = aal.get(i);
-            for (int j = 0; j < zz.length; j ++) {
+            for (int j = 0; j < zz.length; j++) {
                 XSSFCell cell = row.createCell(j);
                 cell.setCellValue(zz[j]);
             }
         }
         String filePath = "export.xlsx";
-        File file=new File(filePath);
+        File file = new File(filePath);
         if (!file.exists()) {
             file.createNewFile();
         }
@@ -353,7 +354,7 @@ class DocSearchApplicationTests {
         workbook.close();
     }
 
-    private boolean setData(String data,  List<String[]> aal) {
+    private boolean setData(String data, List<String[]> aal) {
 
         JSONObject post = JSON.parseObject(data);
         JSONObject topicList = post.getJSONObject("topic_list");
@@ -401,7 +402,7 @@ class DocSearchApplicationTests {
 
                     String TopicLink = String.format("%s/t/%s/%s", FORUMDOMAIM, slug, id);
 
-                    for (int j = 1; j < posts.size(); j ++) {
+                    for (int j = 1; j < posts.size(); j++) {
                         JSONObject pt = posts.getJSONObject(j);
                         String cooked = pt.getString("cooked");
                         Parser parser = Parser.builder().build();
@@ -499,7 +500,6 @@ class DocSearchApplicationTests {
     }
 
 
-
     public String ford(String dateTime) {
         dateTime = dateTime.replace("Z", " UTC");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
@@ -516,14 +516,106 @@ class DocSearchApplicationTests {
 
     @Test
     public void DDd() throws IOException {
-        List<Map<String, Object>> r = new ArrayList<>();
-        OPENEULER openeuler = new OPENEULER();
-        openeuler.setService(r);
+        File file = new File("export.jsonl");
 
+        if (!file.exists()) {    //文件不存在则创建文件，先创建目录
+            file.createNewFile();
+        }
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter(file.getPath()));
+        System.out.println("begin --------");
+        long st = System.currentTimeMillis();
+        //源es
+        RestHighLevelClient input = getEsClientSecurity("159.138.10.226", 9200, "admin", "Cloudfoundry@123");
+        //目标迁移es
+        //你需要迁移的index
+        String index = "openeuler_test_zh";
+
+        int scrollSize = 500;//一次读取的doc数量
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());//读取全量数据
+        searchSourceBuilder.size(scrollSize);
+        Scroll scroll = new Scroll(TimeValue.timeValueMinutes(10));//设置一次读取的最大连接时长
+
+        SearchRequest searchRequest = new SearchRequest(index);
+//        searchRequest1.types("_doc");
+        searchRequest.source(searchSourceBuilder);
+        searchRequest.scroll(scroll);
+
+        SearchResponse searchResponse = input.search(searchRequest, RequestOptions.DEFAULT);
+
+        String scrollId = searchResponse.getScrollId();
+        System.out.println("scrollId - " + scrollId);
+
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        System.out.println("hits - " + hits.length);
+        BulkRequest bulkRequest = new BulkRequest();
+        for (SearchHit hit : hits) {
+            Map<String, Object> mm = hit.getSourceAsMap();
+            JSONObject json = new JSONObject();
+            json.put("prompt", mm.get("title"));
+            json.put("completion", mm.get("textContent"));
+            String type = (String)mm.get("type");
+            switch (type) {
+                case "service" -> json.put("path", mm.get("path"));
+                case "forum" -> json.put("path", "https://forum.openeuler.org" + mm.get("path"));
+                case "docs" -> json.put("path", "https://docs.openeuler.org/" + mm.get("path"));
+                default -> json.put("path", "https://www.openeuler.org/" + mm.get("path"));
+            }
+
+
+            String zzz = json.toJSONString();
+            System.out.println(zzz);
+
+            bw.write(zzz + "\n");
+
+        }
+
+        while (hits.length > 0) {
+            SearchScrollRequest searchScrollRequestS = new SearchScrollRequest(scrollId);
+            searchScrollRequestS.scroll(scroll);
+            SearchResponse searchScrollResponseS = input.scroll(searchScrollRequestS, RequestOptions.DEFAULT);
+            scrollId = searchScrollResponseS.getScrollId();
+            System.out.println("scrollId - " + scrollId);
+
+            hits = searchScrollResponseS.getHits().getHits();
+            System.out.println("hits - " + hits.length);
+
+            BulkRequest bulkRequestS = new BulkRequest();
+            for (SearchHit hit : hits) {
+                Map<String, Object> mm = hit.getSourceAsMap();
+                JSONObject json = new JSONObject();
+                json.put("prompt", mm.get("title"));
+                json.put("completion", mm.get("textContent"));
+                String type = (String)mm.get("type");
+                switch (type) {
+                    case "service" -> json.put("path", mm.get("path"));
+                    case "forum" -> json.put("path", "https://forum.openeuler.org" + mm.get("path"));
+                    case "docs" -> json.put("path", "https://docs.openeuler.org/" + mm.get("path"));
+                    default -> json.put("path", "https://www.openeuler.org/" + mm.get("path"));
+                }
+
+
+                String zzz = json.toJSONString();
+                System.out.println(zzz);
+
+                bw.write(zzz + "\n");
+
+            }
+
+        }
+
+        ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+        clearScrollRequest.addScrollId(scrollId);
+        try {
+            input.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("读取用时:" + (System.currentTimeMillis() - st));
+
+        bw.close();
     }
-
-
-
 
 
 }
