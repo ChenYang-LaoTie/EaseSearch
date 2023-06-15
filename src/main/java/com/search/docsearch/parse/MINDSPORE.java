@@ -1,19 +1,11 @@
 package com.search.docsearch.parse;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +15,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 public class MINDSPORE {
     public static final String BASEPATH = "/usr/local/docs/target/";
@@ -31,28 +38,29 @@ public class MINDSPORE {
     public static final String LANG_ZH = "/zh-CN/";
     public static final String MINDSPORE_OFFICIAL = "https://www.mindspore.cn";
 
-    private static final HashMap<String, String > COMPONENTS_MAP  = new HashMap<String, String>(){{
-        put("docs", "MindSpore");
-        put("lite", "MindSpore Lite");
-        put("mindinsight", "MindSpore Insight");
-        put("mindarmour", "MindSpore Armour");
-        put("serving", "MindSpore Serving");
-        put("federated", "MindSpore Federated");
-        put("golden_stick", "MindSpore Golden Stick");
-        put("xai", "MindSpore XAI");
-        put("devtoolkit", "MindSpore Dev Toolkit");
-        put("recommender", "MindSpore Recommender");
-        put("graphlearning", "MindSpore Graph Learning");
-        put("reinforcement", "MindSpore Reinforcement");
-        put("probability", "MindSpore Probability");
-        put("mindpandas", "MindSpore Pandas");
-        put("hub", "MindSpore Hub");
-        put("mindelec", "MindSpore Elec");
-        put("mindsponge", "MindSpore SPONGE");
-        put("mindflow", "MindSpore Flow");
-        put("mindquantum", "MindSpore Quantum");
-    }};
-
+    private static final HashMap<String, String> COMPONENTS_MAP = new HashMap<String, String>() {
+        {
+            put("docs", "MindSpore");
+            put("lite", "MindSpore Lite");
+            put("mindinsight", "MindSpore Insight");
+            put("mindarmour", "MindSpore Armour");
+            put("serving", "MindSpore Serving");
+            put("federated", "MindSpore Federated");
+            put("golden_stick", "MindSpore Golden Stick");
+            put("xai", "MindSpore XAI");
+            put("devtoolkit", "MindSpore Dev Toolkit");
+            put("recommender", "MindSpore Recommender");
+            put("graphlearning", "MindSpore Graph Learning");
+            put("reinforcement", "MindSpore Reinforcement");
+            put("probability", "MindSpore Probability");
+            put("mindpandas", "MindSpore Pandas");
+            put("hub", "MindSpore Hub");
+            put("mindelec", "MindSpore Elec");
+            put("mindsponge", "MindSpore SPONGE");
+            put("mindflow", "MindSpore Flow");
+            put("mindquantum", "MindSpore Quantum");
+        }
+    };
 
     public Map<String, Object> parse(File file) throws Exception {
 
@@ -139,7 +147,7 @@ public class MINDSPORE {
                 title = t.text();
                 t.remove();
             } else {
-                System.out.println(MINDSPORE_OFFICIAL+ "/" + jsonMap.get("path"));
+                System.out.println(MINDSPORE_OFFICIAL + "/" + jsonMap.get("path"));
                 return false;
             }
             title = title.replaceAll("¶", "");
@@ -152,7 +160,6 @@ public class MINDSPORE {
         jsonMap.put("textContent", textContent);
         return true;
     }
-
 
     public Boolean parseInstall(Map<String, Object> jsonMap, String fileContent) {
         String fileName = (String) jsonMap.get("articleName");
@@ -171,7 +178,6 @@ public class MINDSPORE {
         t.remove();
         String textContent = node.text();
 
-
         String path = (String) jsonMap.get("path");
         String v = path.substring(path.indexOf("/") + 1);
         int location = v.indexOf("/");
@@ -187,14 +193,13 @@ public class MINDSPORE {
         return true;
     }
 
-
     public List<Map<String, Object>> customizeData() throws Exception {
         List<Map<String, Object>> r = new ArrayList<>();
         String path = MINDSPORE_OFFICIAL + "/selectWebNews";
 
         HttpURLConnection connection = null;
-        String result;  // 返回结果字符串
-        for (int i = 1; ; i++) {
+        String result; // 返回结果字符串
+        for (int i = 1;; i++) {
             TimeUnit.SECONDS.sleep(10);
             try {
                 JSONObject param = new JSONObject();
@@ -234,10 +239,8 @@ public class MINDSPORE {
             }
         }
 
-
         return r;
     }
-
 
     private HttpURLConnection sendHTTP(String path, String method, String param) throws IOException {
         URL url = new URL(path);
@@ -309,7 +312,6 @@ public class MINDSPORE {
                 type = getInformationTypeEn(topic.getString("type"));
             }
 
-
             path = String.format(MINDSPORE_OFFICIAL + "/selectNewsInfo?id=%d", id);
 
             try {
@@ -319,7 +321,7 @@ public class MINDSPORE {
                     JSONObject st = JSON.parseObject(result);
                     JSONObject detail = st.getJSONObject("detail");
                     String newsDetail = detail.getString("newsDetail");
-                    //双重解析转义
+                    // 双重解析转义
                     Document node = Jsoup.parse(Jsoup.parse(newsDetail).text());
                     String textContent = node.text();
                     String title = st.getString("titie");
@@ -350,7 +352,6 @@ public class MINDSPORE {
         }
         return true;
     }
-
 
     public String getInformationType(String t) {
         return switch (t) {

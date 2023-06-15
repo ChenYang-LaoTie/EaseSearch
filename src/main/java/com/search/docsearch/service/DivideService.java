@@ -1,9 +1,9 @@
 package com.search.docsearch.service;
 
-import com.search.docsearch.entity.vo.SearchDocs;
-
 import java.io.IOException;
 import java.util.Map;
+
+import com.search.docsearch.entity.vo.SearchDocs;
 
 public interface DivideService {
 

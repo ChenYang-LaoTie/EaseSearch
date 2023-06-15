@@ -1,19 +1,25 @@
 package com.search.docsearch.controller;
 
 
+import java.io.IOException;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.entity.vo.SearchCondition;
 import com.search.docsearch.entity.vo.SearchTags;
 import com.search.docsearch.entity.vo.SysResult;
 import com.search.docsearch.service.SearchService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j

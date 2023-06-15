@@ -1,15 +1,29 @@
 package com.search.docsearch.service.impl;
 
-import com.search.docsearch.config.KafkaConfig;
-import com.search.docsearch.config.MySystem;
-import com.search.docsearch.service.DataImportService;
-import lombok.extern.slf4j.Slf4j;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import com.search.docsearch.constant.Constants;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -37,15 +51,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.util.*;
+import com.search.docsearch.config.KafkaConfig;
+import com.search.docsearch.config.MySystem;
+import com.search.docsearch.constant.Constants;
+import com.search.docsearch.service.DataImportService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
