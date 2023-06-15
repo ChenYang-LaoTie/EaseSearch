@@ -1,10 +1,23 @@
 package com.search.docsearch.parse;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import com.search.docsearch.constant.Constants;
-import lombok.extern.slf4j.Slf4j;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.io.FileUtils;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -15,15 +28,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OPENEULER {
@@ -38,7 +47,6 @@ public class OPENEULER {
     public static final String SHOWCASE = "showcase";
     public static final String EVENTS = "events";
     public static final String USERPRACTICE = "userPractice";
-
 
     public static final String FORUMDOMAIM = "https://forum.openeuler.org";
     public static final String REPODOMAI = "https://repo.openeuler.org";
@@ -97,7 +105,6 @@ public class OPENEULER {
         return jsonMap;
     }
 
-
     public static void parseHtml(Map<String, Object> jsonMap, String fileContent) {
         Document node = Jsoup.parse(fileContent);
         Elements titles = node.getElementsByTag("title");
@@ -112,7 +119,8 @@ public class OPENEULER {
         }
     }
 
-    public static void parseDocsType(Map<String, Object> jsonMap, String fileContent, String fileName, String path, String type) {
+    public static void parseDocsType(Map<String, Object> jsonMap, String fileContent, String fileName, String path,
+            String type) {
         Parser parser = Parser.builder().build();
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         Node document = parser.parse(fileContent);
@@ -150,7 +158,6 @@ public class OPENEULER {
             }
         }
 
-
         Node document = parser.parse(fileContent);
         Document node = Jsoup.parse(renderer.render(document));
         jsonMap.put("textContent", node.text());
@@ -163,7 +170,7 @@ public class OPENEULER {
             key = entry.getKey().toLowerCase(Locale.ROOT);
             value = entry.getValue();
             if (key.equals("date")) {
-                //需要处理日期不标准导致的存入ES失败的问题。
+                // 需要处理日期不标准导致的存入ES失败的问题。
                 String dateString = "";
                 if (value.getClass().getSimpleName().equals("Date")) {
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -171,7 +178,7 @@ public class OPENEULER {
                 } else {
                     dateString = value.toString();
                 }
-                Pattern pattern = Pattern.compile("\\D"); //匹配所有非数字
+                Pattern pattern = Pattern.compile("\\D"); // 匹配所有非数字
                 Matcher matcher = pattern.matcher(dateString);
                 dateString = matcher.replaceAll("-");
                 if (dateString.length() < 10) {
@@ -187,7 +194,7 @@ public class OPENEULER {
                 value = dateString;
             }
             if (key.equals("author") && value instanceof String) {
-                value = new String[]{value.toString()};
+                value = new String[] { value.toString() };
             }
             if (key.equals("head")) {
                 continue;
@@ -200,12 +207,10 @@ public class OPENEULER {
 
     }
 
-
     public Map<String, Object> parseHook(String data) {
         int index = data.indexOf(" ");
         String parameter = data.substring(0, index);
         String value = data.substring(index);
-
 
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("type", "forum");
@@ -233,8 +238,8 @@ public class OPENEULER {
             return null;
         }
 
-        //验证是否为删除
-        //为了清除http请求缓存所在请求路径上加了随机数
+        // 验证是否为删除
+        // 为了清除http请求缓存所在请求路径上加了随机数
         String p = FORUMDOMAIM + jsonMap.get("path") + "?ran=" + Math.random();
         HttpURLConnection connection = null;
         try {
@@ -262,8 +267,8 @@ public class OPENEULER {
 
         String req = "";
         HttpURLConnection connection = null;
-        String result;  // 返回结果字符串
-        for (int i = 0; ; i++) {
+        String result; // 返回结果字符串
+        for (int i = 0;; i++) {
             req = path + i;
             try {
                 connection = sendHTTP(req, "GET");
@@ -287,7 +292,6 @@ public class OPENEULER {
             }
         }
 
-
         return r;
     }
 
@@ -300,7 +304,7 @@ public class OPENEULER {
         }
         String path = "";
         HttpURLConnection connection = null;
-        String result;  // 返回结果字符串
+        String result; // 返回结果字符串
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject topic = jsonArray.getJSONObject(i);
             String id = topic.getString("id");
@@ -343,7 +347,6 @@ public class OPENEULER {
         return true;
     }
 
-
     private HttpURLConnection sendHTTP(String path, String method) throws IOException {
         URL url = new URL(path);
         HttpURLConnection connection = null;
@@ -376,6 +379,4 @@ public class OPENEULER {
 
     }
 
-
 }
-

@@ -1,5 +1,14 @@
 package com.search.docsearch.parse;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.io.FileUtils;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -9,15 +18,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.yaml.snakeyaml.Yaml;
-
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class OPENGAUSS {
     public static final String BASEPATH = "/usr/local/docs/target/";
@@ -88,7 +88,6 @@ public class OPENGAUSS {
         return jsonMap;
     }
 
-
     public static void parseHtml(Map<String, Object> jsonMap, String fileContent) {
         Document node = Jsoup.parse(fileContent);
         Elements titles = node.getElementsByTag("title");
@@ -103,7 +102,8 @@ public class OPENGAUSS {
         }
     }
 
-    public static void parseDocsType(Map<String, Object> jsonMap, String fileContent, String fileName, String path, String type) {
+    public static void parseDocsType(Map<String, Object> jsonMap, String fileContent, String fileName, String path,
+            String type) {
         Parser parser = Parser.builder().build();
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         Node document = parser.parse(fileContent);
@@ -125,7 +125,7 @@ public class OPENGAUSS {
 
         String version = path.replaceFirst(jsonMap.get("lang") + "/" + type + "/", "");
         version = version.substring(0, version.indexOf("/"));
-        //gauss master分支需要显示为latest
+        // gauss master分支需要显示为latest
         if (version.equals("master") || version.equals("master-lite")) {
             String p = (String) jsonMap.get("path");
             jsonMap.put("path", p.replaceAll("/master/", "/latest/").replaceAll("/master-lite/", "/latest-lite/"));
@@ -146,7 +146,6 @@ public class OPENGAUSS {
             }
         }
 
-
         Node document = parser.parse(fileContent);
         Document node = Jsoup.parse(renderer.render(document));
         jsonMap.put("textContent", node.text());
@@ -159,7 +158,7 @@ public class OPENGAUSS {
             key = entry.getKey().toLowerCase(Locale.ROOT);
             value = entry.getValue();
             if (key.equals("date")) {
-                //需要处理日期不标准导致的存入ES失败的问题。
+                // 需要处理日期不标准导致的存入ES失败的问题。
                 String dateString = "";
                 if (value.getClass().getSimpleName().equals("Date")) {
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -167,7 +166,7 @@ public class OPENGAUSS {
                 } else {
                     dateString = value.toString();
                 }
-                Pattern pattern = Pattern.compile("\\D"); //匹配所有非数字
+                Pattern pattern = Pattern.compile("\\D"); // 匹配所有非数字
                 Matcher matcher = pattern.matcher(dateString);
                 dateString = matcher.replaceAll("-");
                 if (dateString.length() < 10) {
@@ -183,7 +182,7 @@ public class OPENGAUSS {
                 value = dateString;
             }
             if (key.equals("author") && value instanceof String) {
-                value = new String[]{value.toString()};
+                value = new String[] { value.toString() };
             }
             if (key.equals("head")) {
                 continue;
@@ -196,6 +195,4 @@ public class OPENGAUSS {
 
     }
 
-
 }
-
