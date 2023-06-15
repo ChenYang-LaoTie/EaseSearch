@@ -245,6 +245,7 @@ public class OPENEULER {
         //为了清除http请求缓存所在请求路径上加了随机数
         String p = System.getenv("FORUMDOMAIM") + jsonMap.get("path") + "?ran=" + getSecureRandomNumber();
 
+
         HttpURLConnection connection = null;
         try {
             connection = sendHTTP(p, "GET");
@@ -253,7 +254,7 @@ public class OPENEULER {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         } finally {
             if (null != connection) {
                 connection.disconnect();
@@ -294,7 +295,7 @@ public class OPENEULER {
                     return null;
                 }
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
                 return null;
             } finally {
                 if (null != connection) {
@@ -349,7 +350,7 @@ public class OPENEULER {
                     log.error(path + " - ", connection.getResponseCode());
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             } finally {
                 if (null != connection) {
                     connection.disconnect();
@@ -381,12 +382,12 @@ public class OPENEULER {
         try {
             br.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         try {
             is.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return sbf.toString();
 
