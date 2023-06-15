@@ -13,7 +13,6 @@ public class General {
         put("_", " ");
         put("&", " ");
         put("+", " ");
-        put(".", " ");
     }};
 
     public static String removeChinese(String str) {
@@ -32,6 +31,24 @@ public class General {
         for (Map.Entry<String, String> entry : REPLACE_MAP.entrySet()) {
             str = str.replace(entry.getKey(), entry.getValue());
         }
+        // "."因为有浮点数影响，不能单纯的看作英文连接词，在有数字的情况下特殊处理。
+        char key = '.';
+        int a = str.indexOf(key);
+        while (a != -1) {
+            int ind = a;
+
+            if (ind < 1 || ind > str.length() - 2) {
+                continue;
+            }
+            if (!Character.isDigit(str.charAt(ind - 1)) || !Character.isDigit(str.charAt(ind + 1))) {
+                str = str.substring(0, ind) + " " + str.substring(ind + 1);
+            }
+
+            a = str.indexOf(key, a + 1);
+
+        }
+
+
         String reply = str;
         return reply;
     }

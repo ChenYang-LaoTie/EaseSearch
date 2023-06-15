@@ -15,8 +15,7 @@
 	<name>EaseSearch</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>17</java.version>
-<!--		<java.version>1.8</java.version>-->
+		<java.version>19</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -98,6 +97,12 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.0.0</version>
 		</dependency>
 
 	</dependencies>
