@@ -15,6 +15,8 @@ RUN cd /root \
 ENV JAVA_HOME=/root/jdk-19.0.2
 ENV PATH=${JAVA_HOME}/bin:$PATH
 
+ENV FORUMDOMAIM=https://forum.openeuler.org
+
 WORKDIR /EaseSearch
 COPY . /EaseSearch
 RUN chmod 777 -R ./* \

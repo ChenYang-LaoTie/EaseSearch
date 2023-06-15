@@ -49,9 +49,6 @@ public class OPENEULER {
     public static final String USERPRACTICE = "userPractice";
 
 
-    public static final String FORUMDOMAIM = "https://forum.openeuler.org";
-    public static final String REPODOMAI = "https://repo.openeuler.org";
-
     public Map<String, Object> parse(File file) throws Exception {
         String originalPath = file.getPath();
         String fileName = file.getName();
@@ -77,7 +74,7 @@ public class OPENEULER {
             if (!fileName.equals("index.html")) {
                 return null;
             }
-
+        
         }
         if (type.equals(OTHER) || type.equals(SHOWCASE) || type.equals(MIGRATION)) {
             path = path.substring(0, path.length() - 5);
@@ -244,7 +241,7 @@ public class OPENEULER {
 
         //验证是否为删除
         //为了清除http请求缓存所在请求路径上加了随机数
-        String p = FORUMDOMAIM + jsonMap.get("path") + "?ran=" + Math.random();
+        String p = System.getenv("FORUMDOMAIM") + jsonMap.get("path") + "?ran=" + Math.random();
         HttpURLConnection connection = null;
         try {
             connection = sendHTTP(p, "GET");
@@ -265,7 +262,7 @@ public class OPENEULER {
     }
 
     public List<Map<String, Object>> customizeData() {
-        String path = FORUMDOMAIM + "/latest.json?no_definitions=true&page=";
+        String path = System.getenv("FORUMDOMAIM") + "/latest.json?no_definitions=true&page=";
 
         List<Map<String, Object>> r = new ArrayList<>();
 
@@ -314,7 +311,7 @@ public class OPENEULER {
             JSONObject topic = jsonArray.getJSONObject(i);
             String id = topic.getString("id");
             String slug = topic.getString("slug");
-            path = String.format("%s/t/%s/%s.json?track_visit=true&forceLoad=true", FORUMDOMAIM, slug, id);
+            path = String.format("%s/t/%s/%s.json?track_visit=true&forceLoad=true", System.getenv("FORUMDOMAIM"), slug, id);
             try {
                 connection = sendHTTP(path, "GET");
                 if (connection.getResponseCode() == 200) {
