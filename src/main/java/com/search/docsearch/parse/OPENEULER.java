@@ -5,9 +5,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -241,7 +243,8 @@ public class OPENEULER {
 
         //验证是否为删除
         //为了清除http请求缓存所在请求路径上加了随机数
-        String p = System.getenv("FORUMDOMAIM") + jsonMap.get("path") + "?ran=" + Math.random();
+        String p = System.getenv("FORUMDOMAIM") + jsonMap.get("path") + "?ran=" + getSecureRandomNumber();
+
         HttpURLConnection connection = null;
         try {
             connection = sendHTTP(p, "GET");
@@ -260,6 +263,13 @@ public class OPENEULER {
         return jsonMap;
 
     }
+
+    //Get a secure random number
+    public static String getSecureRandomNumber() {
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(130, random).toString(32);
+    }
+
 
     public List<Map<String, Object>> customizeData() {
         String path = System.getenv("FORUMDOMAIM") + "/latest.json?no_definitions=true&page=";
@@ -381,6 +391,8 @@ public class OPENEULER {
         return sbf.toString();
 
     }
+
+
 
 
 }

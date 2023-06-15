@@ -36,7 +36,6 @@ public class MINDSPORE {
 
     public static final String LANG_EN = "/en/";
     public static final String LANG_ZH = "/zh-CN/";
-    public static final String MINDSPORE_OFFICIAL = "https://www.mindspore.cn";
 
     private static final HashMap<String, String> COMPONENTS_MAP = new HashMap<String, String>() {
         {
@@ -147,7 +146,7 @@ public class MINDSPORE {
                 title = t.text();
                 t.remove();
             } else {
-                System.out.println(MINDSPORE_OFFICIAL + "/" + jsonMap.get("path"));
+                System.out.println(System.getenv("MINDSPORE_OFFICIAL") + "/" + jsonMap.get("path"));
                 return false;
             }
             title = title.replaceAll("¶", "");
@@ -195,7 +194,7 @@ public class MINDSPORE {
 
     public List<Map<String, Object>> customizeData() throws Exception {
         List<Map<String, Object>> r = new ArrayList<>();
-        String path = MINDSPORE_OFFICIAL + "/selectWebNews";
+        String path = System.getenv("MINDSPORE_OFFICIAL") + "/selectWebNews";
 
         HttpURLConnection connection = null;
         String result; // 返回结果字符串
@@ -312,7 +311,7 @@ public class MINDSPORE {
                 type = getInformationTypeEn(topic.getString("type"));
             }
 
-            path = String.format(MINDSPORE_OFFICIAL + "/selectNewsInfo?id=%d", id);
+            path = String.format(System.getenv("MINDSPORE_OFFICIAL") + "/selectNewsInfo?id=%d", id);
 
             try {
                 connection = sendGET(path, "GET");
