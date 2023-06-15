@@ -3,6 +3,7 @@ package com.search.docsearch.parse;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.search.docsearch.constant.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.commonmark.node.Node;
@@ -12,7 +13,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.util.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -41,12 +41,7 @@ public class OPENEULER {
 
 
     public static final String FORUMDOMAIM = "https://forum.openeuler.org";
-    public static final String OPS_DOMAIN = "https://ops.osinfra.cn";
-
-    private static final HashMap<String, String> SERVICE_INFO = new HashMap<String, String>() {{
-        put("zh", "https://gitee.com/openeuler/openEuler-portal/raw/master/app/.vitepress/src/i18n/common/common-zh.ts");
-        put("en", "https://gitee.com/openeuler/openEuler-portal/raw/master/app/.vitepress/src/i18n/common/common-en.ts");
-    }};
+    public static final String REPODOMAI = "https://repo.openeuler.org";
 
     public Map<String, Object> parse(File file) throws Exception {
         String originalPath = file.getPath();
@@ -211,6 +206,7 @@ public class OPENEULER {
         String parameter = data.substring(0, index);
         String value = data.substring(index);
 
+
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("type", "forum");
         jsonMap.put("lang", "zh");
@@ -242,13 +238,13 @@ public class OPENEULER {
         String p = FORUMDOMAIM + jsonMap.get("path") + "?ran=" + Math.random();
         HttpURLConnection connection = null;
         try {
-            connection = sendHTTP(p, "GET", null, null);
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            connection = sendHTTP(p, "GET");
+            if (connection.getResponseCode() != 200) {
                 jsonMap.put("delete", "true");
             }
 
         } catch (Exception e) {
-            log.error("Connection failed, error is: " + e.getMessage());
+            e.printStackTrace();
         } finally {
             if (null != connection) {
                 connection.disconnect();
@@ -260,23 +256,9 @@ public class OPENEULER {
     }
 
     public List<Map<String, Object>> customizeData() {
-        List<Map<String, Object>> r = new ArrayList<>();
-
-        if (!setForum(r)) {
-            log.error("博客数据添加失败");
-            return null;
-        }
-
-        if (!setService(r)) {
-            log.error("博客数据添加失败");
-            return null;
-        }
-
-        return r;
-    }
-
-    private boolean setForum(List<Map<String, Object>> r) {
         String path = FORUMDOMAIM + "/latest.json?no_definitions=true&page=";
+
+        List<Map<String, Object>> r = new ArrayList<>();
 
         String req = "";
         HttpURLConnection connection = null;
@@ -284,27 +266,29 @@ public class OPENEULER {
         for (int i = 0; ; i++) {
             req = path + i;
             try {
-                connection = sendHTTP(req, "GET", null, null);
+                connection = sendHTTP(req, "GET");
                 TimeUnit.SECONDS.sleep(30);
-                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                if (connection.getResponseCode() == 200) {
                     result = ReadInput(connection.getInputStream());
                     if (!setData(result, r)) {
                         break;
                     }
                 } else {
                     log.error(req + " - ", connection.getResponseCode());
-                    return false;
+                    return null;
                 }
             } catch (IOException | InterruptedException e) {
-                log.error("Connection failed, error is: " + e.getMessage());
-                return false;
+                e.printStackTrace();
+                return null;
             } finally {
                 if (null != connection) {
                     connection.disconnect();
                 }
             }
         }
-        return true;
+
+
+        return r;
     }
 
     private boolean setData(String data, List<Map<String, Object>> r) {
@@ -323,8 +307,8 @@ public class OPENEULER {
             String slug = topic.getString("slug");
             path = String.format("%s/t/%s/%s.json?track_visit=true&forceLoad=true", FORUMDOMAIM, slug, id);
             try {
-                connection = sendHTTP(path, "GET", null, null);
-                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                connection = sendHTTP(path, "GET");
+                if (connection.getResponseCode() == 200) {
                     result = ReadInput(connection.getInputStream());
                     JSONObject st = JSON.parseObject(result);
                     JSONObject postStream = st.getJSONObject("post_stream");
@@ -349,7 +333,7 @@ public class OPENEULER {
                     log.error(path + " - ", connection.getResponseCode());
                 }
             } catch (IOException e) {
-                log.error("Connection failed, error is: " + e.getMessage());
+                e.printStackTrace();
             } finally {
                 if (null != connection) {
                     connection.disconnect();
@@ -359,59 +343,12 @@ public class OPENEULER {
         return true;
     }
 
-    public boolean setService(List<Map<String, Object>> r) {
-        String path = "https://raw.githubusercontent.com/ChenYang-LaoTie/EaseSearch/main/src/main/resources/script/openeuler/service.yml";
 
-
-        HttpURLConnection connection = null;
-        String result;  // 返回结果字符串
-        try {
-            connection = sendHTTP(path, "GET", null, null);
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK){
-                return false;
-            }
-            Yaml yaml = new Yaml();
-
-            List<Map<String, Object>> data = yaml.load(connection.getInputStream());
-
-            for (Map<String, Object> datum : data) {
-                Map<String, Object> jsonMap = new HashMap<>();
-                jsonMap.put("title", datum.get("name"));
-                jsonMap.put("textContent", datum.get("introduce"));
-                jsonMap.put("lang", datum.get("lang"));
-                jsonMap.put("path", datum.get("path"));
-                jsonMap.put("type", "service");
-                r.add(jsonMap);
-            }
-        } catch (IOException e) {
-            log.error("Connection failed, error is: " + e.getMessage());
-        } finally {
-            if (null != connection) {
-                connection.disconnect();
-            }
-        }
-        return true;
-    }
-
-
-    private HttpURLConnection sendHTTP(String path, String method, Map<String, String> header, String body) throws IOException {
+    private HttpURLConnection sendHTTP(String path, String method) throws IOException {
         URL url = new URL(path);
         HttpURLConnection connection = null;
         connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method);
-        if (header != null) {
-            for (Map.Entry<String, String> entry : header.entrySet()) {
-                connection.setRequestProperty(entry.getKey(), entry.getValue());
-            }
-        }
-
-        if (StringUtils.hasText(body)) {
-            connection.setDoOutput(true);
-            OutputStream outputStream = connection.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
-            writer.write(body);
-            writer.close();
-        }
         connection.setConnectTimeout(60000);
         connection.setReadTimeout(60000);
         connection.connect();
@@ -420,7 +357,7 @@ public class OPENEULER {
 
     private String ReadInput(InputStream is) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-        StringBuilder sbf = new StringBuilder();
+        StringBuffer sbf = new StringBuffer();
         String temp = null;
         while ((temp = br.readLine()) != null) {
             sbf.append(temp);
@@ -428,12 +365,12 @@ public class OPENEULER {
         try {
             br.close();
         } catch (IOException e) {
-            log.error("read input failed, error is: " + e.getMessage());
+            e.printStackTrace();
         }
         try {
             is.close();
         } catch (IOException e) {
-            log.error("close stream failed, error is: " + e.getMessage());
+            e.printStackTrace();
         }
         return sbf.toString();
 
