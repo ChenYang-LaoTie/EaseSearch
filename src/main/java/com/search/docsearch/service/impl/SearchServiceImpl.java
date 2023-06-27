@@ -1,21 +1,18 @@
 package com.search.docsearch.service.impl;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.search.docsearch.config.MySystem;
+import com.search.docsearch.entity.vo.SearchCondition;
+import com.search.docsearch.entity.vo.SearchTags;
+import com.search.docsearch.service.SearchService;
+import com.search.docsearch.utils.General;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.BucketOrder;
@@ -35,14 +32,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.search.docsearch.config.MySystem;
-import com.search.docsearch.entity.vo.SearchCondition;
-import com.search.docsearch.entity.vo.SearchTags;
-import com.search.docsearch.service.SearchService;
-import com.search.docsearch.utils.General;
+import java.io.IOException;
+import java.util.*;
 
 
 @Service
+@Slf4j
 public class SearchServiceImpl implements SearchService {
 
     @Autowired

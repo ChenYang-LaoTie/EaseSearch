@@ -1,10 +1,6 @@
 package com.search.docsearch.config;
 
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.SSLContext;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -25,7 +21,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.net.ssl.*;
+
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 @Configuration
 @EnableConfigurationProperties(ElasticsearchProperties.class)

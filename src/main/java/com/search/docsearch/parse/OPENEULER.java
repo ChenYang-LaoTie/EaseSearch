@@ -1,25 +1,10 @@
 package com.search.docsearch.parse;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.search.docsearch.constant.Constants;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -30,11 +15,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.yaml.snakeyaml.Yaml;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class OPENEULER {
@@ -50,6 +39,9 @@ public class OPENEULER {
     public static final String EVENTS = "events";
     public static final String USERPRACTICE = "userPractice";
 
+
+    public static final String FORUMDOMAIM = "https://forum.openeuler.org";
+    public static final String REPODOMAI = "https://repo.openeuler.org";
 
     public Map<String, Object> parse(File file) throws Exception {
         String originalPath = file.getPath();
@@ -76,7 +68,7 @@ public class OPENEULER {
             if (!fileName.equals("index.html")) {
                 return null;
             }
-        
+
         }
         if (type.equals(OTHER) || type.equals(SHOWCASE) || type.equals(MIGRATION)) {
             path = path.substring(0, path.length() - 5);
@@ -243,9 +235,7 @@ public class OPENEULER {
 
         //验证是否为删除
         //为了清除http请求缓存所在请求路径上加了随机数
-        String p = System.getenv("FORUMDOMAIM") + jsonMap.get("path") + "?ran=" + getSecureRandomNumber();
-
-
+        String p = FORUMDOMAIM + jsonMap.get("path") + "?ran=" + Math.random();
         HttpURLConnection connection = null;
         try {
             connection = sendHTTP(p, "GET");
@@ -254,7 +244,7 @@ public class OPENEULER {
             }
 
         } catch (Exception e) {
-            log.error(e.getMessage());
+            e.printStackTrace();
         } finally {
             if (null != connection) {
                 connection.disconnect();
@@ -265,15 +255,8 @@ public class OPENEULER {
 
     }
 
-    //Get a secure random number
-    public static String getSecureRandomNumber() {
-        SecureRandom random = new SecureRandom();
-        return new BigInteger(130, random).toString(32);
-    }
-
-
     public List<Map<String, Object>> customizeData() {
-        String path = System.getenv("FORUMDOMAIM") + "/latest.json?no_definitions=true&page=";
+        String path = FORUMDOMAIM + "/latest.json?no_definitions=true&page=";
 
         List<Map<String, Object>> r = new ArrayList<>();
 
@@ -295,7 +278,7 @@ public class OPENEULER {
                     return null;
                 }
             } catch (IOException | InterruptedException e) {
-                log.error(e.getMessage());
+                e.printStackTrace();
                 return null;
             } finally {
                 if (null != connection) {
@@ -322,7 +305,7 @@ public class OPENEULER {
             JSONObject topic = jsonArray.getJSONObject(i);
             String id = topic.getString("id");
             String slug = topic.getString("slug");
-            path = String.format("%s/t/%s/%s.json?track_visit=true&forceLoad=true", System.getenv("FORUMDOMAIM"), slug, id);
+            path = String.format("%s/t/%s/%s.json?track_visit=true&forceLoad=true", FORUMDOMAIM, slug, id);
             try {
                 connection = sendHTTP(path, "GET");
                 if (connection.getResponseCode() == 200) {
@@ -350,7 +333,7 @@ public class OPENEULER {
                     log.error(path + " - ", connection.getResponseCode());
                 }
             } catch (IOException e) {
-                log.error(e.getMessage());
+                e.printStackTrace();
             } finally {
                 if (null != connection) {
                     connection.disconnect();
@@ -382,18 +365,16 @@ public class OPENEULER {
         try {
             br.close();
         } catch (IOException e) {
-            log.error(e.getMessage());
+            e.printStackTrace();
         }
         try {
             is.close();
         } catch (IOException e) {
-            log.error(e.getMessage());
+            e.printStackTrace();
         }
         return sbf.toString();
 
     }
-
-
 
 
 }

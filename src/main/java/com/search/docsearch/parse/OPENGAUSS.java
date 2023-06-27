@@ -1,14 +1,5 @@
 package com.search.docsearch.parse;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.io.FileUtils;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -18,6 +9,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.yaml.snakeyaml.Yaml;
+
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class OPENGAUSS {
     public static final String BASEPATH = "/usr/local/docs/target/";
@@ -194,6 +192,11 @@ public class OPENGAUSS {
             jsonMap.put("archives", jsonMap.get("date").toString().substring(0, 7));
         }
 
+    }
+
+    public List<Map<String, Object>> customizeData() {
+        List<Map<String, Object>> r = new ArrayList<>();
+        return r;
     }
 
 
