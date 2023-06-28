@@ -36,7 +36,6 @@ public class MINDSPORE {
 
     public static final String LANG_EN = "/en/";
     public static final String LANG_ZH = "/zh-CN/";
-    // public static final String MINDSPORE_OFFICIAL = "https://www.mindspore.cn";
 
     public String MINDSPORE_OFFICIAL = System.getenv("MINDSPORE_OFFICIAL");
 
