@@ -48,10 +48,6 @@ public class DataImportController implements ApplicationRunner {
         try {
             //导入es数据
             dataImportService.refreshDoc();
-            //如果配置钟需要kafka则启动监听
-            if (needKafka) {
-                dataImportService.listenKafka();
-            }
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -64,11 +60,7 @@ public class DataImportController implements ApplicationRunner {
      */
     @PostMapping("/hook/{parameter}")
     public void webhook(@RequestBody String data, @PathVariable String parameter) {
-        if (needKafka) {
-            //将webhook接收到的数据发送到kafka
-            dataImportService.sendKafka(data, parameter);
-        }
-
+        dataImportService.addForum(data, parameter);
     }
 
 }

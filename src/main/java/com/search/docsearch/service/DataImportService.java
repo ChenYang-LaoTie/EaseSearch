@@ -7,9 +7,7 @@ public interface DataImportService {
 
     void refreshDoc();
 
-    void sendKafka(String data, String parameter);
-
-    void listenKafka();
+    void addForum(String data, String parameter);
 
     void deleteExpired(Set<String> idSet);
 

@@ -1,15 +1,23 @@
 package com.search.docsearch.service.impl;
 
-import com.search.docsearch.config.KafkaConfig;
-import com.search.docsearch.config.MySystem;
-import com.search.docsearch.service.DataImportService;
-import lombok.extern.slf4j.Slf4j;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
+
 import org.apache.commons.io.FileUtils;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import com.search.docsearch.constant.Constants;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -37,15 +45,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.util.*;
+import com.search.docsearch.config.MySystem;
+import com.search.docsearch.constant.Constants;
+import com.search.docsearch.service.DataImportService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -57,10 +61,6 @@ public class DataImportServiceImpl implements DataImportService {
     @Autowired
     @Qualifier("setConfig")
     private MySystem s;
-
-    @Autowired
-    @Qualifier("initKafka")
-    private KafkaConfig kafkaConfig;
 
     private static final String GLOBAL_LOCK_ID = "global_lock";
 
@@ -243,42 +243,21 @@ public class DataImportServiceImpl implements DataImportService {
         restHighLevelClient.indices().create(request1, RequestOptions.DEFAULT);
     }
 
-
     @Override
-    public void sendKafka(String data, String parameter) {
-        String topic = s.getSystem() + "_search_topic";
-        ProducerRecord<String, String> mess = new ProducerRecord<String, String>(topic, parameter + " " + data);
-        System.out.println("producer -> " + parameter + " " + data);
-        kafkaConfig.kafkaProducer.send(mess);
-    }
-
-
-    @Override
-    @Async("threadPoolTaskExecutor")
-    public void listenKafka() {
-        KafkaConsumer<String, String> kafkaConsumer = kafkaConfig.kafkaConsumer;
-        String topic = s.getSystem() + "_search_topic";
-        kafkaConsumer.subscribe(Collections.singleton(topic));
-        while (true) {
-            ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(1));
-            for (ConsumerRecord<String, String> record : records) {
-                try {
-                    System.out.println("coo - > " + record.value() + "---" + record.topic());
-
-                    String className = "com.search.docsearch.parse." + s.getSystem().toUpperCase(Locale.ROOT);
-                    Class<?> c = Class.forName(className);
-                    Method m = c.getMethod("parseHook", String.class);
-                    Object map = m.invoke(c.getDeclaredConstructor().newInstance(), record.value());
-                    if (map != null) {
-                        Map<String, Object> d = (Map<String, Object>) map;
-                        renew(d, s.getIndex() + "_" + d.get("lang"));
-                    }
-
-                } catch (Exception e) {
-                    log.error("error: " + e.getMessage());
-                }
+    public void addForum(String data, String parameter) {
+        try {
+            String className = "com.search.docsearch.parse." + s.getSystem().toUpperCase(Locale.ROOT);
+            Class<?> c = Class.forName(className);
+            Method m = c.getMethod("parseHook", String.class);
+            Object map = m.invoke(c.getDeclaredConstructor().newInstance(), parameter + " " + data);
+            if (map != null) {
+                Map<String, Object> d = (Map<String, Object>) map;
+                renew(d, s.getIndex() + "_" + d.get("lang"));
             }
+        } catch (Exception e) {
+            log.error("error: " + e.getMessage());
         }
+        
     }
 
     @Override

@@ -1,11 +1,10 @@
 package com.search.docsearch.service;
 
+import java.io.IOException;
+import java.util.Map;
+
 import com.search.docsearch.entity.vo.SearchCondition;
 import com.search.docsearch.entity.vo.SearchTags;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 public interface SearchService {
 

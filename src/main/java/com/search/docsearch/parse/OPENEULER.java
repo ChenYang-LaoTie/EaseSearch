@@ -40,8 +40,14 @@ public class OPENEULER {
     public static final String USERPRACTICE = "userPractice";
 
 
-    public static final String FORUMDOMAIM = "https://forum.openeuler.org";
-    public static final String REPODOMAI = "https://repo.openeuler.org";
+    // public static final String FORUMDOMAIM = "https://forum.openeuler.org";
+    // public static final String REPODOMAI = "https://repo.openeuler.org";
+
+
+    private String FORUMDOMAIM;
+    private String REPODOMAI;
+
+
 
     public Map<String, Object> parse(File file) throws Exception {
         String originalPath = file.getPath();
