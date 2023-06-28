@@ -1,19 +1,11 @@
 package com.search.docsearch.parse;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -23,13 +15,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 public class MINDSPORE {
     public static final String BASEPATH = "/usr/local/docs/target/";
 
     public static final String LANG_EN = "/en/";
     public static final String LANG_ZH = "/zh-CN/";
-    public static final String MINDSPORE_OFFICIAL = "https://www.mindspore.cn";
+    // public static final String MINDSPORE_OFFICIAL = "https://www.mindspore.cn";
+
+    public String MINDSPORE_OFFICIAL = System.getenv("MINDSPORE_OFFICIAL");
 
     private static final HashMap<String, String > COMPONENTS_MAP  = new HashMap<String, String>(){{
         put("docs", "MindSpore");
