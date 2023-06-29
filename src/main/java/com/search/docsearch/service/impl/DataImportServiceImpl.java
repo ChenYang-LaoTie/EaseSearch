@@ -110,9 +110,9 @@ public class DataImportServiceImpl implements DataImportService {
                     Method method = clazz.getMethod("parse", File.class);
                     Object result = method.invoke(clazz.getDeclaredConstructor().newInstance(), paresFile);
                     if (result != null) {
-                        Map<String, Object> d = (Map<String, Object>) result;
-                        insert(d, s.getIndex() + "_" + d.get("lang"));
-                        idSet.add((String) d.get("path"));
+                        Map<String, Object> escape = (Map<String, Object>) result;
+                        insert(escape, s.getIndex() + "_" + escape.get("lang"));
+                        idSet.add((String) escape.get("path"));
                     }
 
                 } catch (Exception e) {
@@ -133,9 +133,9 @@ public class DataImportServiceImpl implements DataImportService {
                 return;
             }
 
-            List<Map<String, Object>> d = (List<Map<String, Object>>) result;
-            System.out.println("============== " + d.size());
-            for (Map<String, Object> lm : d) {
+            List<Map<String, Object>> escape = (List<Map<String, Object>>) result;
+            System.out.println("============== " + escape.size());
+            for (Map<String, Object> lm : escape) {
                 insert(lm, s.getIndex() + "_" + lm.get("lang"));
                 idSet.add((String) lm.get("path"));
             }
@@ -251,8 +251,8 @@ public class DataImportServiceImpl implements DataImportService {
             Method method = clazz.getMethod("parseHook", String.class);
             Object result = method.invoke(clazz.getDeclaredConstructor().newInstance(), parameter + " " + data);
             if (result != null) {
-                Map<String, Object> d = (Map<String, Object>) result;
-                renew(d, s.getIndex() + "_" + d.get("lang"));
+                Map<String, Object> escape = (Map<String, Object>) result;
+                renew(d, s.getIndex() + "_" + escape.get("lang"));
             }
         } catch (Exception e) {
             log.error("error: " + e.getMessage());
