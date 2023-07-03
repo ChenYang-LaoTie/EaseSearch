@@ -252,7 +252,7 @@ public class DataImportServiceImpl implements DataImportService {
             Object result = method.invoke(clazz.getDeclaredConstructor().newInstance(), parameter + " " + data);
             if (result != null) {
                 Map<String, Object> escape = (Map<String, Object>) result;
-                renew(d, s.getIndex() + "_" + escape.get("lang"));
+                renew(escape, s.getIndex() + "_" + escape.get("lang"));
             }
         } catch (Exception e) {
             log.error("error: " + e.getMessage());
