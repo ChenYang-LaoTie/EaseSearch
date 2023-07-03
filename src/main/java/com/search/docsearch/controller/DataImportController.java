@@ -1,10 +1,9 @@
 package com.search.docsearch.controller;
 
 
-import com.search.docsearch.config.MySystem;
-import com.search.docsearch.service.DataImportService;
-import com.search.docsearch.service.SearchService;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import com.search.docsearch.config.MySystem;
+import com.search.docsearch.service.DataImportService;
+import com.search.docsearch.service.SearchService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
@@ -59,7 +62,7 @@ public class DataImportController implements ApplicationRunner {
      * @param parameter
      */
     @PostMapping("/hook/{parameter}")
-    public void webhook(@RequestBody String data, @PathVariable String parameter) {
+    public void webhook(@RequestBody @NotBlank(message = "hook data can not be blank") String data, @PathVariable @NotBlank(message = "must have a parameter") String parameter) {
         dataImportService.addForum(data, parameter);
     }
 

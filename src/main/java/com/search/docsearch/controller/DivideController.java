@@ -1,14 +1,24 @@
 package com.search.docsearch.controller;
 
 
+import java.util.Map;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.search.docsearch.entity.vo.SearchDocs;
 import com.search.docsearch.entity.vo.SysResult;
 import com.search.docsearch.service.DivideService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
@@ -20,7 +30,7 @@ public class DivideController {
 
 
     @PostMapping("/{type}")
-    public SysResult DivideBLog(@PathVariable String type, @RequestBody Map<String, String> m){
+    public SysResult DivideBLog(@PathVariable @NotBlank(message = "must have a type") String type, @RequestBody @NotEmpty(message = "Requires at least one condition") Map<String, String> m){
 
         try {
             Map<String, Object> result = divideService.advancedSearch(m, type);
@@ -37,7 +47,7 @@ public class DivideController {
     }
 
     @PostMapping("docs")
-    public SysResult DivideDocs(@RequestBody SearchDocs searchDocs) {
+    public SysResult DivideDocs(@RequestBody @Validated SearchDocs searchDocs) {
         try {
             Map<String, Object> result = divideService.docsSearch(searchDocs);
             if (result == null) {

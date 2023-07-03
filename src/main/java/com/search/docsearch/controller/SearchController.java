@@ -1,19 +1,26 @@
 package com.search.docsearch.controller;
 
 
+import java.io.IOException;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.entity.vo.SearchCondition;
 import com.search.docsearch.entity.vo.SearchTags;
 import com.search.docsearch.entity.vo.SysResult;
 import com.search.docsearch.service.SearchService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
@@ -35,11 +42,7 @@ public class SearchController {
      * @return 搜索结果
      */
     @PostMapping("docs")
-    public SysResult searchDocByKeyword(@RequestBody SearchCondition condition) {
-        if (!StringUtils.hasText(condition.getKeyword())) {
-            return SysResult.fail("keyword must not null", null);
-        }
-//        condition.setKeyword(condition.getKeyword().replace("#", ""));
+    public SysResult searchDocByKeyword(@RequestBody @Validated SearchCondition condition) {
         try {
             Map<String, Object> result = searchService.searchByCondition(condition);
             if (result == null) {
@@ -53,7 +56,7 @@ public class SearchController {
     }
 
     @PostMapping("sugg")
-    public SysResult getSuggestion(@RequestBody SearchCondition condition) {
+    public SysResult getSuggestion(@RequestBody @Validated SearchCondition condition) {
         if (!StringUtils.hasText(condition.getKeyword())) {
             return SysResult.fail("keyword must not null", null);
         }
@@ -72,7 +75,7 @@ public class SearchController {
 
 
     @PostMapping("count")
-    public SysResult getCount(@RequestBody SearchCondition condition) {
+    public SysResult getCount(@RequestBody @Validated SearchCondition condition) {
         try {
             Map<String, Object> result = searchService.getCount(condition);
             if (result == null) {
@@ -105,7 +108,7 @@ public class SearchController {
 
     @PostMapping("sort")
     public SysResult makeSort(@RequestBody Map<String, String> m) {
-
+        System.out.println(m.size());
         try {
             Map<String, Object> result = searchService.advancedSearch(m);
             if (result == null) {
@@ -121,7 +124,7 @@ public class SearchController {
     }
 
     @PostMapping("tags")
-    public SysResult getTags(@RequestBody SearchTags searchTags) {
+    public SysResult getTags(@RequestBody @Validated SearchTags searchTags) {
         try {
             Map<String, Object> result = searchService.getTags(searchTags);
             if (result == null) {
