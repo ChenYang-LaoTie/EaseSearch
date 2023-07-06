@@ -23,7 +23,10 @@ RUN chmod 777 -R ./* \
     && chmod 777 -R script \
     && mkdir -p /usr/local/docs/source/ \
     && cd /usr/local/docs/source \
+    && git clone https://gitee.com/opengauss/blog.git -b v2 \
     && git clone https://gitee.com/opengauss/website.git -b v2  \
+    cp -r ./blog/app/zh/blogs/* ./website/app/zh/blogs/ \
+    cp -r ./blog/app/en/blogs/* ./website/app/en/blogs/ \
     && cd website \
     && pnpm install \
     && pnpm build \
