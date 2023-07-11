@@ -30,7 +30,6 @@ public class OPENLOOKENG {
     public static final String DOCS = "docs";
 
     public Map<String, Object> parse(File file) throws Exception {
-        System.out.println("parse file: " + file.getPath());
         try {
             String originalPath = file.getPath();
             String fileName = file.getName();
