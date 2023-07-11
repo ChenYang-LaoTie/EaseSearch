@@ -30,49 +30,43 @@ public class OPENLOOKENG {
     public static final String DOCS = "docs";
 
     public Map<String, Object> parse(File file) throws Exception {
-        try {
-            String originalPath = file.getPath();
-            String fileName = file.getName();
-            String path = originalPath
-                    .replace("\\", "/")
-                    .replace(BASEPATH, "")
-                    .replace("\\\\", "/")
-                    .replace(".md", "")
-                    .replace(".html", "");
+        String originalPath = file.getPath();
+        String fileName = file.getName();
+        String path = originalPath
+                .replace("\\", "/")
+                .replace(BASEPATH, "")
+                .replace("\\\\", "/")
+                .replace(".md", "")
+                .replace(".html", "");
 
-            String lang = path.substring(0, path.indexOf("/"));
+        String lang = path.substring(0, path.indexOf("/"));
 
-            String type = path.substring(lang.length() + 1, path.indexOf("/", lang.length() + 1));
+        String type = path.substring(lang.length() + 1, path.indexOf("/", lang.length() + 1));
 
-            Map<String, Object> jsonMap = new HashMap<>();
-            jsonMap.put("lang", lang);
-            jsonMap.put("type", type);
-            jsonMap.put("articleName", fileName);
-            jsonMap.put("path", path);
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("lang", lang);
+        jsonMap.put("type", type);
+        jsonMap.put("articleName", fileName);
+        jsonMap.put("path", path);
 
-            String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+        String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
-            if (fileName.endsWith(".html")) {
-                parseHtml(jsonMap, fileContent);
+        if (fileName.endsWith(".html")) {
+            parseHtml(jsonMap, fileContent);
+        } else {
+            if (DOCS.equals(type)) {
+                parseDocsType(jsonMap, fileContent, fileName, path, type);
             } else {
-                if (DOCS.equals(type)) {
-                    parseDocsType(jsonMap, fileContent, fileName, path, type);
-                } else {
-                    parseUnDocsType(jsonMap, fileContent);
-                }
+                parseUnDocsType(jsonMap, fileContent);
             }
+        }
 
-            if (jsonMap.get("title") == "" && jsonMap.get("textContent") == "") {
-                System.out.println("title and textContent is null, path: " + path);
-                return null;
-            }
-
-            return jsonMap;
-        } catch (Exception e) {
-            log.error("parse error++++++++++++++", e);
-            log.error(BASEPATH + "++++++++++++++" + file.getPath());
+        if (jsonMap.get("title") == "" && jsonMap.get("textContent") == "") {
+            System.out.println("title and textContent is null, path: " + path);
             return null;
         }
+
+        return jsonMap;
 
     }
 
