@@ -24,7 +24,7 @@ import org.yaml.snakeyaml.Yaml;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OPENlOOKENG {
+public class OPENLOOKENG {
     public static final String BASEPATH = "/usr/local/docs/target/";
 
     public static final String DOCS = "docs";
