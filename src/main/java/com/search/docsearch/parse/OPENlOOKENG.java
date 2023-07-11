@@ -30,45 +30,50 @@ public class OPENlOOKENG {
     public static final String DOCS = "docs";
 
     public Map<String, Object> parse(File file) throws Exception {
-        String originalPath = file.getPath();
-        String fileName = file.getName();
-        String path = originalPath
-                .replace("\\", "/")
-                .replace(BASEPATH, "")
-                .replace("\\\\", "/")
-                .replace(".md", "")
-                .replace(".html", "");
+        try {
+            String originalPath = file.getPath();
+            String fileName = file.getName();
+            String path = originalPath
+                    .replace("\\", "/")
+                    .replace(BASEPATH, "")
+                    .replace("\\\\", "/")
+                    .replace(".md", "")
+                    .replace(".html", "");
 
-        String lang = path.substring(0, path.indexOf("/"));
+            String lang = path.substring(0, path.indexOf("/"));
 
-        String type = path.substring(lang.length() + 1, path.indexOf("/", lang.length() + 1));
+            String type = path.substring(lang.length() + 1, path.indexOf("/", lang.length() + 1));
 
-        Map<String, Object> jsonMap = new HashMap<>();
-        jsonMap.put("lang", lang);
-        jsonMap.put("type", type);
-        jsonMap.put("articleName", fileName);
-        jsonMap.put("path", path);
+            Map<String, Object> jsonMap = new HashMap<>();
+            jsonMap.put("lang", lang);
+            jsonMap.put("type", type);
+            jsonMap.put("articleName", fileName);
+            jsonMap.put("path", path);
 
+            String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
-        String fileContent = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-
-        if (fileName.endsWith(".html")) {
-            parseHtml(jsonMap, fileContent);
-        } else {
-            if (DOCS.equals(type)) {
-                parseDocsType(jsonMap, fileContent, fileName, path, type);
+            if (fileName.endsWith(".html")) {
+                parseHtml(jsonMap, fileContent);
             } else {
-                parseUnDocsType(jsonMap, fileContent);
+                if (DOCS.equals(type)) {
+                    parseDocsType(jsonMap, fileContent, fileName, path, type);
+                } else {
+                    parseUnDocsType(jsonMap, fileContent);
+                }
             }
-        }
 
-        if (jsonMap.get("title") == "" && jsonMap.get("textContent") == "") {
+            if (jsonMap.get("title") == "" && jsonMap.get("textContent") == "") {
+                System.out.println("title and textContent is null, path: " + path);
+                return null;
+            }
+
+            return jsonMap;
+        } catch (Exception e) {
+            log.error("parse error", e);
             return null;
         }
-        
-        return jsonMap;
-    }
 
+    }
 
     public static void parseHtml(Map<String, Object> jsonMap, String fileContent) {
         Document node = Jsoup.parse(fileContent);
@@ -84,7 +89,8 @@ public class OPENlOOKENG {
         }
     }
 
-    public static void parseDocsType(Map<String, Object> jsonMap, String fileContent, String fileName, String path, String type) {
+    public static void parseDocsType(Map<String, Object> jsonMap, String fileContent, String fileName, String path,
+            String type) {
         Parser parser = Parser.builder().build();
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         Node document = parser.parse(fileContent);
@@ -121,7 +127,6 @@ public class OPENlOOKENG {
             }
         }
 
-
         Node document = parser.parse(fileContent);
         Document node = Jsoup.parse(renderer.render(document));
         jsonMap.put("textContent", node.text());
@@ -134,7 +139,7 @@ public class OPENlOOKENG {
             key = entry.getKey().toLowerCase(Locale.ROOT);
             value = entry.getValue();
             if (key.equals("date")) {
-                //需要处理日期不标准导致的存入ES失败的问题。
+                // 需要处理日期不标准导致的存入ES失败的问题。
                 String dateString = "";
                 if (value.getClass().getSimpleName().equals("Date")) {
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -142,7 +147,7 @@ public class OPENlOOKENG {
                 } else {
                     dateString = value.toString();
                 }
-                Pattern pattern = Pattern.compile("\\D"); //匹配所有非数字
+                Pattern pattern = Pattern.compile("\\D"); // 匹配所有非数字
                 Matcher matcher = pattern.matcher(dateString);
                 dateString = matcher.replaceAll("-");
                 if (dateString.length() < 10) {
@@ -158,7 +163,7 @@ public class OPENlOOKENG {
                 value = dateString;
             }
             if (key.equals("author") && value instanceof String) {
-                value = new String[]{value.toString()};
+                value = new String[] { value.toString() };
             }
             if (key.equals("head")) {
                 continue;
