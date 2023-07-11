@@ -61,7 +61,12 @@ public class OPENlOOKENG {
                 parseUnDocsType(jsonMap, fileContent);
             }
         }
-        return null;
+
+        if (jsonMap.get("title") == "" && jsonMap.get("textContent") == "") {
+            return null;
+        }
+        
+        return jsonMap;
     }
 
 
