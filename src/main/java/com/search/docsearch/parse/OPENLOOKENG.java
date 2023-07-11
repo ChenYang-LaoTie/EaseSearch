@@ -69,7 +69,7 @@ public class OPENLOOKENG {
 
             return jsonMap;
         } catch (Exception e) {
-            log.error("parse error", e);
+            log.error("parse error++++++++++++++", e);
             return null;
         }
 
