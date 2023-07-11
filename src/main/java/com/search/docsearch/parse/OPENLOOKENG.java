@@ -70,6 +70,7 @@ public class OPENLOOKENG {
             return jsonMap;
         } catch (Exception e) {
             log.error("parse error++++++++++++++", e);
+            log.error(BASEPATH + "++++++++++++++" + file.getPath());
             return null;
         }
 
