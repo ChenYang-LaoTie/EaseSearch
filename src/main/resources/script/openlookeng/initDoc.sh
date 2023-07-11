@@ -16,6 +16,7 @@ cp -r /usr/local/docs/source/website-v2/app/en/information/blog /usr/local/docs/
 cp -r /usr/local/docs/source/website-v2/app/en/information/activity /usr/local/docs/target/en/
 cp -r /usr/local/docs/source/website-v2/app/en/information/video /usr/local/docs/target/en/
 
+cd /usr/local/docs/source
 git clone https://gitee.com/openlookeng/website-docs.git
 cp -r /usr/local/docs/source/website-docs/content/zh/docs/docs/ /usr/local/docs/target/zh/docs/
 cp -r /usr/local/docs/source/website-docs/content/en/docs/docs/ /usr/local/docs/target/en/docs/
