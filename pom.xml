@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
-            <version>6.8.20</version>
+            <version>8.1.2</version>
         </dependency>
 
         <dependency>
