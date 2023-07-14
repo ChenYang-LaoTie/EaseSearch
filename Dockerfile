@@ -5,7 +5,8 @@ ENV LC_ALL C.UTF-8
 ENV LANGUAGE C.UTF-8
 ENV NODE_OPTIONS --max-old-space-size=2048
 
-RUN mkdir -p /EaseSearch \
+RUN apt update \
+    && mkdir -p /EaseSearch \
     && apt update \
     && apt-get install -y openjdk-17-jdk
 

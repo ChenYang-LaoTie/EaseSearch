@@ -5,7 +5,8 @@ ENV LC_ALL C.UTF-8
 ENV LANGUAGE C.UTF-8
 ENV searchsystem openGauss
 
-RUN cd /root \
+RUN apt update \
+    && cd /root \
     && wget https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-19.0.2_linux-x64_bin.tar.gz \
     && tar -zxvf openjdk-19.0.2_linux-x64_bin.tar.gz \
     && mkdir -p /EaseSearch \
