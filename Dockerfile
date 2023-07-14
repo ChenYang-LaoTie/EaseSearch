@@ -6,6 +6,8 @@ ENV LANGUAGE C.UTF-8
 ENV NODE_OPTIONS --max-old-space-size=2048
 
 RUN apt update \
+    && wget http://security.debian.org/debian-security/pool/updates/main/j/json-smart/libjson-smart-java_2.2-2+deb10u1_all.deb \
+    && dpkg -i libjson-smart-java_2.2-2+deb10u1_all.deb  \
     && mkdir -p /EaseSearch \
     && apt update \
     && apt-get install -y openjdk-17-jdk
