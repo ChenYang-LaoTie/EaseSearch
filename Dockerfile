@@ -8,9 +8,10 @@ ENV NODE_OPTIONS --max-old-space-size=2048
 RUN apt update \
     && wget http://security.debian.org/debian-security/pool/updates/main/j/json-smart/libjson-smart-java_2.2-2+deb10u1_all.deb \
     && dpkg -i libjson-smart-java_2.2-2+deb10u1_all.deb  \
-    && mkdir -p /EaseSearch \
-    && apt update \
-    && apt-get install -y openjdk-17-jdk
+    && cd /root \
+    && wget https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-19.0.2_linux-x64_bin.tar.gz \
+    && tar -zxvf openjdk-19.0.2_linux-x64_bin.tar.gz \
+    && mkdir -p /EaseSearch
 
 WORKDIR /EaseSearch
 COPY . /EaseSearch

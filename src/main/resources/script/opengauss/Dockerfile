@@ -33,6 +33,9 @@ RUN chmod 777 -R ./* \
     && cd website \
     && pnpm install \
     && pnpm build \
+
+
+    
     && cd /EaseSearch/target
 
 EXPOSE 8080
