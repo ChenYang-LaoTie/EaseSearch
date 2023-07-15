@@ -14,6 +14,9 @@ RUN apt update \
     && tar -zxvf openjdk-19.0.2_linux-x64_bin.tar.gz \
     && mkdir -p /EaseSearch
 
+ENV JAVA_HOME=/root/jdk-19.0.2
+ENV PATH=${JAVA_HOME}/bin:$PATH
+
 WORKDIR /EaseSearch
 COPY . /EaseSearch
 RUN chmod 777 -R ./* \
