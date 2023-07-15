@@ -6,6 +6,7 @@ ENV LANGUAGE C.UTF-8
 ENV searchsystem openGauss
 
 RUN apt update \
+    && apt install libasm-java \
     && wget http://security.debian.org/debian-security/pool/updates/main/j/json-smart/libjson-smart-java_2.2-2+deb10u1_all.deb \
     && dpkg -i libjson-smart-java_2.2-2+deb10u1_all.deb  \
     && cd /root \
@@ -33,9 +34,6 @@ RUN chmod 777 -R ./* \
     && cd website \
     && pnpm install \
     && pnpm build \
-
-
-    
     && cd /EaseSearch/target
 
 EXPOSE 8080
