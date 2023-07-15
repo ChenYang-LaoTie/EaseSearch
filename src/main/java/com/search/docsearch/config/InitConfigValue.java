@@ -13,8 +13,14 @@ public class InitConfigValue {
     // public boolean isDev;
 
     
-    public void deletEvnformApplication() {
-
+    public static void deletEvnformApplication() {
+        System.out.println("deletEvnformApplication");
+        
+        //delete evn
+        System.getProperties().remove("eshost");
+        System.getProperties().remove("esport");
+        System.getProperties().remove("esusername");
+        System.getProperties().remove("espassword");
     }
 
     
