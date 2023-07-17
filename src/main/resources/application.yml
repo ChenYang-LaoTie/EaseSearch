@@ -32,4 +32,4 @@ asyncThreadPool:
 server:
   port: 8080
 
-config-path: ${configpath:config}
+config-path: ${buildconfig:config}
