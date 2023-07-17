@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.search.docsearch.config.InitConfigValue;
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.service.DataImportService;
 import com.search.docsearch.service.SearchService;
@@ -48,6 +49,7 @@ public class DataImportController implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
+        InitConfigValue.deletEvnformApplication();
         try {
             //导入es数据
             dataImportService.refreshDoc();
