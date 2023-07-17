@@ -5,7 +5,6 @@ import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.search.docsearch.config.MySystem;
+import com.search.docsearch.constant.Constants;
 import com.search.docsearch.service.DataImportService;
 import com.search.docsearch.service.SearchService;
 import com.search.docsearch.utils.FileUtils;
@@ -36,9 +36,6 @@ public class DataImportController implements ApplicationRunner {
     @Qualifier("setConfig")
     private MySystem s;
 
-    @Value("${config-path}")
-    private String configPath;
-
     @Autowired
     HttpServletRequest httpServletRequest;
 
@@ -49,7 +46,7 @@ public class DataImportController implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
-        if (FileUtils.deleteFile(configPath)) {
+        if (FileUtils.deleteFile(Constants.CONFIG_PATH)) {
             log.info("delete application success");
         } else {
             log.info("delete application fail");

@@ -31,5 +31,3 @@ asyncThreadPool:
 
 server:
   port: 8080
-
-config-path: ${buildconfig:config}
