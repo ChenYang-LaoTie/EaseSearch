@@ -6,7 +6,6 @@ import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -46,7 +45,8 @@ public class DataImportController implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
-        InitConfigValue.deletEvnformApplication();
+        // InitConfigValue initConfigValue = new InitConfigValue();
+        // initConfigValue.deletEvnformApplication();
         try {
             //导入es数据
             dataImportService.refreshDoc();
