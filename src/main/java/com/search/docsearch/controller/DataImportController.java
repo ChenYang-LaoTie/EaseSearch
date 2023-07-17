@@ -1,6 +1,5 @@
 package com.search.docsearch.controller;
 
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.service.DataImportService;
 import com.search.docsearch.service.SearchService;
+import com.search.docsearch.utils.FileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,34 +43,35 @@ public class DataImportController implements ApplicationRunner {
     HttpServletRequest httpServletRequest;
 
     /**
-     *  该方法在项目启动时就会运行
+     * 该方法在项目启动时就会运行
+     * 
      * @param args
      */
     @Override
     public void run(ApplicationArguments args) {
-                // if (FileUtils.deleteFile(configPath)) {
-        //     log.info("delete application success");
-        // } else {
-        //     log.info("delete application fail");
-        // }
-        System.out.println("2++++++++++++++++++" + configPath);
+        if (FileUtils.deleteFile(configPath)) {
+            log.info("delete application success");
+        } else {
+            log.info("delete application fail");
+        }
         try {
-            //导入es数据
+            // 导入es数据
             dataImportService.refreshDoc();
         } catch (Exception e) {
             log.error(e.getMessage());
         }
 
-        
     }
 
     /**
      * 对外提供的webhook
+     * 
      * @param data
      * @param parameter
      */
     @PostMapping("/hook/{parameter}")
-    public void webhook(@RequestBody @NotBlank(message = "hook data can not be blank") String data, @PathVariable @NotBlank(message = "must have a parameter") String parameter) {
+    public void webhook(@RequestBody @NotBlank(message = "hook data can not be blank") String data,
+            @PathVariable @NotBlank(message = "must have a parameter") String parameter) {
         dataImportService.addForum(data, parameter);
     }
 
