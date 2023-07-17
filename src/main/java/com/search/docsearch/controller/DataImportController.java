@@ -6,6 +6,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.search.docsearch.config.InitConfigValue;
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.service.DataImportService;
 import com.search.docsearch.service.SearchService;
@@ -36,6 +36,9 @@ public class DataImportController implements ApplicationRunner {
     @Qualifier("setConfig")
     private MySystem s;
 
+    @Value("${config-path}")
+    private String configPath;
+
     @Autowired
     HttpServletRequest httpServletRequest;
 
@@ -45,14 +48,20 @@ public class DataImportController implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
-        InitConfigValue initConfigValue = new InitConfigValue();
-        initConfigValue.deletEvnformApplication();
+                // if (FileUtils.deleteFile(configPath)) {
+        //     log.info("delete application success");
+        // } else {
+        //     log.info("delete application fail");
+        // }
+        System.out.println("2++++++++++++++++++" + configPath);
         try {
             //导入es数据
             dataImportService.refreshDoc();
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+
+        
     }
 
     /**
