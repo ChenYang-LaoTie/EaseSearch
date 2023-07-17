@@ -1,6 +1,10 @@
 package com.search.docsearch.config;
 
-import lombok.extern.slf4j.Slf4j;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.SSLContext;
+
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -16,18 +20,14 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.net.ssl.*;
-
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
-@EnableConfigurationProperties(ElasticsearchProperties.class)
+@EnableConfigurationProperties(ElasticSearchConfig.class)
 @Slf4j
 public class ElasticSearchConfig {
 

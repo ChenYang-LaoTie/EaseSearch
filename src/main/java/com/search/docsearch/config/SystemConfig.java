@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
-@EnableConfigurationProperties(MySystem.class)
+@EnableConfigurationProperties(SystemConfig.class)
 @Slf4j
 public class SystemConfig {
 
