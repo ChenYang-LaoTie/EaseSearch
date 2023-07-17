@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-@EnableConfigurationProperties(InitConfigValue.class)
+@EnableConfigurationProperties()
 public class InitConfigValue {
 
     @Value("${config-path}")
