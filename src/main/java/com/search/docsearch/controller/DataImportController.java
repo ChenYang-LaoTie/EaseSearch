@@ -45,8 +45,8 @@ public class DataImportController implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
-        // InitConfigValue initConfigValue = new InitConfigValue();
-        // initConfigValue.deletEvnformApplication();
+        InitConfigValue initConfigValue = new InitConfigValue();
+        initConfigValue.deletEvnformApplication();
         try {
             //导入es数据
             dataImportService.refreshDoc();
