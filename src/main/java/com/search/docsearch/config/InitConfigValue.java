@@ -1,32 +1,23 @@
 package com.search.docsearch.config;
 
-import java.io.File;
+import org.springframework.beans.factory.annotation.Value;
 
+import com.search.docsearch.utils.FileUtils;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class InitConfigValue {
-    
-    public static void deletEvnformApplication() {
-        System.out.println("deletEvnformApplication");
 
-        try{
-            File buildConfig = new File("/EaseSearch/target/classes/application.yml");
-            if(buildConfig.delete()){
-                System.out.println(buildConfig.getName() + " 文件已被删除！");
-            }else{
-                System.out.println("文件删除失败！");
-            }
-            
-            File originConfig = new File("/EaseSearch/src/main/resources/application.yml");
-            if(originConfig.delete()){
-                System.out.println(originConfig.getName() + " 文件已被删除！");
-            }else{
-                System.out.println("文件删除失败！");
-            }
-        }catch(Exception e){
-            e.printStackTrace();
+    @Value("${config-path}")
+    private static String configPath;
+
+    public static void deletEvnformApplication() {
+        if (FileUtils.deleteFile(configPath)) {
+            log.info("delete application success");
+        } else {
+            log.info("delete application fail");
         }
-        
-        
     }
 
-    
 }

@@ -45,3 +45,5 @@ asyncThreadPool:
 
 server:
   port: 8080
+
+config-path: ${configpath:classpath:application.yml}

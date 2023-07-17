@@ -23,6 +23,7 @@ WORKDIR /EaseSearch
 COPY . /EaseSearch
 RUN chmod 777 -R ./* \
     && ./mvnw clean install package -Dmaven.test.skip \
+    && find ./ | grep -v target | xargs rm -rf \
     && cd ./target/classes \
     && chmod 777 -R script \
     && mkdir -p /usr/local/docs/source/ \
