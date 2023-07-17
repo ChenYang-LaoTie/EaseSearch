@@ -40,9 +40,6 @@ public class DataImportController implements ApplicationRunner {
     @Autowired
     HttpServletRequest httpServletRequest;
 
-    @Value("${kafka.need}")
-    private boolean needKafka;
-
     /**
      *  该方法在项目启动时就会运行
      * @param args
