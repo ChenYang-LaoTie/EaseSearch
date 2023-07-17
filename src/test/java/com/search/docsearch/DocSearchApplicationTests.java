@@ -20,6 +20,7 @@ import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.util.HtmlUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -356,6 +357,9 @@ class DocSearchApplicationTests {
 
 	@Test
 	public void aa() {
+		String xss = "<script>alert(document.cookie)</script>";
 
+		String s =	HtmlUtils.htmlEscape(xss);
+		System.out.println(s);
 	}
 }
