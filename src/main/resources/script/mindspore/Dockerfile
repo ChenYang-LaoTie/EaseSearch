@@ -29,4 +29,4 @@ RUN chmod 777 -R ./* \
     && cd /EaseSearch/target
 
 EXPOSE 8080
-CMD java -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=/vault/secrets/application.yml
+CMD java -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}

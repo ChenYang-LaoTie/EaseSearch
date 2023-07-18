@@ -26,4 +26,4 @@ RUN chmod 777 -R ./* \
     && chmod 777 -R script \
     && cd ../
 EXPOSE 8080
-CMD java -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=/EaseSearch/target/classes/application.yml
+CMD java -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
