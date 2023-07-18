@@ -6,6 +6,7 @@ ENV LANGUAGE C.UTF-8
 ENV searchsystem openlookeng
 
 RUN apt update \
+    && apt install libasm-java \
     && wget http://security.debian.org/debian-security/pool/updates/main/j/json-smart/libjson-smart-java_2.2-2+deb10u1_all.deb \
     && dpkg -i libjson-smart-java_2.2-2+deb10u1_all.deb  \
     && cd /root \
