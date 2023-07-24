@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 @RequestMapping("/search")
-
-@CrossOrigin(origins = "*")
 public class SearchController {
 
     @Autowired

@@ -9,7 +9,7 @@ mkdir -p /usr/local/docs/target/
 
 #shellcheck disable=SC2164
 cd /usr/local/docs/source
-git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@gitee.com/mindspore/website-docs.git
+git clone https://gitee.com/mindspore/website-docs.git
 
 if [ ! -d "/usr/local/docs/source/website-docs" ]; then
  rm -rf /usr/local/docs/target
