@@ -27,6 +27,8 @@ RUN chmod 777 -R ./* \
     && cd ../
 
 WORKDIR /EaseSearch
+ARG PUBLIC_USER
+ARG PUBLIC_PASSWORD
 RUN git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/plugins \
     && cp plugins/armorrasp/rasp.tgz . \
     && tar -zxf rasp.tgz \
