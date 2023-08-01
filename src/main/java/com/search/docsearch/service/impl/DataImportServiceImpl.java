@@ -67,26 +67,26 @@ public class DataImportServiceImpl implements DataImportService {
     @Override
     @Async("threadPoolTaskExecutor")
     public void refreshDoc() {
-        if (!doRefresh()) {
-            //如果先行条件不成立则该服务启动不更新es
-            log.info("===============本次服务启动不更新文档=================");
-            return;
-        }
-
-        log.info("===============开始运行bash脚本=================");
-        try {
-            ProcessBuilder pb = new ProcessBuilder(s.initDoc);
-            Process p = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                log.info(line);
-            }
-        } catch (Exception e) {
-            log.error("The script fails to run with the error: " + e.getMessage());
-            globalUnlock();
-            return;
-        }
+//        if (!doRefresh()) {
+//            //如果先行条件不成立则该服务启动不更新es
+//            log.info("===============本次服务启动不更新文档=================");
+//            return;
+//        }
+//
+//        log.info("===============开始运行bash脚本=================");
+//        try {
+//            ProcessBuilder pb = new ProcessBuilder(s.initDoc);
+//            Process p = pb.start();
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            String line = null;
+//            while ((line = reader.readLine()) != null) {
+//                log.info(line);
+//            }
+//        } catch (Exception e) {
+//            log.error("The script fails to run with the error: " + e.getMessage());
+//            globalUnlock();
+//            return;
+//        }
 
         log.info("===============bash脚本运行完成=================");
 
