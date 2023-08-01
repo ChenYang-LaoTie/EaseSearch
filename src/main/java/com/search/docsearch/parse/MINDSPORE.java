@@ -147,7 +147,7 @@ public class MINDSPORE {
                 title = t.text();
                 t.remove();
             } else {
-                System.out.println(MINDSPORE_OFFICIAL+ "/" + jsonMap.get("path"));
+                System.out.println(MINDSPORE_OFFICIAL+ "/" + jsonMap.get("path") + " ----zzzzz");
                 return false;
             }
             title = title.replaceAll("¶", "");
