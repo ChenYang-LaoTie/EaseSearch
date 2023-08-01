@@ -153,6 +153,7 @@ public class MINDSPORE {
             title = title.replaceAll("¶", "");
             textContent = one.text();
         } else {
+            System.out.println(MINDSPORE_OFFICIAL+ "/" + jsonMap.get("path") + "  +++++++++");
             return false;
         }
 
