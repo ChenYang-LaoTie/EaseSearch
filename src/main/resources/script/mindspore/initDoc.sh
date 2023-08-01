@@ -60,6 +60,9 @@ find ./ -name _modules |xargs rm -rf
 find ./ -name _sources |xargs rm -rf
 # shellcheck disable=SC2038
 find ./ -name _static |xargs rm -rf
-
-
-
+# shellcheck disable=SC2038
+find ./ -name search.html |xargs rm -rf
+# shellcheck disable=SC2038
+find ./ -name genindex.html |xargs rm -rf
+# shellcheck disable=SC2038
+find ./ -name py-modindex.html |xargs rm -rf
