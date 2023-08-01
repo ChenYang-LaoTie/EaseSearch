@@ -151,6 +151,7 @@ public class MINDSPORE {
                 return false;
             }
             title = title.replaceAll("¶", "");
+            title = title.replaceAll("\uF0C1", "");
             textContent = one.text();
         } else {
             System.out.println(MINDSPORE_OFFICIAL+ "/" + jsonMap.get("path") + "  +++++++++");
