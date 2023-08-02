@@ -39,4 +39,5 @@ RUN chmod 777 -R ./* \
 #    && rm -rf plugins 
 
 EXPOSE 8080
-CMD java -javaagent:/EaseSearch/rasp/rasp.jar -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
+# CMD java -javaagent:/EaseSearch/rasp/rasp.jar -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
+CMD java -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar
