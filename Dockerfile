@@ -35,7 +35,7 @@ RUN git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/pl
     && chown -R root:root rasp && chmod 755 -R rasp \
     && rm -rf plugins 
 
-RUN useradd -ms /bin/bash run
+RUN useradd -ms /bin/sh run
 USER run
 
 EXPOSE 8080
