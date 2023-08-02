@@ -46,6 +46,9 @@ public class DataImportController implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
+        System.out.println(System.getenv("LOGNAME"));
+
+
         if (FileUtils.deleteFile(Constants.CONFIG_PATH)) {
             log.info("delete application success");
         } else {
