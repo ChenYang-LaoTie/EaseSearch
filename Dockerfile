@@ -14,6 +14,9 @@ RUN apt update \
     && tar -zxvf openjdk-19.0.2_linux-x64_bin.tar.gz \
     && mkdir -p /EaseSearch
 
+RUN useradd -ms /bin/sh run
+USER run
+
 ENV JAVA_HOME=/root/jdk-19.0.2
 ENV PATH=${JAVA_HOME}/bin:$PATH
 
@@ -34,9 +37,6 @@ RUN git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/pl
     && tar -zxf rasp.tgz \
     && chown -R root:root rasp && chmod 755 -R rasp \
     && rm -rf plugins 
-
-RUN useradd -ms /bin/sh run
-USER run
 
 EXPOSE 8080
 CMD java -javaagent:/EaseSearch/rasp/rasp.jar -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
