@@ -14,8 +14,8 @@ RUN apt update \
     && tar -zxvf openjdk-19.0.2_linux-x64_bin.tar.gz \
     && mkdir -p /EaseSearch
 
-RUN useradd -ms /bin/sh run
-USER run
+# RUN useradd -ms /bin/sh run
+# USER run
 
 ENV JAVA_HOME=/root/jdk-19.0.2
 ENV PATH=${JAVA_HOME}/bin:$PATH
