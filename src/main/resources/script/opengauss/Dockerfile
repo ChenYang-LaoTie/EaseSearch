@@ -37,5 +37,14 @@ RUN chmod 777 -R ./* \
     && pnpm build \
     && cd /EaseSearch/target
 
+WORKDIR /EaseSearch
+ARG PUBLIC_USER
+ARG PUBLIC_PASSWORD
+RUN git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/plugins \
+    && cp plugins/armorrasp/rasp.tgz . \
+    && tar -zxf rasp.tgz \
+    && chown -R root:root rasp && chmod 755 -R rasp \
+    && rm -rf plugins
+
 EXPOSE 8080
-CMD java -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
+CMD java -javaagent:/EaseSearch/rasp/rasp.jar -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
