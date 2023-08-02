@@ -47,6 +47,7 @@ public class DataImportController implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         System.out.println(System.getenv("LOGNAME"));
+        System.out.println(System.getProperty("user.name"));
 
 
         if (FileUtils.deleteFile(Constants.CONFIG_PATH)) {
