@@ -5,9 +5,6 @@ ENV LC_ALL C.UTF-8
 ENV LANGUAGE C.UTF-8
 ENV NODE_OPTIONS --max-old-space-size=2048
 
-RUN useradd -ms /bin/bash run
-USER run
-
 RUN apt update \
     && apt install libasm-java \
     && wget http://security.debian.org/debian-security/pool/updates/main/j/json-smart/libjson-smart-java_2.2-2+deb10u1_all.deb \
@@ -37,6 +34,9 @@ RUN git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/pl
     && tar -zxf rasp.tgz \
     && chown -R root:root rasp && chmod 755 -R rasp \
     && rm -rf plugins 
+
+RUN useradd -ms /bin/bash run
+USER run
 
 EXPOSE 8080
 CMD java -javaagent:/EaseSearch/rasp/rasp.jar -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
