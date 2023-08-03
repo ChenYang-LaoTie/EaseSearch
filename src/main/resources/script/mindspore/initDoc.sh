@@ -1,29 +1,29 @@
 #!/bin/bash
-if [ -d "/usr/local/docs" ]; then
-  rm -rf /usr/local/docs/source/*
-  rm -rf /usr/local/docs/target/*
+if [ -d "/workspace/file" ]; then
+  rm -rf /workspace/file/source/*
+  rm -rf /workspace/file/target/*
 fi
 
-mkdir -p /usr/local/docs/source/
-mkdir -p /usr/local/docs/target/
+mkdir -p /workspace/file/source/
+mkdir -p /workspace/file/target/
 
 #shellcheck disable=SC2164
-cd /usr/local/docs/source
+cd /workspace/file/source
 git clone https://gitee.com/mindspore/website-docs.git
 
-if [ ! -d "/usr/local/docs/source/website-docs" ]; then
- rm -rf /usr/local/docs/target
+if [ ! -d "/workspace/file/source/website-docs" ]; then
+ rm -rf /workspace/file/target
  exit
 fi
 
 
 # shellcheck disable=SC2164
-cd /usr/local/docs/source/website-docs
+cd /workspace/file/source/website-docs
 
-cp -r /usr/local/docs/source/website-docs/public/* /usr/local/docs/target/
+cp -r /workspace/file/source/website-docs/public/* /workspace/file/target/
 
 # shellcheck disable=SC2164
-cd /usr/local/docs/target/
+cd /workspace/file/target/
 
 # shellcheck disable=SC2035
 

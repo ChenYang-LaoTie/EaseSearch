@@ -1,63 +1,63 @@
 #!/bin/bash
-if [ -d "/usr/local/docs/target" ]; then
-  rm -rf /usr/local/docs/target/*
+if [ -d "/workspace/file/target" ]; then
+  rm -rf /workspace/file/target/*
 fi
 
-mkdir -p /usr/local/docs/target/zh/
-mkdir -p /usr/local/docs/target/en/
-mkdir -p /usr/local/docs/target/ru/
+mkdir -p /workspace/file/target/zh/
+mkdir -p /workspace/file/target/en/
+mkdir -p /workspace/file/target/ru/
 
-if [ ! -d "/usr/local/docs/source/openEuler-portal" ]; then
- rm -rf /usr/local/docs/target
+if [ ! -d "/workspace/file/source/openEuler-portal" ]; then
+ rm -rf /workspace/file/target
  exit
 fi
 
 # shellcheck disable=SC2164
-cd /usr/local/docs/source/openEuler-portal
+cd /workspace/file/source/openEuler-portal
 
-cp -r /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/zh /usr/local/docs/target/
-cp -r /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/en /usr/local/docs/target/
-cp -r /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/ru /usr/local/docs/target/
+cp -r /workspace/file/source/openEuler-portal/app/.vitepress/dist/zh /workspace/file/target/
+cp -r /workspace/file/source/openEuler-portal/app/.vitepress/dist/en /workspace/file/target/
+cp -r /workspace/file/source/openEuler-portal/app/.vitepress/dist/ru /workspace/file/target/
 
 
-rm -rf /usr/local/docs/target/zh/blog
-cp -r /usr/local/docs/source/openEuler-portal/app/zh/blog /usr/local/docs/target/zh/
-rm -rf /usr/local/docs/target/zh/news
-cp -r /usr/local/docs/source/openEuler-portal/app/zh/news /usr/local/docs/target/zh/
-rm -rf /usr/local/docs/target/zh/showcase
-cp -r /usr/local/docs/source/openEuler-portal/app/zh/showcase /usr/local/docs/target/zh/
-cp /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/zh/showcase/index.html /usr/local/docs/target/zh/showcase/
-rm -rf /usr/local/docs/target/zh/migration
-cp -r /usr/local/docs/source/openEuler-portal/app/zh/migration /usr/local/docs/target/zh/
+rm -rf /workspace/file/target/zh/blog
+cp -r /workspace/file/source/openEuler-portal/app/zh/blog /workspace/file/target/zh/
+rm -rf /workspace/file/target/zh/news
+cp -r /workspace/file/source/openEuler-portal/app/zh/news /workspace/file/target/zh/
+rm -rf /workspace/file/target/zh/showcase
+cp -r /workspace/file/source/openEuler-portal/app/zh/showcase /workspace/file/target/zh/
+cp /workspace/file/source/openEuler-portal/app/.vitepress/dist/zh/showcase/index.html /workspace/file/target/zh/showcase/
+rm -rf /workspace/file/target/zh/migration
+cp -r /workspace/file/source/openEuler-portal/app/zh/migration /workspace/file/target/zh/
 
-rm -rf /usr/local/docs/target/en/blog
-cp -r /usr/local/docs/source/openEuler-portal/app/en/blog /usr/local/docs/target/en/
-rm -rf /usr/local/docs/target/en/news
-cp -r /usr/local/docs/source/openEuler-portal/app/en/news /usr/local/docs/target/en/
-rm -rf /usr/local/docs/target/en/showcase
-cp -r /usr/local/docs/source/openEuler-portal/app/en/showcase /usr/local/docs/target/en/
-cp /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/en/showcase/index.html /usr/local/docs/target/en/showcase/
-rm -rf /usr/local/docs/target/en/migration
-cp -r /usr/local/docs/source/openEuler-portal/app/en/migration /usr/local/docs/target/en/
+rm -rf /workspace/file/target/en/blog
+cp -r /workspace/file/source/openEuler-portal/app/en/blog /workspace/file/target/en/
+rm -rf /workspace/file/target/en/news
+cp -r /workspace/file/source/openEuler-portal/app/en/news /workspace/file/target/en/
+rm -rf /workspace/file/target/en/showcase
+cp -r /workspace/file/source/openEuler-portal/app/en/showcase /workspace/file/target/en/
+cp /workspace/file/source/openEuler-portal/app/.vitepress/dist/en/showcase/index.html /workspace/file/target/en/showcase/
+rm -rf /workspace/file/target/en/migration
+cp -r /workspace/file/source/openEuler-portal/app/en/migration /workspace/file/target/en/
 
-rm -rf /usr/local/docs/target/ru/blog
-cp -r /usr/local/docs/source/openEuler-portal/app/ru/blog /usr/local/docs/target/ru/
-rm -rf /usr/local/docs/target/ru/news
-cp -r /usr/local/docs/source/openEuler-portal/app/ru/news /usr/local/docs/target/ru/
-rm -rf /usr/local/docs/target/ru/showcase
-cp -r /usr/local/docs/source/openEuler-portal/app/ru/showcase /usr/local/docs/target/ru/
-cp /usr/local/docs/source/openEuler-portal/app/.vitepress/dist/ru/showcase/index.html /usr/local/docs/target/ru/showcase/
-rm -rf /usr/local/docs/target/ru/migration
-cp -r /usr/local/docs/source/openEuler-portal/app/ru/migration /usr/local/docs/target/ru/
+rm -rf /workspace/file/target/ru/blog
+cp -r /workspace/file/source/openEuler-portal/app/ru/blog /workspace/file/target/ru/
+rm -rf /workspace/file/target/ru/news
+cp -r /workspace/file/source/openEuler-portal/app/ru/news /workspace/file/target/ru/
+rm -rf /workspace/file/target/ru/showcase
+cp -r /workspace/file/source/openEuler-portal/app/ru/showcase /workspace/file/target/ru/
+cp /workspace/file/source/openEuler-portal/app/.vitepress/dist/ru/showcase/index.html /workspace/file/target/ru/showcase/
+rm -rf /workspace/file/target/ru/migration
+cp -r /workspace/file/source/openEuler-portal/app/ru/migration /workspace/file/target/ru/
 
 
 # shellcheck disable=SC2164
-cd /usr/local/docs/source
+cd /workspace/file/source
 
 git clone https://gitee.com/openeuler/docs.git
 
-if [ ! -d "/usr/local/docs/source/docs" ]; then
- rm -rf /usr/local/docs/target
+if [ ! -d "/workspace/file/source/docs" ]; then
+ rm -rf /workspace/file/target
  exit
 fi
 
@@ -67,10 +67,10 @@ for r in $(git branch -r --list "origin/stable2-*")
 do
   b=${r##*origin/stable2-}
   git checkout $r
-  mkdir -p /usr/local/docs/target/zh/docs/$b/docs
-  mkdir -p /usr/local/docs/target/en/docs/$b/docs
-  cp -r /usr/local/docs/source/docs/docs/zh/docs/* /usr/local/docs/target/zh/docs/$b/docs/
-  cp -r /usr/local/docs/source/docs/docs/en/docs/* /usr/local/docs/target/en/docs/$b/docs/
+  mkdir -p /workspace/file/target/zh/docs/$b/docs
+  mkdir -p /workspace/file/target/en/docs/$b/docs
+  cp -r /workspace/file/source/docs/docs/zh/docs/* /workspace/file/target/zh/docs/$b/docs/
+  cp -r /workspace/file/source/docs/docs/en/docs/* /workspace/file/target/en/docs/$b/docs/
 done
 
 

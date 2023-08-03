@@ -15,13 +15,11 @@ RUN apt update \
     && cd /workspace \
     && wget https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-19.0.2_linux-x64_bin.tar.gz \
     && tar -zxvf openjdk-19.0.2_linux-x64_bin.tar.gz \
+    && npm i pnpm -g \
     && mkdir -p /workspace/EaseSearch
-
-
 
 ENV JAVA_HOME=/workspace/jdk-19.0.2
 ENV PATH=${JAVA_HOME}/bin:$PATH
-
 
 COPY . /workspace/EaseSearch
 RUN cd /workspace/EaseSearch \
@@ -31,14 +29,14 @@ RUN cd /workspace/EaseSearch \
     && cd ./target/classes \
     && chmod 777 -R script 
 
-#WORKDIR /EaseSearch
-#ARG PUBLIC_USER
-#ARG PUBLIC_PASSWORD
-#RUN git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/plugins \
-#    && cp plugins/armorrasp/rasp.tgz . \
-#    && tar -zxf rasp.tgz \
-#    && chown -R root:root rasp && chmod 755 -R rasp \
-#    && rm -rf plugins 
+ARG PUBLIC_USER
+ARG PUBLIC_PASSWORD
+RUN cd /workspace/EaseSearch \
+   && git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/plugins \
+   && cp plugins/armorrasp/rasp.tgz . \
+   && tar -zxf rasp.tgz \
+   && rm -rf plugins 
+
 RUN useradd -ms /bin/bash runtime\
     && chown -R runtime:runtime /workspace \
     && chmod 755 -R /workspace
@@ -46,5 +44,4 @@ RUN useradd -ms /bin/bash runtime\
 USER runtime
 
 EXPOSE 8080
-# CMD java -javaagent:/EaseSearch/rasp/rasp.jar -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
-CMD java -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar
+CMD java -javaagent:/EaseSearch/rasp/rasp.jar -jar ./target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}

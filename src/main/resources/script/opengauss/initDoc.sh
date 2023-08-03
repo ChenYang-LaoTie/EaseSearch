@@ -1,47 +1,47 @@
 #!/bin/bash
-if [ -d "/usr/local/docs/target" ]; then
-  rm -rf /usr/local/docs/target/*
+if [ -d "/workspace/file/target" ]; then
+  rm -rf /workspace/file/target/*
 fi
 
-mkdir -p /usr/local/docs/target/zh/
-mkdir -p /usr/local/docs/target/en/
+mkdir -p /workspace/file/target/zh/
+mkdir -p /workspace/file/target/en/
 
-if [ ! -d "/usr/local/docs/source/website" ]; then
- rm -rf /usr/local/docs/target
+if [ ! -d "/workspace/file/source/website" ]; then
+ rm -rf /workspace/file/target
  exit
 fi
 
 # shellcheck disable=SC2164
-cd /usr/local/docs/source/website
+cd /workspace/file/source/website
 
-cp -r /usr/local/docs/source/website/app/.vitepress/dist/zh /usr/local/docs/target/
-cp -r /usr/local/docs/source/website/app/.vitepress/dist/en /usr/local/docs/target/
+cp -r /workspace/file/source/website/app/.vitepress/dist/zh /workspace/file/target/
+cp -r /workspace/file/source/website/app/.vitepress/dist/en /workspace/file/target/
 
-rm -rf /usr/local/docs/target/zh/blogs
-cp -r /usr/local/docs/source/website/app/zh/blogs /usr/local/docs/target/zh/
-rm -rf /usr/local/docs/target/zh/news
-cp -r /usr/local/docs/source/website/app/zh/news /usr/local/docs/target/zh/
-rm -rf /usr/local/docs/target/zh/events
-cp -r /usr/local/docs/source/website/app/zh/events /usr/local/docs/target/zh/
-rm -rf /usr/local/docs/target/zh/userPractice
-cp -r /usr/local/docs/source/website/app/zh/userPractice /usr/local/docs/target/zh/
+rm -rf /workspace/file/target/zh/blogs
+cp -r /workspace/file/source/website/app/zh/blogs /workspace/file/target/zh/
+rm -rf /workspace/file/target/zh/news
+cp -r /workspace/file/source/website/app/zh/news /workspace/file/target/zh/
+rm -rf /workspace/file/target/zh/events
+cp -r /workspace/file/source/website/app/zh/events /workspace/file/target/zh/
+rm -rf /workspace/file/target/zh/userPractice
+cp -r /workspace/file/source/website/app/zh/userPractice /workspace/file/target/zh/
 
-rm -rf /usr/local/docs/target/en/blogs
-cp -r /usr/local/docs/source/website/app/en/blogs /usr/local/docs/target/en/
-rm -rf /usr/local/docs/target/en/news
-cp -r /usr/local/docs/source/website/app/en/news /usr/local/docs/target/en/
-rm -rf /usr/local/docs/target/en/events
-cp -r /usr/local/docs/source/website/app/en/events /usr/local/docs/target/en/
-rm -rf /usr/local/docs/target/en/userPractice
-cp -r /usr/local/docs/source/website/app/en/userPractice /usr/local/docs/target/en/
+rm -rf /workspace/file/target/en/blogs
+cp -r /workspace/file/source/website/app/en/blogs /workspace/file/target/en/
+rm -rf /workspace/file/target/en/news
+cp -r /workspace/file/source/website/app/en/news /workspace/file/target/en/
+rm -rf /workspace/file/target/en/events
+cp -r /workspace/file/source/website/app/en/events /workspace/file/target/en/
+rm -rf /workspace/file/target/en/userPractice
+cp -r /workspace/file/source/website/app/en/userPractice /workspace/file/target/en/
 
 # shellcheck disable=SC2164
-cd /usr/local/docs/source
+cd /workspace/file/source
 
 git clone https://gitee.com/opengauss/docs.git
 
-if [ ! -d "/usr/local/docs/source/docs" ]; then
- rm -rf /usr/local/docs/target
+if [ ! -d "/workspace/file/source/docs" ]; then
+ rm -rf /workspace/file/target
  exit
 fi
 
@@ -58,15 +58,15 @@ for r in $(git branch -r --list "origin/*"); do
  # shellcheck disable=SC2053
  if [[ "website" != $b ]] && [[ "HEAD" != $b ]] && [[ "->" != $b ]] && [[ "reconstruct-frozen" != $b ]] && [[ "master-bak" != $b ]] && [[ "website-v2" != $b ]]; then
     git checkout $r
-    mkdir -p /usr/local/docs/target/zh/docs/$b/docs
-    mkdir -p /usr/local/docs/target/en/docs/$b/docs
-    cp -r /usr/local/docs/source/docs/content/zh/docs/* /usr/local/docs/target/zh/docs/$b/docs/
-    cp -r /usr/local/docs/source/docs/content/en/docs/* /usr/local/docs/target/en/docs/$b/docs/
+    mkdir -p /workspace/file/target/zh/docs/$b/docs
+    mkdir -p /workspace/file/target/en/docs/$b/docs
+    cp -r /workspace/file/source/docs/content/zh/docs/* /workspace/file/target/zh/docs/$b/docs/
+    cp -r /workspace/file/source/docs/content/en/docs/* /workspace/file/target/en/docs/$b/docs/
 
-    mkdir -p /usr/local/docs/target/zh/docs/$b-lite/docs
-    mkdir -p /usr/local/docs/target/en/docs/$b-lite/docs
-    cp -r /usr/local/docs/source/docs/content/docs-lite/zh/docs/* /usr/local/docs/target/zh/docs/$b-lite/docs/
-    cp -r /usr/local/docs/source/docs/content/docs-list/en/docs/* /usr/local/docs/target/en/docs/$b-lite/docs/
+    mkdir -p /workspace/file/target/zh/docs/$b-lite/docs
+    mkdir -p /workspace/file/target/en/docs/$b-lite/docs
+    cp -r /workspace/file/source/docs/content/docs-lite/zh/docs/* /workspace/file/target/zh/docs/$b-lite/docs/
+    cp -r /workspace/file/source/docs/content/docs-list/en/docs/* /workspace/file/target/en/docs/$b-lite/docs/
 
  fi
 done
