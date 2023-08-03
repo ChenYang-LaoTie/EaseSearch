@@ -39,7 +39,7 @@ RUN cd /workspace/EaseSearch \
 #    && tar -zxf rasp.tgz \
 #    && chown -R root:root rasp && chmod 755 -R rasp \
 #    && rm -rf plugins 
-RUN adduser runtime \
+RUN useradd -ms /bin/bash runtime\
     && chown -R runtime:runtime /workspace \
     && chmod 755 -R /workspace
 
