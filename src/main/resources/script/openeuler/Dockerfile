@@ -3,7 +3,7 @@ FROM node
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV LANGUAGE C.UTF-8
-ENV NODE_OPTIONS --max-old-space-size=2048
+ENV NODE_OPTIONS --max-old-space-size=8192
 ENV searchsystem openEuler
 
 RUN mkdir /workspace
@@ -52,5 +52,4 @@ RUN useradd -ms /bin/bash runtime\
 USER runtime
 
 EXPOSE 8080
-# CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
-CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=/workspace/EaseSearch/target/classes/application.yml
+CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH:/workspace/EaseSearch/target/classes/application.yml}
