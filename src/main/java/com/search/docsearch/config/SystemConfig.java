@@ -20,9 +20,9 @@ public class SystemConfig {
     @Value("${dep}")
     private String dep;
 
-    public static final String MAPPINGPATH = "/workspace/EaseSearch/target/classes/mapping/mapping.json";
+    public static final String BASEPATH = System.getenv("TARGET");
 
-    public static final String BASEPATH = "/workspace/file/target/";
+    public static final String MAPPINGPATH = BASEPATH + "/classes/mapping/mapping.json";
 
     @Bean
     public MySystem setConfig() {
@@ -43,7 +43,7 @@ public class SystemConfig {
         mySystem.setMappingPath(MAPPINGPATH);
         mySystem.setBasePath(BASEPATH);
 
-        mySystem.setInitDoc("/workspace/EaseSearch/target/classes/script/" + system + "/initDoc.sh");
+        mySystem.setInitDoc(BASEPATH + "/classes/script/" + system + "/initDoc.sh");
 
         return mySystem;
     }

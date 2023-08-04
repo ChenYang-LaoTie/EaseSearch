@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OPENEULER {
-    public static final String BASEPATH = "/workspace/file/target/";
+    public static final String BASEPATH = System.getenv("TARGET") + "/";
 
     public static final String BLOG = "blog";
     public static final String BLOGS = "blogs";

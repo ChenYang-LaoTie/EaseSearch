@@ -14,7 +14,7 @@ WORKDIR ${WORKSPACE}
 
 RUN useradd -ms /bin/bash runtime \
     && chown -R runtime:runtime ${WORKSPACE} \
-    && chmod 755 -R ${WORKSPACE}
+    && chmod 777 -R ${WORKSPACE}
 
 RUN apt update \
     && apt install libasm-java \
@@ -36,29 +36,28 @@ USER runtime
 
 COPY . /workspace/EaseSearch
 RUN cd /workspace/EaseSearch \
-    && chmod 777 -R ./* \
     && ./mvnw clean install package -Dmaven.test.skip \
     && rm -rf `ls | grep -v target` \
     && cd ./target/classes \
-    && chmod 777 -R script \
     && cd /workspace \
-    && mkdir -p /workspace/file/source/ \
-    && cd /workspace/file/source/ \
+    && mkdir -p ${SOURCE} \
+    && cd ${SOURCE} \
     && git clone https://gitee.com/openeuler/openEuler-portal.git \
     && cd openEuler-portal \
     && pnpm install \
     && pnpm build
 
-# ARG PUBLIC_USER
-# ARG PUBLIC_PASSWORD
-# RUN cd /workspace/EaseSearch \
-#    && git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/plugins \
-#    && cp plugins/armorrasp/rasp.tgz . \
-#    && tar -zxf rasp.tgz \
-#    && rm -rf plugins 
+ARG PUBLIC_USER
+ARG PUBLIC_PASSWORD
+RUN cd ${WORKSPACE}/EaseSearch \
+   && git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/plugins \
+   && cp plugins/armorrasp/rasp.tgz . \
+   && tar -zxf rasp.tgz \
+   && rm -rf plugins 
 
 
 
 EXPOSE 8080
 # CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
-CMD java -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar
+CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=/workspace/EaseSearch/target/classes/application.yml
+# CMD java -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar
