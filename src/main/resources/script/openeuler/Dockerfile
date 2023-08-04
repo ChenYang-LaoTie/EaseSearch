@@ -4,10 +4,17 @@ ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV LANGUAGE C.UTF-8
 ENV NODE_OPTIONS --max-old-space-size=8192
-ENV searchsystem openEuler
 
-RUN mkdir /workspace
-WORKDIR /workspace
+ENV WORKSPACE=/workspace
+ENV SOURCE=${WORKSPACE}/file/source
+ENV TARGET=${WORKSPACE}/file/target
+
+RUN mkdir ${WORKSPACE}
+WORKDIR ${WORKSPACE}
+
+RUN useradd -ms /bin/bash runtime \
+    && chown -R runtime:runtime ${WORKSPACE} \
+    && chmod 755 -R ${WORKSPACE}
 
 RUN apt update \
     && apt install libasm-java \
@@ -19,8 +26,13 @@ RUN apt update \
     && npm i pnpm -g \
     && mkdir -p /workspace/EaseSearch
 
+
 ENV JAVA_HOME=/workspace/jdk-19.0.2
 ENV PATH=${JAVA_HOME}/bin:$PATH
+
+ENV searchsystem=openEuler
+
+USER runtime
 
 COPY . /workspace/EaseSearch
 RUN cd /workspace/EaseSearch \
@@ -37,19 +49,16 @@ RUN cd /workspace/EaseSearch \
     && pnpm install \
     && pnpm build
 
-ARG PUBLIC_USER
-ARG PUBLIC_PASSWORD
-RUN cd /workspace/EaseSearch \
-   && git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/plugins \
-   && cp plugins/armorrasp/rasp.tgz . \
-   && tar -zxf rasp.tgz \
-   && rm -rf plugins 
+# ARG PUBLIC_USER
+# ARG PUBLIC_PASSWORD
+# RUN cd /workspace/EaseSearch \
+#    && git clone https://$PUBLIC_USER:$PUBLIC_PASSWORD@github.com/Open-Infra-Ops/plugins \
+#    && cp plugins/armorrasp/rasp.tgz . \
+#    && tar -zxf rasp.tgz \
+#    && rm -rf plugins 
 
-RUN useradd -ms /bin/bash runtime\
-    && chown -R runtime:runtime /workspace \
-    && chmod 755 -R /workspace
 
-USER runtime
 
 EXPOSE 8080
-CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH:/workspace/EaseSearch/target/classes/application.yml}
+# CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
+CMD java -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar
