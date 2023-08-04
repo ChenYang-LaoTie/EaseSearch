@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MINDSPORE {
-    public static final String BASEPATH = "/usr/local/docs/target/";
+    public static final String BASEPATH = "/workspace/file/target/";
 
     public static final String LANG_EN = "/en/";
     public static final String LANG_ZH = "/zh-CN/";
