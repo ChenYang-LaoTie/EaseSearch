@@ -32,8 +32,6 @@ ENV PATH=${JAVA_HOME}/bin:$PATH
 
 ENV searchsystem=openEuler
 
-USER runtime
-
 COPY . /workspace/EaseSearch
 RUN cd /workspace/EaseSearch \
     && ./mvnw clean install package -Dmaven.test.skip \
@@ -55,7 +53,7 @@ RUN cd ${WORKSPACE}/EaseSearch \
    && tar -zxf rasp.tgz \
    && rm -rf plugins 
 
-
+USER runtime
 
 EXPOSE 8080
 # CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
