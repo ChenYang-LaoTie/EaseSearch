@@ -4,6 +4,7 @@ ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV LANGUAGE C.UTF-8
 ENV NODE_OPTIONS --max-old-space-size=2048
+ENV searchsystem openlookeng
 
 RUN mkdir /workspace
 WORKDIR /workspace
