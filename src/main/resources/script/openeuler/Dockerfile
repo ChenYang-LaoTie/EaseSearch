@@ -5,7 +5,7 @@ ENV LC_ALL C.UTF-8
 ENV LANGUAGE C.UTF-8
 ENV NODE_OPTIONS --max-old-space-size=8192
 
-RUN groupadd -g 1001easysearch \
+RUN groupadd -g 1001 easysearch \
     && useradd -u 1001 -g easysearch -s /bin/bash -m easysearch
 
 ENV WORKSPACE=/home/easysearch
