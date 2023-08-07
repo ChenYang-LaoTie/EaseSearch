@@ -32,7 +32,7 @@ COPY . ${BASEPATH}
 RUN cd ${BASEPATH} \
     && ./mvnw clean install package -Dmaven.test.skip \
     && rm -rf `ls | grep -v target` \
-    && chmod -x target/classes/script/*.sh
+    && chmod -x ./target/classes/script
 
 ARG PUBLIC_USER
 ARG PUBLIC_PASSWORD
