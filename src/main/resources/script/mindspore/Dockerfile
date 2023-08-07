@@ -41,6 +41,10 @@ RUN cd ${BASEPATH} \
    && tar -zxf rasp.tgz \
    && rm -rf plugins
 
+RUN mkdir -p ${SOURCE} \
+    && cd ${SOURCE} \
+    && git clone https://gitee.com/mindspore/website-docs.git
+
 ENV searchsystem mindspore
 
 USER runtime

@@ -1,22 +1,18 @@
 #!/bin/bash
-if [ -d "/workspace/file/target" ]; then
-  rm -rf /workspace/file/target/*
-fi
+mkdir -p ${TARGET}/zh/
+mkdir -p ${TARGET}/en/
 
-mkdir -p /workspace/file/target/zh/
-mkdir -p /workspace/file/target/en/
+cp -r ${SOURCE}/website-v2/app/zh/information/news ${TARGET}/zh/
+cp -r ${SOURCE}/website-v2/app/zh/information/blog ${TARGET}/zh/
+cp -r ${SOURCE}/website-v2/app/zh/information/activity ${TARGET}/zh/
+cp -r ${SOURCE}/website-v2/app/zh/information/video ${TARGET}/zh/
 
-cp -r /workspace/file/source/website-v2/app/zh/information/news /workspace/file/target/zh/
-cp -r /workspace/file/source/website-v2/app/zh/information/blog /workspace/file/target/zh/
-cp -r /workspace/file/source/website-v2/app/zh/information/activity /workspace/file/target/zh/
-cp -r /workspace/file/source/website-v2/app/zh/information/video /workspace/file/target/zh/
+cp -r ${SOURCE}/website-v2/app/en/information/news ${TARGET}/en/
+cp -r ${SOURCE}/website-v2/app/en/information/blog ${TARGET}/en/
+cp -r ${SOURCE}/website-v2/app/en/information/activity ${TARGET}/en/
+cp -r ${SOURCE}/website-v2/app/en/information/video ${TARGET}/en/
 
-cp -r /workspace/file/source/website-v2/app/en/information/news /workspace/file/target/en/
-cp -r /workspace/file/source/website-v2/app/en/information/blog /workspace/file/target/en/
-cp -r /workspace/file/source/website-v2/app/en/information/activity /workspace/file/target/en/
-cp -r /workspace/file/source/website-v2/app/en/information/video /workspace/file/target/en/
-
-cd /workspace/file/source
+cd ${SOURCE}
 git clone https://gitee.com/openlookeng/website-docs.git
-cp -r /workspace/file/source/website-docs/content/zh/docs/docs/ /workspace/file/target/zh/docs/
-cp -r /workspace/file/source/website-docs/content/en/docs/docs/ /workspace/file/target/en/docs/
+cp -r ${SOURCE}/website-docs/content/zh/docs/docs/ ${TARGET}/zh/docs/
+cp -r ${SOURCE}/website-docs/content/en/docs/docs/ ${TARGET}/en/docs/

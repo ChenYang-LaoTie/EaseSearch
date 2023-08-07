@@ -1,10 +1,5 @@
 #!/bin/bash
-mkdir -p ${SOURCE}
 mkdir -p ${TARGET}
-
-#shellcheck disable=SC2164
-cd ${SOURCE}
-git clone https://gitee.com/mindspore/website-docs.git
 
 if [ ! -d "${SOURCE}/website-docs" ]; then
  rm -rf ${TARGET}
