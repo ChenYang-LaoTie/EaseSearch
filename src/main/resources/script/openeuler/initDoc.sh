@@ -3,7 +3,7 @@ mkdir -p ${TARGET}/zh/
 mkdir -p ${TARGET}/en/
 mkdir -p ${TARGET}/ru/
 
-if [ ! -d "${SOURCE}/openEuler-portal" ]; then
+if [ ! -d ${SOURCE}/openEuler-portal ]; then
  rm -rf ${TARGET}
  exit
 fi
