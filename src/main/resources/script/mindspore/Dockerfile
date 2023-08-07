@@ -33,7 +33,7 @@ RUN cd ${BASEPATH} \
     && ./mvnw clean install package -Dmaven.test.skip \
     && rm -rf `ls | grep -v target` \
     && chown -R easysearch:easysearch ./target \
-    && chmod -R 700 ./target
+    && chmod -R 700 ${WORKSPACE}
 
 ARG PUBLIC_USER
 ARG PUBLIC_PASSWORD
