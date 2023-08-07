@@ -31,7 +31,8 @@ ENV PATH=${JAVA_HOME}/bin:$PATH
 COPY . ${BASEPATH}
 RUN cd ${BASEPATH} \
     && ./mvnw clean install package -Dmaven.test.skip \
-    && rm -rf `ls | grep -v target`
+    && rm -rf `ls | grep -v target` \
+    && chmod 777 -R target
 
 ARG PUBLIC_USER
 ARG PUBLIC_PASSWORD
@@ -47,9 +48,8 @@ RUN mkdir -p ${SOURCE} \
 
 ENV searchsystem=openlookeng
 
-USER runtime
+USER easysearch
 
 EXPOSE 8080
-# CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
-CMD java -javaagent:${BASEPATH}/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=/workspace/EaseSearch/target/classes/application.yml
-# CMD java -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar
+ENV APPLICATION_PATH=/home/easysearch/EaseSearch/target/classes/application.yml
+CMD java -javaagent:${BASEPATH}/rasp/rasp.jar -jar ${BASEPATH}/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
