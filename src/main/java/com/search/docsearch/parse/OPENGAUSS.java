@@ -22,8 +22,7 @@ import org.jsoup.select.Elements;
 import org.yaml.snakeyaml.Yaml;
 
 public class OPENGAUSS {
-    public static final String BASEPATH = "/workspace/file/target/";
-
+    public static final String BASEPATH = System.getenv("TARGET") + "/";
     public static final String BLOG = "blog";
     public static final String BLOGS = "blogs";
     public static final String DOCS = "docs";

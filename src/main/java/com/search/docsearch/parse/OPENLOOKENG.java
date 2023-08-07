@@ -25,8 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OPENLOOKENG {
-    public static final String BASEPATH = "/workspace/file/target/";
-
+    public static final String BASEPATH = System.getenv("TARGET") + "/";
     public static final String DOCS = "docs";
 
     public Map<String, Object> parse(File file) throws Exception {

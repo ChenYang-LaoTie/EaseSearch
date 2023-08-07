@@ -5,8 +5,8 @@ ENV LC_ALL C.UTF-8
 ENV LANGUAGE C.UTF-8
 ENV NODE_OPTIONS --max-old-space-size=8192
 
-RUN groupadd -g 1000 easysearch \
-    && useradd -u 1000 -g easysearch -s /bin/bash -m easysearch
+RUN groupadd -g 1001easysearch \
+    && useradd -u 1001 -g easysearch -s /bin/bash -m easysearch
 
 ENV WORKSPACE=/home/easysearch
 ENV SOURCE=${WORKSPACE}/file/source
@@ -54,5 +54,5 @@ USER easysearch
 
 EXPOSE 8080
 # CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
-CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=/home/easysearch/EaseSearch/target/classes/application.yml
+CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /home/easysearch/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=/home/easysearch/EaseSearch/target/classes/application.yml
 # CMD java -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar
