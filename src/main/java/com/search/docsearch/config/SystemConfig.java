@@ -43,8 +43,6 @@ public class SystemConfig {
         mySystem.setMappingPath(MAPPINGPATH);
         mySystem.setTargetPath(TARGET_PATH);
 
-        // mySystem.setInitDoc(System.getenv("BASEPATH") + "/target/classes/script/" + system + "/initDoc.sh");
-
         return mySystem;
     }
 }

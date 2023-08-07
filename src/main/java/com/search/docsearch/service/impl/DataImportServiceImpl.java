@@ -71,23 +71,6 @@ public class DataImportServiceImpl implements DataImportService {
             return;
         }
 
-        // log.info("===============开始运行bash脚本=================");
-        // try {
-        //     ProcessBuilder pb = new ProcessBuilder(s.initDoc);
-        //     Process p = pb.start();
-        //     BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        //     String line = null;
-        //     while ((line = reader.readLine()) != null) {
-        //         log.info(line);
-        //     }
-        // } catch (Exception e) {
-        //     log.error("The script fails to run with the error: " + e.getMessage());
-        //     globalUnlock();
-        //     return;
-        // }
-
-        // log.info("===============bash脚本运行完成=================");
-
         File indexFile = new File(s.getTargetPath());
         if (!indexFile.exists()) {
             log.error(String.format("%s 文件夹不存在", indexFile.getPath()));
