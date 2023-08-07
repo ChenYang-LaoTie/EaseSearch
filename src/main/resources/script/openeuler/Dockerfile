@@ -25,7 +25,7 @@ RUN wget https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df57
     && npm i pnpm -g \
     && mkdir -p ${BASEPATH}
 
-ENV JAVA_HOME=/workspace/jdk-19.0.2
+ENV JAVA_HOME=${WORKSPACE}/jdk-19.0.2
 ENV PATH=${JAVA_HOME}/bin:$PATH
 
 COPY . ${BASEPATH}
@@ -54,5 +54,5 @@ USER easysearch
 
 EXPOSE 8080
 # CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
-CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /home/easysearch/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=/home/easysearch/EaseSearch/target/classes/application.yml
+CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar ${BASEPATH}/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=/home/easysearch/EaseSearch/target/classes/application.yml
 # CMD java -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar
