@@ -50,6 +50,7 @@ RUN mkdir -p ${SOURCE} \
     && pnpm install \
     && pnpm build \
     && cd ${BASEPATH}/target/classes/script/openeuler \
+    && chmod +x initDoc.sh \
     && ./initDoc.sh
 
 ENV searchsystem=openEuler
