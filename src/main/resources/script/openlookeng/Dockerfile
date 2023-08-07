@@ -51,5 +51,5 @@ USER runtime
 
 EXPOSE 8080
 # CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
-CMD java -javaagent:/workspace/EaseSearch/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=/workspace/EaseSearch/target/classes/application.yml
+CMD java -javaagent:${BASEPATH}/rasp/rasp.jar -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=/workspace/EaseSearch/target/classes/application.yml
 # CMD java -jar /workspace/EaseSearch/target/EaseSearch-0.0.1-SNAPSHOT.jar
