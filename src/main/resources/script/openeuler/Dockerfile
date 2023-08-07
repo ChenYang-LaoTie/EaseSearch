@@ -31,7 +31,8 @@ ENV PATH=${JAVA_HOME}/bin:$PATH
 COPY . ${BASEPATH}
 RUN cd ${BASEPATH} \
     && ./mvnw clean install package -Dmaven.test.skip \
-    && rm -rf `ls | grep -v target`
+    && rm -rf `ls | grep -v target` \
+    && chmod -x target
 
 ARG PUBLIC_USER
 ARG PUBLIC_PASSWORD
