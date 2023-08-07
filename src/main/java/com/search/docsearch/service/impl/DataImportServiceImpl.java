@@ -1,9 +1,7 @@
 package com.search.docsearch.service.impl;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -73,22 +71,22 @@ public class DataImportServiceImpl implements DataImportService {
             return;
         }
 
-        log.info("===============开始运行bash脚本=================");
-        try {
-            ProcessBuilder pb = new ProcessBuilder(s.initDoc);
-            Process p = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                log.info(line);
-            }
-        } catch (Exception e) {
-            log.error("The script fails to run with the error: " + e.getMessage());
-            globalUnlock();
-            return;
-        }
+        // log.info("===============开始运行bash脚本=================");
+        // try {
+        //     ProcessBuilder pb = new ProcessBuilder(s.initDoc);
+        //     Process p = pb.start();
+        //     BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        //     String line = null;
+        //     while ((line = reader.readLine()) != null) {
+        //         log.info(line);
+        //     }
+        // } catch (Exception e) {
+        //     log.error("The script fails to run with the error: " + e.getMessage());
+        //     globalUnlock();
+        //     return;
+        // }
 
-        log.info("===============bash脚本运行完成=================");
+        // log.info("===============bash脚本运行完成=================");
 
         File indexFile = new File(s.getTargetPath());
         if (!indexFile.exists()) {

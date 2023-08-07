@@ -31,9 +31,9 @@ ENV PATH=${JAVA_HOME}/bin:$PATH
 COPY . ${BASEPATH}
 RUN cd ${BASEPATH} \
     && ./mvnw clean install package -Dmaven.test.skip \
-    && rm -rf `ls | grep -v target` \
-    && chown -R easysearch:easysearch ${WORKSPACE} \
-    && chmod -R 700 ${WORKSPACE}
+    && rm -rf `ls | grep -v target`
+    # && chown -R easysearch:easysearch ${WORKSPACE} \
+    # && chmod -R 700 ${WORKSPACE}
 
 ARG PUBLIC_USER
 ARG PUBLIC_PASSWORD
@@ -48,7 +48,9 @@ RUN mkdir -p ${SOURCE} \
     && git clone https://gitee.com/openeuler/openEuler-portal.git \
     && cd openEuler-portal \
     && pnpm install \
-    && pnpm build
+    && pnpm build \
+    && cd ${BASEPATH}/target/classes/script/openeuler \
+    && ./initDoc.sh
 
 ENV searchsystem=openEuler
 

@@ -16,5 +16,5 @@ public class MySystem {
     public String trackerIndex;
     public String mappingPath;
     public String targetPath;
-    public String initDoc;
+    // public String initDoc;
 }
