@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.search.docsearch.config.MySystem;
-import com.search.docsearch.constant.Constants;
 import com.search.docsearch.service.DataImportService;
 import com.search.docsearch.service.SearchService;
 import com.search.docsearch.utils.FileUtils;
@@ -46,11 +46,17 @@ public class DataImportController implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
-        if (FileUtils.deleteFile(Constants.CONFIG_PATH)) {
-            log.info("delete application success");
+        String applictionPath = System.getenv("APPLICATION_PATH");
+        if (StringUtils.hasText(applictionPath)) {
+            if (FileUtils.deleteFile(applictionPath)) {
+                log.info("delete application success");
+            } else {
+                log.info("delete application fail");
+            }
         } else {
-            log.info("delete application fail");
+            log.info("application path is null");
         }
+        
         try {
             // 导入es数据
             dataImportService.refreshDoc();
