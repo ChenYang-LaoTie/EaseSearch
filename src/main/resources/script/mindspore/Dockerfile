@@ -45,7 +45,10 @@ RUN cd ${BASEPATH} \
 
 RUN mkdir -p ${SOURCE} \
     && cd ${SOURCE} \
-    && git clone https://gitee.com/mindspore/website-docs.git
+    && git clone https://gitee.com/mindspore/website-docs.git \
+    && cd ${BASEPATH}/target/classes/script/mindspore \
+    && chmod +x initDoc.sh \
+    && ./initDoc.sh
 
 ENV searchsystem mindspore
 

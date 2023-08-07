@@ -51,7 +51,10 @@ RUN mkdir -p ${SOURCE} \
     && cp -r ./blog/app/en/blogs/* ./website/app/en/blogs/ \
     && cd website \
     && pnpm install \
-    && pnpm build
+    && pnpm build \
+    && cd ${BASEPATH}/target/classes/script/opengauss \
+    && chmod +x initDoc.sh \
+    && ./initDoc.sh
 
 ENV searchsystem=openGauss
 
