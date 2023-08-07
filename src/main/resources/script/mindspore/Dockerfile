@@ -51,6 +51,5 @@ ENV searchsystem mindspore
 USER runtime
 
 EXPOSE 8080
-ENV APPLICATION_PATH=/home/easysearch/EaseSearch/target/classes/application.yml
-CMD java -javaagent:${BASEPATH}/rasp/rasp.jar -jar ${BASEPATH}/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
 
+CMD java -javaagent:${BASEPATH}/rasp/rasp.jar -jar ${BASEPATH}/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=/home/easysearch/EaseSearch/target/classes/application.yml
