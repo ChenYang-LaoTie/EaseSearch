@@ -90,7 +90,7 @@ public class DataImportServiceImpl implements DataImportService {
 
         log.info("===============bash脚本运行完成=================");
 
-        File indexFile = new File(s.basePath);
+        File indexFile = new File(s.getTargetPath());
         if (!indexFile.exists()) {
             log.error(String.format("%s 文件夹不存在", indexFile.getPath()));
             log.error("服务器开小差了");
