@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.search.docsearch.aop.LimitRequest;
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.entity.vo.SearchCondition;
 import com.search.docsearch.entity.vo.SearchTags;
@@ -39,6 +40,7 @@ public class SearchController {
      * @return 搜索结果
      */
     @PostMapping("docs")
+    @LimitRequest()
     public SysResult searchDocByKeyword(@RequestBody @Validated SearchCondition condition) {
         try {
             Map<String, Object> result = searchService.searchByCondition(condition);
@@ -53,6 +55,7 @@ public class SearchController {
     }
 
     @PostMapping("sugg")
+    @LimitRequest()
     public SysResult getSuggestion(@RequestBody @Validated SearchCondition condition) {
         if (!StringUtils.hasText(condition.getKeyword())) {
             return SysResult.fail("keyword must not null", null);
@@ -72,6 +75,7 @@ public class SearchController {
 
 
     @PostMapping("count")
+    @LimitRequest()
     public SysResult getCount(@RequestBody @Validated SearchCondition condition) {
         try {
             Map<String, Object> result = searchService.getCount(condition);
@@ -86,6 +90,7 @@ public class SearchController {
     }
 
     @PostMapping("pop")
+    @LimitRequest(callTime = 10, callCount = 1000)
     public SysResult getPop(String lang) {
         try {
             String[] result = null;
@@ -104,6 +109,7 @@ public class SearchController {
 
 
     @PostMapping("sort")
+    @LimitRequest()
     public SysResult makeSort(@RequestBody Map<String, String> m) {
         System.out.println(m.size());
         try {
@@ -121,6 +127,7 @@ public class SearchController {
     }
 
     @PostMapping("tags")
+    @LimitRequest()
     public SysResult getTags(@RequestBody @Validated SearchTags searchTags) {
         try {
             Map<String, Object> result = searchService.getTags(searchTags);

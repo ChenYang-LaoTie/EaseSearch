@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
+import com.search.docsearch.aop.LimitRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ public class DivideController {
 
 
     @PostMapping("/{type}")
+    @LimitRequest(callTime = 10, callCount = 30)
     public SysResult DivideBLog(@PathVariable @NotBlank(message = "must have a type") String type, @RequestBody @NotEmpty(message = "Requires at least one condition") Map<String, String> m){
 
         try {
@@ -47,6 +49,7 @@ public class DivideController {
     }
 
     @PostMapping("docs")
+    @LimitRequest(callTime = 10, callCount = 30)
     public SysResult DivideDocs(@RequestBody @Validated SearchDocs searchDocs) {
         try {
             Map<String, Object> result = divideService.docsSearch(searchDocs);

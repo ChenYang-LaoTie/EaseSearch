@@ -1,4 +1,10 @@
 package com.search.docsearch;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
@@ -20,7 +26,6 @@ import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.util.HtmlUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -357,9 +362,35 @@ class DocSearchApplicationTests {
 
 	@Test
 	public void aa() {
-		String xss = "<script>alert(document.cookie)</script>";
+		System.out.println("zzzzzzzzzzzzzzzzzz");
+        try {
+            String url = "http://127.0.0.1:8089/search/docs";
+            String jsonPayload = "{\"keyword\":\"生命周期\",\"page\":1,\"pageSize\":10,\"lang\":\"zh\",\"type\":\"\"}";
+    
+            HttpClient httpClient = HttpClient.newBuilder().build();
+    
+            // 构建多个请求
+            for (int i = 0; i < 30; i++) {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .header("Content-Type", "application/json")
+                        .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                        .build();
+                HttpResponse<String>  response = httpClient.send(request, BodyHandlers.ofString());
+    
+                int statusCode = response.statusCode();
+                HttpHeaders headers = response.headers();
+                String responseBody = response.body();
+    
+                System.out.println("Status Code: " + statusCode);
+                System.out.println("Headers: " + headers);
+                System.out.println("Response Body: " + responseBody);
+                System.out.println();
+            }
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		String s =	HtmlUtils.htmlEscape(xss);
-		System.out.println(s);
 	}
 }
