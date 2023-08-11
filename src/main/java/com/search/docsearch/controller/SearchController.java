@@ -90,7 +90,7 @@ public class SearchController {
     }
 
     @PostMapping("pop")
-    @LimitRequest(callTime = 10, callCount = 1000)
+    @LimitRequest(callTime = 1, callCount = 1000)
     public SysResult getPop(String lang) {
         try {
             String[] result = null;

@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LimitRequest {
-    int callTime() default 10;
+    int callTime() default 1;
     int callCount() default 20;
 }
