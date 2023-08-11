@@ -369,7 +369,7 @@ public class OPENEULER {
     }
 
     public boolean setService(List<Map<String, Object>> r) {
-        String path = "https://raw.githubusercontent.com/ChenYang-LaoTie/EaseSearch/main/src/main/resources/script/openeuler/service.yml";
+        String path = "https://raw.githubusercontent.com/ChenYang-LaoTie/EaseSearch/main/src/main/resources/script/openeuler/server.yaml";
 
         HttpURLConnection connection = null;
         String result; // 返回结果字符串
