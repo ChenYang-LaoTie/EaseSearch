@@ -379,10 +379,11 @@ public class OPENEULER {
         try {
             connection = sendHTTP(path, "GET");
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                log.error("get connection :" + connection.getResponseCode());
                 return false;
             }
             Yaml yaml = new Yaml();
-
+            System.out.println("zzzzdeefefef");
             List<Map<String, Object>> data = yaml.load(connection.getInputStream());
 
             for (Map<String, Object> datum : data) {
