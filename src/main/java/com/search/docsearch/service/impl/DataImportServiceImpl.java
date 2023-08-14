@@ -66,20 +66,18 @@ public class DataImportServiceImpl implements DataImportService {
     @Async("threadPoolTaskExecutor")
     public void refreshDoc() {
         if (!doRefresh()) {
-            //如果先行条件不成立则该服务启动不更新es
-            log.info("===============本次服务启动不更新文档=================");
+            log.info("===============document don't update in this time=================");
             return;
         }
 
         File indexFile = new File(s.getTargetPath());
         if (!indexFile.exists()) {
-            log.error(String.format("%s 文件夹不存在", indexFile.getPath()));
-            log.error("服务器开小差了");
+            log.error(String.format("%s folder does not exist", indexFile.getPath()));
             globalUnlock();
             return;
         }
 
-        log.info("开始更新es文档");
+        log.info("begin to update document");
 
         Set<String> idSet = new HashSet<>();
         Collection<File> listFiles = FileUtils.listFiles(indexFile, new String[]{"md", "html"}, true);
@@ -104,12 +102,13 @@ public class DataImportServiceImpl implements DataImportService {
         }
 
         try {
+            log.info("begin to update customize data");
             String className = "com.search.docsearch.parse." + s.getSystem().toUpperCase(Locale.ROOT);
             Class<?> clazz = Class.forName(className);
             Method method = clazz.getMethod("customizeData");
             Object result = method.invoke(clazz.getDeclaredConstructor().newInstance());
             if (result == null) {
-                log.error("自定义数据获取失效，不更新该部分");
+                log.error("get customize data error, do not update this part");
                 globalUnlock();
                 return;
             }
@@ -122,14 +121,14 @@ public class DataImportServiceImpl implements DataImportService {
             }
 
         } catch (Exception e) {
-            log.error("error: " + e.getMessage());
+            log.error("get customize: " + e.getMessage());
             globalUnlock();
             return;
         }
-
+        log.info("start delete expired document");
         deleteExpired(idSet);
 
-        log.info("所有文档更新成功");
+        log.info("all document update success");
         globalUnlock();
     }
 
