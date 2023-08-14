@@ -107,6 +107,8 @@ public class DataImportServiceImpl implements DataImportService {
             Class<?> clazz = Class.forName(className);
             Method method = clazz.getMethod("customizeData");
             Object result = method.invoke(clazz.getDeclaredConstructor().newInstance());
+
+            System.out.println("houhouhou");
             if (result == null) {
                 log.error("get customize data error, do not update this part");
                 globalUnlock();

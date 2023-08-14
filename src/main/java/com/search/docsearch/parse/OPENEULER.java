@@ -386,6 +386,8 @@ public class OPENEULER {
             System.out.println("zzzzdeefefef");
             List<Map<String, Object>> data = yaml.load(connection.getInputStream());
 
+            System.out.println("data : - " + data.size());
+
             for (Map<String, Object> datum : data) {
                 Map<String, Object> jsonMap = new HashMap<>();
                 jsonMap.put("title", datum.get("name"));
