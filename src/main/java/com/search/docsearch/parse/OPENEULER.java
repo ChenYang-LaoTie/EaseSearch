@@ -314,7 +314,7 @@ public class OPENEULER {
                 }
             }
         }
-            return true;
+        return true;
     }
 
     private boolean setData(String data, List<Map<String, Object>> r) {
@@ -370,10 +370,12 @@ public class OPENEULER {
     }
 
     public boolean setService(List<Map<String, Object>> r) {
+
+        System.out.println("zzzzzzzzzzzzzzzzzzzzzzz");
+
         String path = "https://raw.githubusercontent.com/ChenYang-LaoTie/EaseSearch/main/src/main/resources/script/openeuler/server.yaml";
 
         HttpURLConnection connection = null;
-        String result; // 返回结果字符串
         try {
             connection = sendHTTP(path, "GET");
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
@@ -390,10 +392,14 @@ public class OPENEULER {
                 jsonMap.put("lang", datum.get("lang"));
                 jsonMap.put("path", datum.get("path"));
                 jsonMap.put("type", "service");
+
+                System.out.println(jsonMap);
+
                 r.add(jsonMap);
             }
         } catch (IOException e) {
-            log.error("Connection failed, error is: " + e.getMessage());
+            log.error("load yaml failed, error is: " + e.getMessage());
+            return false;
         } finally {
             if (null != connection) {
                 connection.disconnect();
