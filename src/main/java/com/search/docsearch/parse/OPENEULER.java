@@ -269,8 +269,6 @@ public class OPENEULER {
 
     public List<Map<String, Object>> customizeData() {
         List<Map<String, Object>> r = new ArrayList<>();
-        System.out.println("fdsafefefeff");
-        log.info("8888888888888888");
         if (!setForum(r)) {
             log.error("论坛数据添加失败");
             return null;
@@ -370,9 +368,6 @@ public class OPENEULER {
     }
 
     public boolean setService(List<Map<String, Object>> r) {
-
-        System.out.println("zzzzzzzzzzzzzzzzzzzzzzz");
-
         String path = "https://raw.githubusercontent.com/ChenYang-LaoTie/EaseSearch/main/src/main/resources/script/openeuler/server.yaml";
 
         HttpURLConnection connection = null;
@@ -383,10 +378,7 @@ public class OPENEULER {
                 return false;
             }
             Yaml yaml = new Yaml();
-            System.out.println("zzzzdeefefef");
             List<Map<String, Object>> data = yaml.load(connection.getInputStream());
-
-            System.out.println("data : - " + data.size());
 
             for (Map<String, Object> datum : data) {
                 Map<String, Object> jsonMap = new HashMap<>();
@@ -395,8 +387,6 @@ public class OPENEULER {
                 jsonMap.put("lang", datum.get("lang"));
                 jsonMap.put("path", datum.get("path"));
                 jsonMap.put("type", "service");
-
-                System.out.println(jsonMap);
 
                 r.add(jsonMap);
             }

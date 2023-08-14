@@ -107,8 +107,6 @@ public class DataImportServiceImpl implements DataImportService {
             Class<?> clazz = Class.forName(className);
             Method method = clazz.getMethod("customizeData");
             Object result = method.invoke(clazz.getDeclaredConstructor().newInstance());
-
-            System.out.println("houhouhou");
             if (result == null) {
                 log.error("get customize data error, do not update this part");
                 globalUnlock();
@@ -116,7 +114,6 @@ public class DataImportServiceImpl implements DataImportService {
             }
 
             List<Map<String, Object>> escape = (List<Map<String, Object>>) result;
-            System.out.println("============== " + escape.size());
             for (Map<String, Object> lm : escape) {
                 insert(lm, s.getIndex() + "_" + lm.get("lang"));
                 idSet.add((String) lm.get("path"));
@@ -288,7 +285,6 @@ public class DataImportServiceImpl implements DataImportService {
 
             restHighLevelClient.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
 
-            System.out.println("time:" + (System.currentTimeMillis() - st));
         } catch (Exception e) {
             log.error(e.getMessage());
         }
