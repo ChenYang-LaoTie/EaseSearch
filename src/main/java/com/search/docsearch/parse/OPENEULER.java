@@ -269,7 +269,8 @@ public class OPENEULER {
 
     public List<Map<String, Object>> customizeData() {
         List<Map<String, Object>> r = new ArrayList<>();
-
+        System.out.println("fdsafefefeff");
+        log.info("8888888888888888");
         if (!setForum(r)) {
             log.error("论坛数据添加失败");
             return null;
