@@ -1,9 +1,4 @@
 -
-  name: 兼容性技术测评
-  introduce: 帮助企业快速申请兼容性技术测评
-  path: https://certification.openeuler.org/
-  lang: zh
--
   name: QuickIssue
   introduce: 简易快捷地查询、提交社区Issues
   path: https://quickissue.openeuler.org/zh/
@@ -99,11 +94,6 @@
   path: https://forum.openeuler.org/
   lang: zh
 -
-  name: Shell命令解释
-  introduce:
-  path: https://explainshell.openeuler.sh
-  lang: zh
--
   name: 欧拉小智
   introduce: 社区客服机器人欧拉小智
   path: https://qa-robot.openeuler.org/
@@ -112,11 +102,6 @@
   name: 镜像下载网站
   introduce:
   path: https://repo.openeuler.org/
-  lang: zh
--
-  name: 可重复构建
-  introduce:
-  path: https://reproducible-builds.openeuler.org
   lang: zh
 -
   name: EasyEditor
