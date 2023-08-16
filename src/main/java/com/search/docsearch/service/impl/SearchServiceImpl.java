@@ -130,7 +130,7 @@ public class SearchServiceImpl implements SearchService {
         for (SearchHit hit : response.getHits().getHits()) {
             Map<String, Object> map = hit.getSourceAsMap();
             String text = (String)map.getOrDefault("textContent", "");
-            if (text.length() > 200) {
+            if (null != text && text.length() > 200) {
                 text = text.substring(0, 200) + "......";
             }
             map.put("textContent", text);
