@@ -368,8 +368,7 @@ public class OPENEULER {
     }
 
     public boolean setService(List<Map<String, Object>> r) {
-        // String path = System.getenv("SERVICE_URL");
-        String path = "https://gitee.com/ChenYang_LaoTie/om-data/raw/master/src/openeuler/server.yaml";
+        String path = System.getenv("SERVICE_URL");
         HttpURLConnection connection = null;
         try {
             connection = sendHTTP(path, "GET");
