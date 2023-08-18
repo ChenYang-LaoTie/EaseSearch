@@ -2,7 +2,6 @@ package com.search.docsearch.parse;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,7 +28,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.util.ResourceUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import com.alibaba.fastjson2.JSON;
@@ -370,12 +368,16 @@ public class OPENEULER {
     }
 
     public boolean setService(List<Map<String, Object>> r) {
+        // String path = System.getenv("SERVICE_URL");
+        String path = "https://gitee.com/ChenYang_LaoTie/om-data/raw/master/src/openeuler/server.yaml";
+        HttpURLConnection connection = null;
         try {
-            File yamlFile = ResourceUtils.getFile("classpath:script/service.yaml");
-
-            InputStream inputStream = new FileInputStream(yamlFile);
+            connection = sendHTTP(path, "GET");
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                return false;
+            }
             Yaml yaml = new Yaml();
-            List<Map<String, Object>> data = yaml.load(inputStream);
+            List<Map<String, Object>> data = yaml.load(connection.getInputStream());
 
             for (Map<String, Object> datum : data) {
                 Map<String, Object> jsonMap = new HashMap<>();
@@ -387,11 +389,15 @@ public class OPENEULER {
 
                 r.add(jsonMap);
             }
-            inputStream.close();
+        
         } catch (IOException e) {
             log.error("load yaml failed, error is: " + e.getMessage());
             return false;
-        } 
+        } finally {
+            if (null != connection) {
+                connection.disconnect();
+            }
+        }
         return true;
     }
 
