@@ -375,10 +375,8 @@ public class OPENEULER {
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 return false;
             }
-            System.out.println("pppppppp");
             Yaml yaml = new Yaml();
             List<Map<String, Object>> data = yaml.load(connection.getInputStream());
-            System.out.println("OOOOOOOO");
             for (Map<String, Object> datum : data) {
                 Map<String, Object> jsonMap = new HashMap<>();
                 jsonMap.put("title", datum.get("name"));
