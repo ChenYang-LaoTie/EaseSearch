@@ -382,7 +382,7 @@ public class OPENEULER {
             for (Map<String, Object> datum : data) {
                 Map<String, Object> jsonMap = new HashMap<>();
                 jsonMap.put("title", datum.get("name"));
-                jsonMap.put("textContent", datum.get("introduce"));
+                jsonMap.put("textContent", datum.get("introduce") + " " + datum.get("describe"));
                 jsonMap.put("lang", datum.get("lang"));
                 jsonMap.put("path", datum.get("path"));
                 jsonMap.put("type", "service");
