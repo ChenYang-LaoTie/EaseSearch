@@ -384,14 +384,15 @@ public class OPENEULER {
                 jsonMap.put("lang", datum.get("lang"));
                 jsonMap.put("path", datum.get("path"));
                 jsonMap.put("type", "service");
-                Object textContent = "";
-                if (datum.get("introduction") != null && datum.get("description") != null) {
-                    textContent = datum.get("introduction") + " " + datum.get("description");
-                } else if (datum.get("introduction") != null) {
-                    textContent = datum.get("introduction");
-                } else if (datum.get("description") != null) {
-                    textContent = datum.get("description");
+
+                StringBuilder textContentBuilder = new StringBuilder();
+                if (datum.get("introduction") != null) {
+                    textContentBuilder.append(datum.get("introduction")).append(" ");
                 }
+                if (datum.get("description") != null) {
+                    textContentBuilder.append(datum.get("description"));
+                }
+                String textContent =  textContentBuilder.toString();
 
                 jsonMap.put("textContent", textContent);
                 r.add(jsonMap);

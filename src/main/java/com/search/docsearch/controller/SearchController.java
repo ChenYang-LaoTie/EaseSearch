@@ -111,7 +111,6 @@ public class SearchController {
     @PostMapping("sort")
     @LimitRequest()
     public SysResult makeSort(@RequestBody Map<String, String> m) {
-        System.out.println(m.size());
         try {
             Map<String, Object> result = searchService.advancedSearch(m);
             if (result == null) {
