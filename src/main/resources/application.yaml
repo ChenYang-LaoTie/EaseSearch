@@ -30,4 +30,4 @@ asyncThreadPool:
   threadNamePrefix: thread-name-prefix
 
 server:
-  port: 8089
+  port: 8080

@@ -52,7 +52,7 @@ for r in $(git branch -r --list "origin/*"); do
  # shellcheck disable=SC1020
  # shellcheck disable=SC1009
  # shellcheck disable=SC2053
- if [[ "website" != $b ]] && [[ "HEAD" != $b ]] && [[ "->" != $b ]] && [[ "reconstruct-frozen" != $b ]] && [[ "master-bak" != $b ]] && [[ "website-v2" != $b ]]; then
+ if [[ "website" != $b ]] && [[ "HEAD" != $b ]] && [[ "->" != $b ]] && [[ "reconstruct-frozen" != $b ]] && [[ "master-bak" != $b ]] && [[ "website-v2" != $b ]] && [[ "z11" != $b ]]; then
     git checkout $r
     mkdir -p ${TARGET}/zh/docs/$b/docs
     mkdir -p ${TARGET}/en/docs/$b/docs
@@ -62,7 +62,7 @@ for r in $(git branch -r --list "origin/*"); do
     mkdir -p ${TARGET}/zh/docs/$b-lite/docs
     mkdir -p ${TARGET}/en/docs/$b-lite/docs
     cp -r ${SOURCE}/docs/content/docs-lite/zh/docs/* ${TARGET}/zh/docs/$b-lite/docs/
-    cp -r ${SOURCE}/docs/content/docs-list/en/docs/* ${TARGET}/en/docs/$b-lite/docs/
+    cp -r ${SOURCE}/docs/content/docs-lite/en/docs/* ${TARGET}/en/docs/$b-lite/docs/
 
  fi
 done

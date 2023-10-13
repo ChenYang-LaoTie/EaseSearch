@@ -51,7 +51,7 @@ public class ElasticSearchConfig {
     public RestHighLevelClient restHighLevelClient() {
 
         if (isDev) {
-            return new RestHighLevelClient(RestClient.builder(new HttpHost("127.0.0.1", 9200, "http")));
+            return new RestHighLevelClient(RestClient.builder(new HttpHost("", 9200, "http")));
         } else {
             RestHighLevelClient restClient = null;
             try {

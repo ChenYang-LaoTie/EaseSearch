@@ -22,17 +22,22 @@ RUN apt update \
 
 RUN wget https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-19.0.2_linux-x64_bin.tar.gz \
     && tar -zxvf openjdk-19.0.2_linux-x64_bin.tar.gz \
+    && wget https://repo.huaweicloud.com/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz \
+    && tar -zxvf apache-maven-3.8.1-bin.tar.gz \
     && npm i pnpm -g \
     && mkdir -p ${BASEPATH}
 
 ENV JAVA_HOME=${WORKSPACE}/jdk-19.0.2
 ENV PATH=${JAVA_HOME}/bin:$PATH
 
+ENV MAVEN_HOME=${WORKSPACE}/apache-maven-3.8.1
+ENV PATH=${MAVEN_HOME}/bin:$PATH
+
 COPY . ${BASEPATH}
 RUN cd ${BASEPATH} \
-    && chmod +x mvnw \
-    && ./mvnw clean install package -Dmaven.test.skip \
-    && rm -rf `ls | grep -v target`
+    && mvn clean install package -Dmaven.test.skip \
+    && rm -rf `ls | grep -v target` \
+    && rm ${BASEPATH}/target/classes/application.yaml
 
 ARG PUBLIC_USER
 ARG PUBLIC_PASSWORD
