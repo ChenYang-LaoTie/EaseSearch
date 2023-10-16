@@ -47,6 +47,17 @@ RUN cd ${BASEPATH} \
    && tar -zxf rasp.tgz \
    && rm -rf plugins
 
+RUN rm -rf `find / -iname "*gcc*"` \
+    && rm -rf `find / -iname "*cpp*"` \
+    && rm -rf `find /etc/ -iname "*gdb*"` \
+    && rm -rf `find /usr/ -iname "*gdb*"` \
+    && rm -rf /root/.m2/repository/* \
+    && jlink --module-path ${JAVA_HOME}/jmods --add-modules java.base,java.sql,java.naming,java.desktop,java.management,java.security.jgss,java.instrument,java.rmi --output ${WORKSPACE}/jre \
+    && rm -rf ${WORKSPACE}/jdk-19.0.2 \
+    && rm -rf ${WORKSPACE}/apache-maven-3.8.1 \
+    && rm -rf ${WORKSPACE}/openjdk-19.0.2_linux-x64_bin.tar.gz \
+    && rm -rf ${WORKSPACE}/apache-maven-3.8.1-bin.tar.gz
+
 RUN mkdir -p ${SOURCE} \
     && cd ${SOURCE} \
     && git clone https://gitee.com/openeuler/openEuler-portal.git \

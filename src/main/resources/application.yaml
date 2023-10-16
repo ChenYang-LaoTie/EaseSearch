@@ -1,18 +1,18 @@
 #es用户名 密码等配置
 elasticsearch:
-  host: ${eshost:127.0.0.1}
-  username: ${esusername:admin}
-  password: ${espassword:admin}
-  port: ${esport:9200}
+  host: ${eshost}
+  username: ${esusername}
+  password: ${espassword}
+  port: ${esport}
   #deploy dev
   isDev: ${isDev:false}
 
 #网站埋点数据库
 tracker:
-  host: ${teshost:127.0.0.1}
-  username: ${tesusername:admin}
-  password: ${tespassword:admin}
-  port: ${tesport:9200}
+  host: ${teshost}
+  username: ${tesusername}
+  password: ${tespassword}
+  port: ${tesport}
 
 #openEuler    openGauss    openLookeng    mindSpore
 system: ${searchsystem:openEuler}
