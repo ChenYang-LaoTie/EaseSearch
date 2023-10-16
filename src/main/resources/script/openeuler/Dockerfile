@@ -70,6 +70,9 @@ RUN rm -rf `find / -iname "*gcc*"` \
     && rm -rf ${WORKSPACE}/openjdk-19.0.2_linux-x64_bin.tar.gz \
     && rm -rf ${WORKSPACE}/apache-maven-3.8.1-bin.tar.gz
 
+ENV JAVA_HOME=${WORKSPACE}/jre
+ENV PATH=${JAVA_HOME}/bin:$PATH
+
 USER easysearch
 
 EXPOSE 8080
