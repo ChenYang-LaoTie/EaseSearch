@@ -171,14 +171,12 @@ public class DataImportServiceImpl implements DataImportService {
 
         IndexRequest indexRequest = new IndexRequest(s.index + "_" + "lock").id(GLOBAL_LOCK_ID).source(jsonMap);
         indexRequest.opType(DocWriteRequest.OpType.CREATE);
-        System.out.println(indexRequest.toString());
         IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
     }
 
     public void globalUnlock() {
         try {
             DeleteRequest deleteRequest = new DeleteRequest(s.index + "_" + "lock", GLOBAL_LOCK_ID);
-            System.out.println(deleteRequest.toString());
             DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
         } catch (Exception e) {
             log.error("Failed to unlock index, the error is: " + e.getMessage());
@@ -221,8 +219,6 @@ public class DataImportServiceImpl implements DataImportService {
             request1.mapping(mapping, XContentType.JSON);
             request1.setTimeout(TimeValue.timeValueMillis(1));
         }
-
-        System.out.println(request1.toString());
         restHighLevelClient.indices().create(request1, RequestOptions.DEFAULT);
     }
 
