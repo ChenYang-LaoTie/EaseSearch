@@ -74,4 +74,5 @@ USER easysearch
 
 EXPOSE 8080
 
-CMD java -javaagent:${BASEPATH}/rasp/rasp.jar -jar ${BASEPATH}/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
+# CMD java -javaagent:${BASEPATH}/rasp/rasp.jar -jar ${BASEPATH}/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
+CMD java -jar ${BASEPATH}/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
