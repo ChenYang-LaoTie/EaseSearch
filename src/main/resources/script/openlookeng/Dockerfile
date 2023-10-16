@@ -47,6 +47,15 @@ RUN cd ${BASEPATH} \
    && tar -zxf rasp.tgz \
    && rm -rf plugins
 
+RUN mkdir -p ${SOURCE} \
+    && cd ${SOURCE} \
+    && git clone https://gitee.com/openlookeng/website-v2.git  \
+    && cd ${BASEPATH}/target/classes/script/openlookeng \
+    && chmod +x initDoc.sh \
+    && ./initDoc.sh
+
+ENV searchsystem=openlookeng
+
 RUN rm -rf `find / -iname "*gcc*"` \
     && rm -rf `find / -iname "*cpp*"` \
     && rm -rf `find /etc/ -iname "*gdb*"` \
@@ -57,15 +66,6 @@ RUN rm -rf `find / -iname "*gcc*"` \
     && rm -rf ${WORKSPACE}/apache-maven-3.8.1 \
     && rm -rf ${WORKSPACE}/openjdk-19.0.2_linux-x64_bin.tar.gz \
     && rm -rf ${WORKSPACE}/apache-maven-3.8.1-bin.tar.gz
-
-RUN mkdir -p ${SOURCE} \
-    && cd ${SOURCE} \
-    && git clone https://gitee.com/openlookeng/website-v2.git  \
-    && cd ${BASEPATH}/target/classes/script/openlookeng \
-    && chmod +x initDoc.sh \
-    && ./initDoc.sh
-
-ENV searchsystem=openlookeng
 
 USER easysearch
 
