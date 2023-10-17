@@ -50,6 +50,7 @@ RUN cd ${BASEPATH} \
 RUN mkdir -p ${SOURCE} \
     && cd ${SOURCE} \
     && git clone https://gitee.com/openlookeng/website-v2.git  \
+    && git clone https://gitee.com/openlookeng/website-docs.git \
     && cd ${BASEPATH}/target/classes/script/openlookeng \
     && chmod +x initDoc.sh \
     && ./initDoc.sh

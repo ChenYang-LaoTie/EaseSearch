@@ -51,6 +51,7 @@ RUN mkdir -p ${SOURCE} \
     && cd ${SOURCE} \
     && git clone https://gitee.com/opengauss/blog.git -b v2 \
     && git clone https://gitee.com/opengauss/website.git -b v2 \
+    && git clone https://gitee.com/opengauss/docs.git \
     && cp -r ./blog/app/zh/blogs/* ./website/app/zh/blogs/ \
     && cp -r ./blog/app/en/blogs/* ./website/app/en/blogs/ \
     && cd website \
