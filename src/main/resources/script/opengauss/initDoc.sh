@@ -34,8 +34,6 @@ cp -r ${SOURCE}/website/app/en/userPractice ${TARGET}/en/
 # shellcheck disable=SC2164
 cd ${SOURCE}
 
-git clone https://gitee.com/opengauss/docs.git
-
 if [ ! -d "${SOURCE}/docs" ]; then
  rm -rf ${TARGET}
  exit

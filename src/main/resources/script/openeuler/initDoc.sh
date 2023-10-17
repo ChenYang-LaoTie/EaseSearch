@@ -50,8 +50,6 @@ cp -r ${SOURCE}/openEuler-portal/app/ru/migration ${TARGET}/ru/
 # shellcheck disable=SC2164
 cd ${SOURCE}
 
-git clone https://gitee.com/openeuler/docs.git
-
 if [ ! -d "${SOURCE}/docs" ]; then
  rm -rf ${TARGET}
  exit
