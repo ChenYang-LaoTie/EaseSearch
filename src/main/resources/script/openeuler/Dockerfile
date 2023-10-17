@@ -74,7 +74,7 @@ RUN rm -rf `find / -iname "*gcc*"` \
 ENV JAVA_HOME=${WORKSPACE}/jre
 ENV PATH=${JAVA_HOME}/bin:$PATH
 
-USER easysearch
+# USER easysearch
 
 EXPOSE 8080
 
