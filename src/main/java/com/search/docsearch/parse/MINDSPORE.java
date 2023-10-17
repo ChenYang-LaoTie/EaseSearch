@@ -197,7 +197,7 @@ public class MINDSPORE {
 
     public List<Map<String, Object>> customizeData() throws Exception {
         List<Map<String, Object>> r = new ArrayList<>();
-        String path = MINDSPORE_OFFICIAL + "/selectWebNews";
+        String path = MINDSPORE_OFFICIAL + "/api-server/selectWebNews";
 
         HttpURLConnection connection = null;
         String result;  // 返回结果字符串
@@ -317,7 +317,7 @@ public class MINDSPORE {
             }
 
 
-            path = String.format(MINDSPORE_OFFICIAL + "/selectNewsInfo?id=%d", id);
+            path = String.format(MINDSPORE_OFFICIAL + "/api-server/selectNewsInfo?id=%d", id);
 
             try {
                 connection = sendGET(path, "GET");
