@@ -210,6 +210,7 @@ public class MINDSPORE {
                 param.put("pageCurrent", i);
                 param.put("tag", "zh");
                 param.put("type", 0);
+                System.out.println(path);
                 connection = sendHTTP(path, "POST", param.toString());
                 if (connection.getResponseCode() == 200) {
                     result = ReadInput(connection.getInputStream());
