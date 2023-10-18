@@ -320,6 +320,7 @@ public class MINDSPORE {
             path = String.format(MINDSPORE_OFFICIAL + "/api-server/selectNewsInfo?id=%d", id);
 
             try {
+                System.out.println(path);
                 connection = sendGET(path, "GET");
                 if (connection.getResponseCode() == 200) {
                     result = ReadInput(connection.getInputStream());
