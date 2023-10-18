@@ -57,7 +57,7 @@ RUN mkdir -p ${SOURCE} \
 ENV searchsystem mindspore
 
 
-#USER easysearch
+# USER easysearch
 
 EXPOSE 8080
 
