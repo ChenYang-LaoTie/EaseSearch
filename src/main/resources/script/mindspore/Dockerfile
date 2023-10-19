@@ -32,7 +32,7 @@ RUN cd /EaseSearch/target/classes/script/mindspore \
     && ./initDoc.sh 
 
 
-RUN cp jdk-17.0.7 jre
+RUN cp -r jdk-17.0.7 jre
 # RUN jlink --module-path ${JAVA_HOME}/jmods --add-modules java.base,java.compiler,java.datatransfer,java.desktop,java.instrument,java.logging,java.management,java.management.rmi,java.naming,java.net.http,java.prefs,java.rmi,java.scripting,java.se,java.security.jgss,java.security.sasl,java.smartcardio,java.sql,java.sql.rowset,java.transaction.xa,java.xml.crypto,java.xml --output /jre
 
 
