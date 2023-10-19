@@ -209,7 +209,7 @@ public class MINDSPORE {
                 param.put("pageCurrent", i);
                 param.put("tag", "zh");
                 param.put("type", 0);
-                connection = sendHTTP(path, "POST", param.toString());
+                connection = sendHTTP(path, "POST", param.toJSONString());
                 if (connection.getResponseCode() == 200) {
                     result = ReadInput(connection.getInputStream());
                     if (!setData(result, r, "zh")) {
@@ -221,7 +221,7 @@ public class MINDSPORE {
                 }
 
                 param.put("tag", "en");
-                connection = sendHTTP(path, "POST", param.toString());
+                connection = sendHTTP(path, "POST", param.toJSONString());
                 if (connection.getResponseCode() == 200) {
                     result = ReadInput(connection.getInputStream());
                     if (!setData(result, r, "en")) {
