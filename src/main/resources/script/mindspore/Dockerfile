@@ -25,7 +25,7 @@ RUN git clone https://gitee.com/mindspore/website-docs.git
 RUN cp -r jdk-19.0.2 jre
 
 FROM openeuler/openeuler:22.03
-ENV searchsystem=openEuler
+ENV searchsystem=mindspore
 
 RUN groupadd -g 1001 easysearch \
     && useradd -u 1001 -g easysearch -s /bin/bash -m easysearch
@@ -40,7 +40,9 @@ COPY --chown=easysearch --from=Builder /EaseSearch/target ${WORKSPACE}/target
 COPY --chown=easysearch --from=Builder /jre ${WORKSPACE}/jre
 COPY --chown=easysearch --from=Builder /website-docs ${SOURCE}/website-docs
 
-RUN chmod -x ${WORKSPACE}/target/classes/script
+RUN cd ${WORKSPACE}/target/classes/script/mindspore \
+    && chmod +x initDoc.sh \
+    && ./initDoc.sh
 
 ENV JAVA_HOME=${WORKSPACE}/jre
 ENV PATH=${JAVA_HOME}/bin:$PATH

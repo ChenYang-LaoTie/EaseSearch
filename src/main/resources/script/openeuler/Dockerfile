@@ -47,7 +47,9 @@ COPY --chown=easysearch --from=Builder /jre ${WORKSPACE}/jre
 COPY --chown=easysearch --from=Builder /openEuler-portal ${SOURCE}/openEuler-portal
 COPY --chown=easysearch --from=Builder /docs ${SOURCE}/docs
 
-RUN chmod -x ${WORKSPACE}/target/classes/script
+RUN cd ${WORKSPACE}/target/classes/script/openeuler \
+    && chmod +x initDoc.sh \
+    && ./initDoc.sh
 
 ENV JAVA_HOME=${WORKSPACE}/jre
 ENV PATH=${JAVA_HOME}/bin:$PATH
