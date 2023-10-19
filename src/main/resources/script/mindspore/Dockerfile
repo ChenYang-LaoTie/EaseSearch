@@ -31,7 +31,7 @@ RUN cd /EaseSearch/target/classes/script/mindspore \
     && chmod +x initDoc.sh \
     && ./initDoc.sh 
 
-RUN jlink --module-path ${JAVA_HOME}/jmods --add-modules java.base.jmod,java.compiler.jmod,java.datatransfer.jmod,java.desktop.jmod,java.instrument.jmod,java.logging.jmod,java.management.jmod,java.management.rmi.jmod,java.naming.jmod,java.net.http.jmod,java.prefs.jmod,java.rmi.jmod,java.scripting.jmod,java.se.jmod,java.security.jgss.jmod,java.security.sasl.jmod,java.smartcardio.jmod,java.sql.jmod,java.sql.rowset.jmod,java.transaction.xa.jmod,java.xml.crypto.jmod,java.xml.jmod --output /jre
+RUN jlink --module-path ${JAVA_HOME}/jmods --add-modules java.base,java.compiler,java.datatransfer,java.desktop,java.instrument,java.logging,java.management,java.management.rmi,java.naming,java.net.http,java.prefs,java.rmi,java.scripting,java.se,java.security.jgss,java.security.sasl,java.smartcardio,java.sql,java.sql.rowset,java.transaction.xa,java.xml.crypto,java.xml --output /jre
 
 
 FROM openeuler/openeuler:22.03
