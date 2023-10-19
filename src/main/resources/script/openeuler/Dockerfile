@@ -26,6 +26,13 @@ RUN git clone https://gitee.com/openeuler/openEuler-portal.git \
     && pnpm install \
     && pnpm build 
 
+ENV SOURCE=/docs-file/source
+ENV TARGET=/docs-file/target
+RUN cd /EaseSearch/target/classes/script/openeuler \
+    && chmod +x initDoc.sh \
+    && ./initDoc.sh \
+    && rm -rf /EaseSearch/target/classes/script
+
 RUN cp -r jdk-19.0.2 jre
 
 
@@ -44,12 +51,7 @@ WORKDIR ${WORKSPACE}
 
 COPY --chown=easysearch --from=Builder /EaseSearch/target ${WORKSPACE}/target
 COPY --chown=easysearch --from=Builder /jre ${WORKSPACE}/jre
-COPY --chown=easysearch --from=Builder /openEuler-portal ${SOURCE}/openEuler-portal
-COPY --chown=easysearch --from=Builder /docs ${SOURCE}/docs
-
-RUN cd ${WORKSPACE}/target/classes/script/openeuler \
-    && chmod +x initDoc.sh \
-    && ./initDoc.sh
+COPY --chown=easysearch --from=Builder /docs-file/target ${WORKSPACE}/file/target
 
 ENV JAVA_HOME=${WORKSPACE}/jre
 ENV PATH=${JAVA_HOME}/bin:$PATH

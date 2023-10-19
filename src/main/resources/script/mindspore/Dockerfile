@@ -22,6 +22,13 @@ RUN cd /EaseSearch \
 
 RUN git clone https://gitee.com/mindspore/website-docs.git
 
+ENV SOURCE=/docs-file/source
+ENV TARGET=/docs-file/target
+RUN cd /EaseSearch/target/classes/script/mindspore \
+    && chmod +x initDoc.sh \
+    && ./initDoc.sh \
+    && rm -rf /EaseSearch/target/classes/script
+
 RUN cp -r jdk-19.0.2 jre
 
 FROM openeuler/openeuler:22.03
@@ -38,11 +45,7 @@ WORKDIR ${WORKSPACE}
 
 COPY --chown=easysearch --from=Builder /EaseSearch/target ${WORKSPACE}/target
 COPY --chown=easysearch --from=Builder /jre ${WORKSPACE}/jre
-COPY --chown=easysearch --from=Builder /website-docs ${SOURCE}/website-docs
-
-RUN cd ${WORKSPACE}/target/classes/script/mindspore \
-    && chmod +x initDoc.sh \
-    && ./initDoc.sh
+COPY --chown=easysearch --from=Builder /docs-file/target ${WORKSPACE}/file/target
 
 ENV JAVA_HOME=${WORKSPACE}/jre
 ENV PATH=${JAVA_HOME}/bin:$PATH

@@ -28,6 +28,10 @@ public class ManagementOperationLogAOP {
     public void pointCut() {
     }
 
+    @Pointcut("@annotation(com.search.docsearch.aop.LogAction)")
+    public void logAction() {
+    }
+
     @Before(value = "pointCut()")
     public void doBefore(JoinPoint joinPoint) {
         String traceId = UUID.randomUUID().toString();
@@ -40,6 +44,12 @@ public class ManagementOperationLogAOP {
     @AfterReturning(value = "pointCut()", returning = "returnObject")
     public void afterReturning(JoinPoint joinPoint, Object returnObject) {
         LogUtil.returnOperate(joinPoint, response.getStatus(), "", request);
+    }
+
+
+    @Before(value = "logAction() && @annotation(logAction)")
+    public void actionDoBefore(JoinPoint joinPoint, LogAction logAction) {
+        
     }
 
 }
