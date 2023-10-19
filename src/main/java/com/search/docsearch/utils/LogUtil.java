@@ -1,6 +1,6 @@
 package com.search.docsearch.utils;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import lombok.Data;
 import org.aspectj.lang.JoinPoint;
 import org.slf4j.LoggerFactory;
