@@ -40,7 +40,7 @@ RUN cp -r jdk-19.0.2 jre
 
 
 FROM openeuler/openeuler:22.03
-ENV searchsystem=openEuler
+ENV searchsystem=openeuler
 
 RUN groupadd -g 1001 easysearch \
     && useradd -u 1001 -g easysearch -s /bin/bash -m easysearch
@@ -59,5 +59,7 @@ ENV JAVA_HOME=${WORKSPACE}/jre
 ENV PATH=${JAVA_HOME}/bin:$PATH
 
 EXPOSE 8080
+
+USER easysearch
 
 CMD java -jar ${WORKSPACE}/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}

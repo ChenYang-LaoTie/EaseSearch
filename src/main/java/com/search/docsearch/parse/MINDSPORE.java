@@ -92,7 +92,6 @@ public class MINDSPORE {
             jsonMap.put("version", version);
         } else {
             if (!path.startsWith("install/")) {
-                System.out.println("------------- " + path);
                 jsonMap.put("lang", "zh");
             }
         }
@@ -210,7 +209,6 @@ public class MINDSPORE {
                 param.put("pageCurrent", i);
                 param.put("tag", "zh");
                 param.put("type", 0);
-                System.out.println(path);
                 connection = sendHTTP(path, "POST", param.toString());
                 if (connection.getResponseCode() == 200) {
                     result = ReadInput(connection.getInputStream());
@@ -321,7 +319,6 @@ public class MINDSPORE {
             path = String.format(MINDSPORE_OFFICIAL + "/api-server/selectNewsInfo?id=%d", id);
 
             try {
-                System.out.println(path);
                 connection = sendGET(path, "GET");
                 if (connection.getResponseCode() == 200) {
                     result = ReadInput(connection.getInputStream());
