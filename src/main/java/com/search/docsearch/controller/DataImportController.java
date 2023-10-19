@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.service.DataImportService;
 import com.search.docsearch.service.SearchService;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Slf4j
 @RestController
 public class DataImportController {
 

@@ -42,6 +42,9 @@ COPY --chown=easysearch --from=Builder /website-docs ${SOURCE}/website-docs
 
 RUN chmod -x ${WORKSPACE}/target/classes/script
 
+ENV JAVA_HOME=/jre
+ENV PATH=${JAVA_HOME}/bin:$PATH
+
 EXPOSE 8080
 
 CMD java -jar ${WORKSPACE}/target/EaseSearch-0.0.1-SNAPSHOT.jar --spring.config.location=${APPLICATION_PATH}
