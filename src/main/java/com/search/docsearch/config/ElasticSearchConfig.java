@@ -24,6 +24,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.search.docsearch.aop.LogAction;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
@@ -51,7 +53,7 @@ public class ElasticSearchConfig {
     public RestHighLevelClient restHighLevelClient() {
 
         if (isDev) {
-            return new RestHighLevelClient(RestClient.builder(new HttpHost("", 9200, "http")));
+            return new RestHighLevelClient(RestClient.builder(new HttpHost("192.168.1.203", 9200, "http")));
         } else {
             RestHighLevelClient restClient = null;
             try {

@@ -3,6 +3,7 @@ package com.search.docsearch.aop;
 import com.search.docsearch.utils.LogUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,8 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 import static com.search.docsearch.utils.LogUtil.TRACE_ID;
@@ -47,9 +50,13 @@ public class ManagementOperationLogAOP {
     }
 
 
-    @Before(value = "logAction() && @annotation(logAction)")
-    public void actionDoBefore(JoinPoint joinPoint, LogAction logAction) {
-        
+    @Before(value = "logAction()")
+    public void actionDoBefore(JoinPoint joinPoint) {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        LogAction action = method.getAnnotation(LogAction.class);
+
+        System.out.println(action.detail());
     }
 
 }

@@ -35,23 +35,23 @@ public class Init implements ApplicationRunner{
      */
     @Override
     public void run(ApplicationArguments args) {
-        String applictionPath = System.getenv("APPLICATION_PATH");
-        if (StringUtils.hasText(applictionPath)) {
-            if (FileUtils.deleteFile(applictionPath)) {
-                log.info("delete application success");
-            } else {
-                log.info("delete application fail");
-            }
-        } else {
-            log.info("application path is null");
-        }
+        // String applictionPath = System.getenv("APPLICATION_PATH");
+        // if (StringUtils.hasText(applictionPath)) {
+        //     if (FileUtils.deleteFile(applictionPath)) {
+        //         log.info("delete application success");
+        //     } else {
+        //         log.info("delete application fail");
+        //     }
+        // } else {
+        //     log.info("application path is null");
+        // }
         
-        try {
-            // 导入es数据
-            dataImportService.refreshDoc();
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
+        // try {
+        //     // 导入es数据
+        //     dataImportService.refreshDoc();
+        // } catch (Exception e) {
+        //     log.error(e.getMessage());
+        // }
 
     }
 }

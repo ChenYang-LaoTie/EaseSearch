@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
+import com.search.docsearch.utils.LogUtil;
 import org.apache.commons.io.FileUtils;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -172,12 +173,14 @@ public class DataImportServiceImpl implements DataImportService {
         IndexRequest indexRequest = new IndexRequest(s.index + "_" + "lock").id(GLOBAL_LOCK_ID).source(jsonMap);
         indexRequest.opType(DocWriteRequest.OpType.CREATE);
         IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+        LogUtil.sourceOperate(indexRequest.toString());
     }
 
     public void globalUnlock() {
         try {
             DeleteRequest deleteRequest = new DeleteRequest(s.index + "_" + "lock", GLOBAL_LOCK_ID);
             DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
+            LogUtil.sourceOperate(deleteRequest.toString());
         } catch (Exception e) {
             log.error("Failed to unlock index, the error is: " + e.getMessage());
         }
@@ -220,6 +223,7 @@ public class DataImportServiceImpl implements DataImportService {
             request1.setTimeout(TimeValue.timeValueMillis(1));
         }
         restHighLevelClient.indices().create(request1, RequestOptions.DEFAULT);
+        LogUtil.sourceOperate(request1.toString());
     }
 
     @Override

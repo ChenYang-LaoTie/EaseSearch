@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mysql.cj.log.Log;
+import com.search.docsearch.utils.LogUtil;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -78,6 +80,7 @@ public class SearchServiceImpl implements SearchService {
         suggRequest.source(searchSourceBuilder.suggest(suggestBuilder));
 
         SearchResponse suggResponse = restHighLevelClient.search(suggRequest, RequestOptions.DEFAULT);
+        LogUtil.sourceOperate(suggRequest.toString());
 
         List<String> suggestList = new ArrayList<>();
         for (int i = 0; i <= 3; i++) {
@@ -124,7 +127,7 @@ public class SearchServiceImpl implements SearchService {
 
         SearchRequest request = BuildSearchRequest(condition, saveIndex);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-
+        LogUtil.sourceOperate(request.toString());
         List<Map<String, Object>> data = new ArrayList<>();
 
         for (SearchHit hit : response.getHits().getHits()) {
@@ -300,7 +303,7 @@ public class SearchServiceImpl implements SearchService {
         sourceBuilder.aggregation(AggregationBuilders.terms("data").field("type.keyword"));
         request.source(sourceBuilder);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-
+        LogUtil.sourceOperate(request.toString());
         List<Map<String, Object>> numberList = new ArrayList<>();
         Map<String, Object> numberMap = new HashMap<>();
         numberMap.put("doc_count", response.getHits().getTotalHits().value);
@@ -382,7 +385,7 @@ public class SearchServiceImpl implements SearchService {
 
 
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-
+        LogUtil.sourceOperate(request.toString());
         Map<String, Object> result = new HashMap<>();
         List<Map<String, Object>> data = new ArrayList<>();
         for (SearchHit hit : response.getHits().getHits()) {
@@ -419,6 +422,7 @@ public class SearchServiceImpl implements SearchService {
         sourceBuilder.query(boolQueryBuilder);
         request.source(sourceBuilder);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+        LogUtil.sourceOperate(request.toString());
         ParsedTerms aggregation = response.getAggregations().get("data");
         List<Map<String, Object>> numberList = new ArrayList<>();
         List<? extends Terms.Bucket> buckets = aggregation.getBuckets();
