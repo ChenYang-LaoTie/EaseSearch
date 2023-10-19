@@ -20,10 +20,13 @@ COPY . /EaseSearch
 RUN cd /EaseSearch \
     && mvn clean install package -Dmaven.test.skip
 
-RUN git clone https://gitee.com/mindspore/website-docs.git
-
 ENV SOURCE=/docs-file/source
 ENV TARGET=/docs-file/target
+
+RUN mkdir -p ${SOURCE} \
+    && cd ${SOURCE} \
+    && git clone https://gitee.com/mindspore/website-docs.git
+
 RUN cd /EaseSearch/target/classes/script/mindspore \
     && chmod +x initDoc.sh \
     && ./initDoc.sh \

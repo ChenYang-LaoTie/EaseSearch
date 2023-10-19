@@ -20,14 +20,17 @@ COPY . /EaseSearch
 RUN cd /EaseSearch \
     && mvn clean install package -Dmaven.test.skip
 
-RUN git clone https://gitee.com/openeuler/openEuler-portal.git \
+ENV SOURCE=/docs-file/source
+ENV TARGET=/docs-file/target
+
+RUN mkdir -p ${SOURCE} \
+    && cd ${SOURCE} \
+    && git clone https://gitee.com/openeuler/openEuler-portal.git \
     && git clone https://gitee.com/openeuler/docs.git \
     && cd openEuler-portal \
     && pnpm install \
     && pnpm build 
 
-ENV SOURCE=/docs-file/source
-ENV TARGET=/docs-file/target
 RUN cd /EaseSearch/target/classes/script/openeuler \
     && chmod +x initDoc.sh \
     && ./initDoc.sh \
