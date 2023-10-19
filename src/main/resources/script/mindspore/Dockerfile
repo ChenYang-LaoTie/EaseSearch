@@ -42,7 +42,7 @@ COPY --chown=easysearch --from=Builder /website-docs ${SOURCE}/website-docs
 
 RUN chmod -x ${WORKSPACE}/target/classes/script
 
-ENV JAVA_HOME=/jre
+ENV JAVA_HOME=${WORKSPACE}/jre
 ENV PATH=${JAVA_HOME}/bin:$PATH
 
 EXPOSE 8080
