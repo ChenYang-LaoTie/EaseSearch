@@ -3,13 +3,13 @@ FROM gplane/pnpm as Builder
 WORKDIR /
 
 RUN apt update \
-    && wget https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-19.0.2_linux-x64_bin.tar.gz \
-    && tar -zxvf openjdk-19.0.2_linux-x64_bin.tar.gz \
+    && wget https://download.oracle.com/java/17/archive/jdk-17.0.7_linux-x64_bin.tar.gz \
+    && tar -zxvf jdk-17.0.7_linux-x64_bin.tar.gz \
     && wget https://repo.huaweicloud.com/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz \
     && tar -zxvf apache-maven-3.8.1-bin.tar.gz \
     && npm i pnpm -g
 
-ENV JAVA_HOME=/jdk-19.0.2
+ENV JAVA_HOME=/jdk-17.0.7
 ENV PATH=${JAVA_HOME}/bin:$PATH
 
 ENV MAVEN_HOME=/apache-maven-3.8.1
