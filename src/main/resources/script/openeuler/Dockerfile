@@ -33,8 +33,7 @@ RUN mkdir -p ${SOURCE} \
 
 RUN cd /EaseSearch/target/classes/script/openeuler \
     && chmod +x initDoc.sh \
-    && ./initDoc.sh \
-    && rm -rf /EaseSearch/target/classes/script
+    && ./initDoc.sh 
 
 RUN cp -r jdk-19.0.2 jre
 
