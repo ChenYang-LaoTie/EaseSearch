@@ -38,7 +38,7 @@ RUN cd /EaseSearch/target/classes/script/opengauss \
     && chmod +x initDoc.sh \
     && ./initDoc.sh 
 
-RUN cp -r jdk-19.0.2 jre
+RUN jlink --module-path ${JAVA_HOME}/jmods --add-modules java.base.jmod,java.compiler.jmod,java.datatransfer.jmod,java.desktop.jmod,java.instrument.jmod,java.logging.jmod,java.management.jmod,java.management.rmi.jmod,java.naming.jmod,java.net.http.jmod,java.prefs.jmod,java.rmi.jmod,java.scripting.jmod,java.se.jmod,java.security.jgss.jmod,java.security.sasl.jmod,java.smartcardio.jmod,java.sql.jmod,java.sql.rowset.jmod,java.transaction.xa.jmod,java.xml.crypto.jmod,java.xml.jmod --output /jre
 
 
 
