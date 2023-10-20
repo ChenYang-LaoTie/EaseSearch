@@ -58,6 +58,8 @@ public class MINDSPORE {
         put("mindsponge", "MindSpore SPONGE");
         put("mindflow", "MindSpore Flow");
         put("mindquantum", "MindSpore Quantum");
+        put("sciai", "MindSpore SciAI");
+        put("mindearth", "MindSpore Earth");
     }};
 
 

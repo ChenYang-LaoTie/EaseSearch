@@ -5,44 +5,28 @@ import javax.servlet.http.HttpServletRequest;
 public class ClientIPUtil {
 
     public static String getClientIpAddress(HttpServletRequest request) {
-        String headerName = "x-forwarded-for";
-        String ip = request.getHeader(headerName);
-        if (null != ip && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
-            if (ip.contains(",")) {
-                ip = ip.split(",")[0];
+        String[] headerNames = {"x-forwarded-for", "Proxy-Client-IP", "WL-Proxy-Client-IP",
+                "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR", "X-Real-IP"};
+
+        for (String headerName : headerNames) {
+            String ip = request.getHeader(headerName);
+            if (isValidIp(ip)) {
+                return extractIp(ip);
             }
         }
-        if (checkIp(ip)) {
-            headerName = "Proxy-Client-IP";
-            ip = request.getHeader(headerName);
-        }
-        if (checkIp(ip)) {
-            headerName = "WL-Proxy-Client-IP";
-            ip = request.getHeader(headerName);
-        }
-        if (checkIp(ip)) {
-            headerName = "HTTP_CLIENT_IP";
-            ip = request.getHeader(headerName);
-        }
-        if (checkIp(ip)) {
-            headerName = "HTTP_X_FORWARDED_FOR";
-            ip = request.getHeader(headerName);
-        }
-        if (checkIp(ip)) {
-            headerName = "X-Real-IP";
-            ip = request.getHeader(headerName);
-        }
-        if (checkIp(ip)) {
-            headerName = "remote addr";
-            ip = request.getRemoteAddr();
+
+        return request.getRemoteAddr();
+    }
+
+    private static boolean isValidIp(String ip) {
+        return ip != null && ip.length() > 0 && !"unknown".equalsIgnoreCase(ip);
+    }
+
+    private static String extractIp(String ip) {
+        if (ip.contains(",")) {
+            return ip.split(",")[0];
         }
         return ip;
     }
 
-    private static boolean checkIp(String ip) {
-        if (null == ip || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            return true;
-        }
-        return false;
-    }
 }
