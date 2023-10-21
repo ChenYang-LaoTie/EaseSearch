@@ -30,9 +30,9 @@ public class LogUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         log.setTime(dateTime.format(formatter));
 
-        log.setUserId("Internet users");
+        log.setUserId("anonymous");
 
-        log.setAppIP(ClientIPUtil.getClientIpAddress(request));
+        log.setAccessIp(ClientIPUtil.getClientIpAddress(request));
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
@@ -52,9 +52,9 @@ public class LogUtil {
         log.setStatus(status);
 
         if (status != 200) {
-            log.setMessage("SUCCESS");
-        } else {
             log.setMessage("ERROR");
+        } else {
+            log.setMessage("SUCCESS");
         }
 
         String jsonLog = JSON.toJSONString(log);
@@ -73,7 +73,7 @@ public class LogUtil {
 
         private String userId;
 
-        private String appIP;
+        private String accessIp;
 
         private String type;
 

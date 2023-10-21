@@ -32,7 +32,7 @@ public class DivideController {
 
 
 
-    @LogAction(type = "Category search", OperationResource = "search by type")
+    @LogAction(type = "Category search", OperationResource = "Other Documents")
     @PostMapping("/{type}")
     @LimitRequest(callTime = 1, callCount = 30)
     public SysResult DivideBLog(@PathVariable @NotBlank(message = "must have a type") String type, @RequestBody @NotEmpty(message = "Requires at least one condition") Map<String, String> m){
@@ -51,7 +51,7 @@ public class DivideController {
         return SysResult.fail("查询失败", null);
     }
 
-    @LogAction(type = "Category search", OperationResource = "docs search")
+    @LogAction(type = "Category search", OperationResource = "Documents")
     @PostMapping("docs")
     @LimitRequest(callTime = 1, callCount = 30)
     public SysResult DivideDocs(@RequestBody @Validated SearchDocs searchDocs) {

@@ -1,27 +1,25 @@
 package com.search.docsearch.config;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.List;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
-import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
-import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
-import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.http.ssl.TrustStrategy;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,102 +29,69 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ElasticSearchConfig {
 
-    @Value("${elasticsearch.username}")
-    private String userName;
-
-    @Value("${elasticsearch.password}")
-    private String password;
-
-    @Value("${elasticsearch.host}")
-    private String host;
-
-    @Value("${elasticsearch.port}")
-    private int port;
-
-    @Bean(destroyMethod = "close")
-    public RestHighLevelClient restHighLevelClient() {
-
-        RestHighLevelClient restClient = null;
+    public static RestHighLevelClient create(List<String> host, int port, String protocol, int connectTimeout,
+            int connectionRequestTimeoutint, int socketTimeout, String username, String password, String cerFilePath,
+            String cerPassword) throws IOException{
+        final CredentialsProvider  credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+        SSLContext sc = null;
         try {
-            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(userName, password));
-            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-                @Override
-                public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-                    return true;
-                }
-            }).build();
-            SSLIOSessionStrategy sessionStrategy = new SSLIOSessionStrategy(sslContext, NoopHostnameVerifier.INSTANCE);
-            restClient = new RestHighLevelClient(
-                    RestClient.builder(new HttpHost(host, port, "https")).setHttpClientConfigCallback(
-                            new RestClientBuilder.HttpClientConfigCallback() {
-                                @Override
-                                public HttpAsyncClientBuilder customizeHttpClient(
-                                        HttpAsyncClientBuilder httpAsyncClientBuilder) {
-                                    httpAsyncClientBuilder.disableAuthCaching();
-                                    httpAsyncClientBuilder.setSSLStrategy(sessionStrategy);
-                                    httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-                                    return httpAsyncClientBuilder;
-                                }
-                            }).setRequestConfigCallback(
-                                    new RestClientBuilder.RequestConfigCallback() {
-                                        // 该方法接收一个RequestConfig.Builder对象，对该对象进行修改后然后返回。
-                                        @Override
-                                        public RequestConfig.Builder customizeRequestConfig(
-                                                RequestConfig.Builder requestConfigBuilder) {
-                                            return requestConfigBuilder.setConnectTimeout(5 * 1000) // 连接超时（默认为1秒）现在改为5秒
-                                                    .setSocketTimeout(30 * 1000);// 套接字超时（默认为30秒）现在改为30秒
-                                        }
-                                    }));
+            TrustManager[] tm = {new MyX509TrustManager(cerFilePath, cerPassword)};
+            sc = SSLContext.getInstance("SSL", "SunJSSE");
         } catch (Exception e) {
-            log.error("elasticsearch TransportClient create error!!", e);
+            log.error("init SSLContext error: " + e.getMessage());
         }
-        return restClient;
-
     }
 
-    @Value("${tracker.username}")
-    private String trackerUserName;
+     public static class MyX509TrustManager implements X509TrustManager {
+        X509TrustManager sunJSSEX509TrustManager;
 
-    @Value("${tracker.password}")
-    private String trackerPassword;
-
-    @Value("${tracker.host}")
-    private String trackerHost;
-
-    @Value("${tracker.port}")
-    private int trackerPort;
-
-    @Bean(destroyMethod = "close")
-    public RestHighLevelClient trackerClient() {
-
-        RestHighLevelClient restClient = null;
-        try {
-            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(AuthScope.ANY,
-                    new UsernamePasswordCredentials(trackerUserName, trackerPassword));
-            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-                @Override
-                public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-                    return true;
+        MyX509TrustManager(String cerFilePath, String cerPassword) throws Exception {
+            File file = new File(cerFilePath);
+            if (!file.isFile()) {
+                throw new Exception("Wrong Certification Path");
+            }
+            System.out.println("Loading KeyStore " + file + "...");
+            InputStream in = new FileInputStream(file);
+            KeyStore ks = KeyStore.getInstance("JKS");
+            ks.load(in, cerPassword.toCharArray());
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509", "SunJSSE");
+            tmf.init(ks);
+            TrustManager[] tms = tmf.getTrustManagers();
+            for (TrustManager tm : tms) {
+                if (tm instanceof X509TrustManager) {
+                    sunJSSEX509TrustManager = (X509TrustManager) tm;
+                    return;
                 }
-            }).build();
-            SSLIOSessionStrategy sessionStrategy = new SSLIOSessionStrategy(sslContext, NoopHostnameVerifier.INSTANCE);
-            restClient = new RestHighLevelClient(
-                    RestClient.builder(new HttpHost(trackerHost, trackerPort, "https")).setHttpClientConfigCallback(
-                            new RestClientBuilder.HttpClientConfigCallback() {
-                                @Override
-                                public HttpAsyncClientBuilder customizeHttpClient(
-                                        HttpAsyncClientBuilder httpAsyncClientBuilder) {
-                                    httpAsyncClientBuilder.disableAuthCaching();
-                                    httpAsyncClientBuilder.setSSLStrategy(sessionStrategy);
-                                    httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-                                    return httpAsyncClientBuilder;
-                                }
-                            }));
-        } catch (Exception e) {
-            log.error("elasticsearch TransportClient create error!!", e);
+            }
+            throw new Exception("Couldn't initialize");
         }
-        return restClient;
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'checkClientTrusted'");
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'checkServerTrusted'");
+        }
     }
 }

@@ -40,7 +40,7 @@ public class SearchController {
      * @param condition 封装查询条件
      * @return 搜索结果
      */
-    @LogAction(type = "global search", OperationResource = "global search")
+    @LogAction(type = "Global search", OperationResource = "Documents")
     @PostMapping("docs")
     @LimitRequest()
     public SysResult searchDocByKeyword(@RequestBody @Validated SearchCondition condition) {
@@ -56,7 +56,7 @@ public class SearchController {
         return SysResult.fail("查询失败", null);
     }
 
-    @LogAction(type = "Search aid", OperationResource = "Get search suggestion words")
+    @LogAction(type = "Get aid", OperationResource = "Suggestion words")
     @PostMapping("sugg")
     @LimitRequest()
     public SysResult getSuggestion(@RequestBody @Validated SearchCondition condition) {
@@ -77,7 +77,7 @@ public class SearchController {
     }
 
 
-    @LogAction(type = "Statistics", OperationResource = "Statistics global search data")
+    @LogAction(type = "Get statistics", OperationResource = "Statistics data")
     @PostMapping("count")
     @LimitRequest()
     public SysResult getCount(@RequestBody @Validated SearchCondition condition) {
@@ -95,7 +95,7 @@ public class SearchController {
 
 
 
-    @LogAction(type = "Search aid", OperationResource = "Get popular search terms")
+    @LogAction(type = "Get aid", OperationResource = "Popular terms")
     @PostMapping("pop")
     @LimitRequest(callTime = 1, callCount = 1000)
     public SysResult getPop(String lang) {
@@ -115,7 +115,7 @@ public class SearchController {
     }
 
 
-    @LogAction(type = "Advanced search", OperationResource = "Filter documents using custom criteria")
+    @LogAction(type = "Filter documents", OperationResource = "Documents")
     @PostMapping("sort")
     @LimitRequest()
     public SysResult makeSort(@RequestBody Map<String, String> m) {
@@ -133,7 +133,7 @@ public class SearchController {
         return SysResult.fail("查询失败", null);
     }
 
-    @LogAction(type = "Statistics", OperationResource = "Get docs tags")
+    @LogAction(type = "Get", OperationResource = "Tags")
     @PostMapping("tags")
     @LimitRequest()
     public SysResult getTags(@RequestBody @Validated SearchTags searchTags) {

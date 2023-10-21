@@ -36,7 +36,6 @@ public class ThreadPoolConfig {
      */
     @Bean(name = "threadPoolTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
-        log.info("---------- 线程池开始加载 ----------");
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
         // 核心线程池大小
         threadPoolTaskExecutor.setCorePoolSize(corePoolSize);
@@ -55,7 +54,7 @@ public class ThreadPoolConfig {
         threadPoolTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         // 初始化
         threadPoolTaskExecutor.initialize();
-        log.info("---------- 线程池加载完成 ----------");
+
         return threadPoolTaskExecutor;
     }
 }
