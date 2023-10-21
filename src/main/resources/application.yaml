@@ -4,8 +4,6 @@ elasticsearch:
   username: ${esusername}
   password: ${espassword}
   port: ${esport}
-  #deploy dev
-  isDev: ${isDev:false}
 
 #网站埋点数据库
 tracker:

@@ -43,56 +43,47 @@ public class ElasticSearchConfig {
     @Value("${elasticsearch.port}")
     private int port;
 
-
-    @Value("${elasticsearch.isDev}")
-    private boolean isDev;
-
     @Bean(destroyMethod = "close")
     public RestHighLevelClient restHighLevelClient() {
 
-        if (isDev) {
-            return new RestHighLevelClient(RestClient.builder(new HttpHost("", 9200, "http")));
-        } else {
-            RestHighLevelClient restClient = null;
-            try {
-                final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(userName, password));
-                SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-                    @Override
-                    public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-                        return true;
-                    }
-                }).build();
-                SSLIOSessionStrategy sessionStrategy = new SSLIOSessionStrategy(sslContext, NoopHostnameVerifier.INSTANCE);
-                restClient = new RestHighLevelClient(
-                        RestClient.builder(new HttpHost(host, port, "https")).setHttpClientConfigCallback(
-                                new RestClientBuilder.HttpClientConfigCallback() {
-                                    @Override
-                                    public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpAsyncClientBuilder) {
-                                        httpAsyncClientBuilder.disableAuthCaching();
-                                        httpAsyncClientBuilder.setSSLStrategy(sessionStrategy);
-                                        httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-                                        return httpAsyncClientBuilder;
-                                    }
+        RestHighLevelClient restClient = null;
+        try {
+            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(userName, password));
+            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+                @Override
+                public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                    return true;
+                }
+            }).build();
+            SSLIOSessionStrategy sessionStrategy = new SSLIOSessionStrategy(sslContext, NoopHostnameVerifier.INSTANCE);
+            restClient = new RestHighLevelClient(
+                    RestClient.builder(new HttpHost(host, port, "https")).setHttpClientConfigCallback(
+                            new RestClientBuilder.HttpClientConfigCallback() {
+                                @Override
+                                public HttpAsyncClientBuilder customizeHttpClient(
+                                        HttpAsyncClientBuilder httpAsyncClientBuilder) {
+                                    httpAsyncClientBuilder.disableAuthCaching();
+                                    httpAsyncClientBuilder.setSSLStrategy(sessionStrategy);
+                                    httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                                    return httpAsyncClientBuilder;
                                 }
-                        ).setRequestConfigCallback(
-                                new RestClientBuilder.RequestConfigCallback() {
-                                    // 该方法接收一个RequestConfig.Builder对象，对该对象进行修改后然后返回。
-                                    @Override
-                                    public RequestConfig.Builder customizeRequestConfig(RequestConfig.Builder requestConfigBuilder) {
-                                        return requestConfigBuilder.setConnectTimeout(5 * 1000) // 连接超时（默认为1秒）现在改为5秒
-                                                .setSocketTimeout(30 * 1000);// 套接字超时（默认为30秒）现在改为30秒
-                                    }
-                                }
-                        ));
-            } catch (Exception e) {
-                log.error("elasticsearch TransportClient create error!!", e);
-            }
-            return restClient;
+                            }).setRequestConfigCallback(
+                                    new RestClientBuilder.RequestConfigCallback() {
+                                        // 该方法接收一个RequestConfig.Builder对象，对该对象进行修改后然后返回。
+                                        @Override
+                                        public RequestConfig.Builder customizeRequestConfig(
+                                                RequestConfig.Builder requestConfigBuilder) {
+                                            return requestConfigBuilder.setConnectTimeout(5 * 1000) // 连接超时（默认为1秒）现在改为5秒
+                                                    .setSocketTimeout(30 * 1000);// 套接字超时（默认为30秒）现在改为30秒
+                                        }
+                                    }));
+        } catch (Exception e) {
+            log.error("elasticsearch TransportClient create error!!", e);
         }
+        return restClient;
+
     }
-
-
 
     @Value("${tracker.username}")
     private String trackerUserName;
@@ -105,13 +96,15 @@ public class ElasticSearchConfig {
 
     @Value("${tracker.port}")
     private int trackerPort;
+
     @Bean(destroyMethod = "close")
     public RestHighLevelClient trackerClient() {
 
         RestHighLevelClient restClient = null;
         try {
             final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(trackerUserName, trackerPassword));
+            credentialsProvider.setCredentials(AuthScope.ANY,
+                    new UsernamePasswordCredentials(trackerUserName, trackerPassword));
             SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
                 @Override
                 public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
@@ -123,14 +116,14 @@ public class ElasticSearchConfig {
                     RestClient.builder(new HttpHost(trackerHost, trackerPort, "https")).setHttpClientConfigCallback(
                             new RestClientBuilder.HttpClientConfigCallback() {
                                 @Override
-                                public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpAsyncClientBuilder) {
+                                public HttpAsyncClientBuilder customizeHttpClient(
+                                        HttpAsyncClientBuilder httpAsyncClientBuilder) {
                                     httpAsyncClientBuilder.disableAuthCaching();
                                     httpAsyncClientBuilder.setSSLStrategy(sessionStrategy);
                                     httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
                                     return httpAsyncClientBuilder;
                                 }
-                            }
-                    ));
+                            }));
         } catch (Exception e) {
             log.error("elasticsearch TransportClient create error!!", e);
         }
