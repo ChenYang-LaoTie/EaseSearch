@@ -61,7 +61,6 @@ public class OPENLOOKENG {
         }
 
         if (jsonMap.get("title") == "" && jsonMap.get("textContent") == "") {
-            System.out.println("title and textContent is null, path: " + path);
             return null;
         }
 

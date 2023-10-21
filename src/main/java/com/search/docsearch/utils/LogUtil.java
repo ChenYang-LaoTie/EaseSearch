@@ -61,32 +61,6 @@ public class LogUtil {
         logger.info("operationLog:{}", jsonLog);
     }
 
-    public static void sourceOperate(String detail) {
-        sourceLog log = new sourceLog();
-        log.setTraceId(MDC.get(TRACE_ID));
-
-        LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        log.setTime(dateTime.format(formatter));
-
-        log.setDetail(detail);
-
-        String jsonLog = JSON.toJSONString(log);
-        logger.info("operationLog:{}", jsonLog);
-    }
-
-    @Data
-    public static class sourceLog implements Serializable {
-        @Serial
-        private static final long serialVersionUID = 1L;
-
-        private String traceId;
-
-        private String time;
-
-        private String detail;
-    }
-
     @Data
     public static class returnLog implements Serializable {
 
