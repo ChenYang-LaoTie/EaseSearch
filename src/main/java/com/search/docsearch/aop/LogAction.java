@@ -6,5 +6,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface LogAction {
-    String detail();
+    String type() default "Unoperated resources";
+
+    String OperationResource() default "Unoperated resources";
 }

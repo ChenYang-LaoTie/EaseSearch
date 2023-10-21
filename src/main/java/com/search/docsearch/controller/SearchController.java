@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.search.docsearch.aop.LimitRequest;
+import com.search.docsearch.aop.LogAction;
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.entity.vo.SearchCondition;
 import com.search.docsearch.entity.vo.SearchTags;
@@ -39,6 +40,7 @@ public class SearchController {
      * @param condition 封装查询条件
      * @return 搜索结果
      */
+    @LogAction(type = "global search", OperationResource = "global search")
     @PostMapping("docs")
     @LimitRequest()
     public SysResult searchDocByKeyword(@RequestBody @Validated SearchCondition condition) {
@@ -54,6 +56,7 @@ public class SearchController {
         return SysResult.fail("查询失败", null);
     }
 
+    @LogAction(type = "Search aid", OperationResource = "Get search suggestion words")
     @PostMapping("sugg")
     @LimitRequest()
     public SysResult getSuggestion(@RequestBody @Validated SearchCondition condition) {
@@ -74,6 +77,7 @@ public class SearchController {
     }
 
 
+    @LogAction(type = "Statistics", OperationResource = "Statistics global search data")
     @PostMapping("count")
     @LimitRequest()
     public SysResult getCount(@RequestBody @Validated SearchCondition condition) {
@@ -89,6 +93,9 @@ public class SearchController {
         return SysResult.fail("查询失败", null);
     }
 
+
+
+    @LogAction(type = "Search aid", OperationResource = "Get popular search terms")
     @PostMapping("pop")
     @LimitRequest(callTime = 1, callCount = 1000)
     public SysResult getPop(String lang) {
@@ -108,6 +115,7 @@ public class SearchController {
     }
 
 
+    @LogAction(type = "Advanced search", OperationResource = "Filter documents using custom criteria")
     @PostMapping("sort")
     @LimitRequest()
     public SysResult makeSort(@RequestBody Map<String, String> m) {
@@ -125,6 +133,7 @@ public class SearchController {
         return SysResult.fail("查询失败", null);
     }
 
+    @LogAction(type = "Statistics", OperationResource = "Get docs tags")
     @PostMapping("tags")
     @LimitRequest()
     public SysResult getTags(@RequestBody @Validated SearchTags searchTags) {
