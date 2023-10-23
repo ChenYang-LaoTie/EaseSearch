@@ -30,7 +30,7 @@ public class LogUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         log.setTime(dateTime.format(formatter));
 
-        log.setUserId("anonymous");
+        log.setUserId(System.getenv("NO_ID_USER"));
 
         log.setAccessIp(ClientIPUtil.getClientIpAddress(request));
 

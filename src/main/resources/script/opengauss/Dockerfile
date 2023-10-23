@@ -59,6 +59,8 @@ COPY --chown=easysearch --from=Builder /docs-file/target ${WORKSPACE}/file/targe
 ENV JAVA_HOME=${WORKSPACE}/jre
 ENV PATH=${JAVA_HOME}/bin:$PATH
 
+ENV NO_ID_USER=anonymous
+
 EXPOSE 8080
 
 USER easysearch
