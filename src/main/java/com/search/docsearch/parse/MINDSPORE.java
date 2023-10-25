@@ -211,7 +211,6 @@ public class MINDSPORE {
                 param.put("pageCurrent", i);
                 param.put("tag", "zh");
                 param.put("type", 0);
-                System.out.println(path);
                 connection = sendHTTP(path, "POST", param.toJSONString());
                 if (connection.getResponseCode() == 200) {
                     result = ReadInput(connection.getInputStream());
@@ -236,6 +235,7 @@ public class MINDSPORE {
                 }
             } catch (Exception e) {
                 log.error("Connection failed, error is: " + e.getMessage());
+                break;
             } finally {
                 if (null != connection) {
                     connection.disconnect();
@@ -322,7 +322,6 @@ public class MINDSPORE {
             path = String.format(MINDSPORE_OFFICIAL + "/api-server/selectNewsInfo?id=%d", id);
 
             try {
-                System.out.println(path);
                 connection = sendGET(path, "GET");
                 if (connection.getResponseCode() == 200) {
                     result = ReadInput(connection.getInputStream());
@@ -339,7 +338,6 @@ public class MINDSPORE {
                     Map<String, Object> jsonMap = new HashMap<>();
 
                     jsonMap.put("title", title);
-                    System.out.print(title);
                     jsonMap.put("textContent", textContent);
                     jsonMap.put("lang", lang);
                     jsonMap.put("category", category);
