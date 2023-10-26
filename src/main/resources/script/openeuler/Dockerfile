@@ -46,7 +46,7 @@ RUN groupadd -g 1001 easysearch \
 ENV WORKSPACE=/home/easysearch
 ENV SOURCE=${WORKSPACE}/file/source
 ENV TARGET=${WORKSPACE}/file/target
-ENV BASEPATH=${WORKSPACE}/target
+ENV BASEPATH=${WORKSPACE}
 
 WORKDIR ${WORKSPACE}
 
