@@ -56,7 +56,6 @@ public class OPENGAUSS {
                 && !USERPRACTICE.equals(type)) {
             type = OTHER;
             if (!fileName.equals("index.html")) {
-                System.out.println("1");
                 return null;
             }
         }
@@ -85,7 +84,6 @@ public class OPENGAUSS {
         }
 
         if (jsonMap.get("title") == "" && jsonMap.get("textContent") == "") {
-            System.out.println("2");
             return null;
         }
         return jsonMap;
