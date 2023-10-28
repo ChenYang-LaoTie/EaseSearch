@@ -65,10 +65,10 @@ public class DataImportServiceImpl implements DataImportService {
     @Override
     @Async("threadPoolTaskExecutor")
     public void refreshDoc() {
-//        if (!doRefresh()) {
-//            log.info("===============document don't update in this time=================");
-//            return;
-//        }
+        if (!doRefresh()) {
+            log.info("===============document don't update in this time=================");
+            return;
+        }
 
         File indexFile = new File(s.getTargetPath());
         if (!indexFile.exists()) {
