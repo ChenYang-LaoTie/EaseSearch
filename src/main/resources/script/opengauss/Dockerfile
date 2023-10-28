@@ -62,6 +62,7 @@ ENV PATH=${JAVA_HOME}/bin:$PATH
 
 ENV NO_ID_USER=anonymous
 ENV LANG="zh_CN.UTF-8"
+RUN yum update -y
 
 EXPOSE 8080
 
