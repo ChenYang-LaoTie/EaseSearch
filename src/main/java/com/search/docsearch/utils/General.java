@@ -38,6 +38,7 @@ public class General {
             int ind = a;
 
             if (ind < 1 || ind > str.length() - 2) {
+                a = str.indexOf(key, a + 1);
                 continue;
             }
             if (!Character.isDigit(str.charAt(ind - 1)) || !Character.isDigit(str.charAt(ind + 1))) {
