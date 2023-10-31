@@ -1,6 +1,6 @@
 #es用户名 密码等配置
 elasticsearch:
-  host: ${eshost}
+  url: ${esurl}
   username: ${esusername}
   password: ${espassword}
   port: ${esport}
