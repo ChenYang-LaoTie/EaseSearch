@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.search.docsearch.aop.LimitRequest;
@@ -20,6 +21,7 @@ import com.search.docsearch.entity.vo.SearchCondition;
 import com.search.docsearch.entity.vo.SearchTags;
 import com.search.docsearch.entity.vo.SysResult;
 import com.search.docsearch.service.SearchService;
+import com.search.docsearch.utils.ParameterUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +34,7 @@ public class SearchController {
     private SearchService searchService;
     @Autowired
     @Qualifier("setConfig")
-    private MySystem s;
+    private MySystem mySystem;
 
     /**
      * 查询文档，首页大搜索
@@ -44,6 +46,8 @@ public class SearchController {
     @PostMapping("docs")
     @LimitRequest()
     public SysResult searchDocByKeyword(@RequestBody @Validated SearchCondition condition) {
+        ParameterUtil.vaildListMap(condition.getLimit());
+        ParameterUtil.vaildListMap(condition.getFilter());
         try {
             Map<String, Object> result = searchService.searchByCondition(condition);
             if (result == null) {
@@ -60,6 +64,8 @@ public class SearchController {
     @PostMapping("sugg")
     @LimitRequest()
     public SysResult getSuggestion(@RequestBody @Validated SearchCondition condition) {
+        ParameterUtil.vaildListMap(condition.getLimit());
+        ParameterUtil.vaildListMap(condition.getFilter());
         if (!StringUtils.hasText(condition.getKeyword())) {
             return SysResult.fail("keyword must not null", null);
         }
@@ -81,6 +87,8 @@ public class SearchController {
     @PostMapping("count")
     @LimitRequest()
     public SysResult getCount(@RequestBody @Validated SearchCondition condition) {
+        ParameterUtil.vaildListMap(condition.getLimit());
+        ParameterUtil.vaildListMap(condition.getFilter());
         try {
             Map<String, Object> result = searchService.getCount(condition);
             if (result == null) {
@@ -101,12 +109,13 @@ public class SearchController {
     public SysResult getPop(String lang) {
         try {
             String[] result = null;
-            if (lang.equals("zh")) {
+            if ("zh".equals(lang)) {
                 result = new String[]{"迁移", "openGauss", "yum", "安装", "白皮书", "生命周期", "docker", "虚拟化"};
-            } else {
+            } else if ("en".equals(lang)){
                 result = new String[]{"migration", "openGauss", "doc", "openstack", "cla"};
+            } else {
+                return SysResult.fail("Invalid lang parameter", null);
             }
-
             return SysResult.ok("查询成功", result);
         } catch (Exception e) {
             log.error("getPop error is: " + e.getMessage());
@@ -137,6 +146,7 @@ public class SearchController {
     @PostMapping("tags")
     @LimitRequest()
     public SysResult getTags(@RequestBody @Validated SearchTags searchTags) {
+        ParameterUtil.vaildMap(searchTags.getCondition());
         try {
             Map<String, Object> result = searchService.getTags(searchTags);
             if (result == null) {
@@ -149,6 +159,40 @@ public class SearchController {
 
 
         return SysResult.fail("查询失败", null);
+    }
+
+    @RequestMapping("sig/name")
+    public String querySigName(@RequestParam(value = "lang", required = false) String lang) throws Exception {
+        lang = ParameterUtil.vaildLang(lang);
+        return searchService.querySigName(lang);
+    }
+
+    @RequestMapping("all")
+    public String queryAll() throws Exception {
+        return searchService.queryAll();
+    }
+
+    @RequestMapping("sig/readme")
+    public String querySigReadme(@RequestParam(value = "sig") String sig,
+            @RequestParam(value = "lang", required = false) String lang) throws Exception {
+        lang = ParameterUtil.vaildLang(lang);
+        return searchService.querySigReadme(sig, lang);
+    }
+
+    @RequestMapping(value = "ecosystem/repo/info")
+    public String getEcosystemRepoInfo(@RequestParam(value = "ecosystem_type") String ecosystemType,
+            @RequestParam(value = "lang", required = false) String lang,
+            @RequestParam(value = "sort_type", required = false) String sortType,
+            @RequestParam(value = "sort_order", required = false) String sortOrder,
+            @RequestParam(value = "page", required = false) String page,
+            @RequestParam(value = "pageSize", required = false) String pageSize) throws Exception {
+        lang = ParameterUtil.vaildLang(lang);
+        ecosystemType = ParameterUtil.vaildEcosystemType(ecosystemType);
+        sortType = ParameterUtil.vaildSortType(sortType);
+        sortOrder = ParameterUtil.vaildSortOrder(sortOrder);
+        page = ParameterUtil.vaildPage(page);
+        pageSize = ParameterUtil.vaildPageSize(pageSize);
+        return searchService.getEcosystemRepoInfo(ecosystemType, sortType, sortOrder, page, pageSize, lang);
     }
 
 }

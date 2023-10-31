@@ -3,15 +3,10 @@ package com.search.docsearch.entity.vo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 @Data
 @Accessors(chain = true)
-public class SysResult implements Serializable {
+public class SysResult {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
     private Integer status;
     private String msg;
     private Object obj;

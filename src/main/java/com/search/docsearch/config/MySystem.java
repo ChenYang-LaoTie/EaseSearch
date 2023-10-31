@@ -14,6 +14,4 @@ public class MySystem {
     public String system;
     public String index;
     public String trackerIndex;
-    public String mappingPath;
-    public String targetPath;
 }

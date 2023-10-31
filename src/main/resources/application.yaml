@@ -4,13 +4,8 @@ elasticsearch:
   username: ${esusername}
   password: ${espassword}
   port: ${esport}
-
-#网站埋点数据库
-tracker:
-  host: ${teshost}
-  username: ${tesusername}
-  password: ${tespassword}
-  port: ${tesport}
+  cerFilePath:
+  cerPassword:
 
 #openEuler    openGauss    openLookeng    mindSpore
 system: ${searchsystem:openEuler}
@@ -18,14 +13,11 @@ system: ${searchsystem:openEuler}
 #formal test
 dep: ${depp:test}
 
-#异步配置
-asyncThreadPool:
-  corePoolSize: 10
-  maxPoolSize: 10
-  queueCapacity: 10
-  keepAliveSeconds: 300
-  awaitTerminationSeconds: 300
-  threadNamePrefix: thread-name-prefix
+api:
+  allApi:
+  sigNameApi:
+  sigReadmeApi:
+  repoInfoApi:
 
 server:
   port: 8080

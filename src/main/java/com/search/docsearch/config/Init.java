@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.search.docsearch.service.DataImportService;
 import com.search.docsearch.service.SearchService;
 import com.search.docsearch.utils.FileUtils;
 
@@ -21,9 +20,6 @@ public class Init implements ApplicationRunner{
     
     @Autowired
     public SearchService searchService;
-
-    @Autowired
-    public DataImportService dataImportService;
 
     @Autowired
     @Qualifier("setConfig")
@@ -45,13 +41,5 @@ public class Init implements ApplicationRunner{
         } else {
             log.info("application path is null");
         }
-        
-        try {
-            // 导入es数据
-            dataImportService.refreshDoc();
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-
     }
 }

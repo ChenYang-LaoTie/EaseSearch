@@ -20,10 +20,6 @@ public class SystemConfig {
     @Value("${dep}")
     private String dep;
 
-    public static final String TARGET_PATH = System.getenv("TARGET");
-
-    public static final String MAPPINGPATH = System.getenv("BASEPATH") + "/target/classes/mapping/mapping.json";
-
     @Bean
     public MySystem setConfig() {
         log.info("system -> " + system);
@@ -39,9 +35,6 @@ public class SystemConfig {
             mySystem.setIndex(system + "_articles");
         }
         mySystem.setTrackerIndex(system + "_tracker");
-
-        mySystem.setMappingPath(MAPPINGPATH);
-        mySystem.setTargetPath(TARGET_PATH);
 
         return mySystem;
     }

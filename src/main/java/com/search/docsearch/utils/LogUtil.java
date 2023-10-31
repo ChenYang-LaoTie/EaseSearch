@@ -5,22 +5,22 @@ import com.search.docsearch.aop.LogAction;
 
 import lombok.Data;
 import org.aspectj.lang.JoinPoint;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.Serial;
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import org.aspectj.lang.reflect.MethodSignature;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class LogUtil {
 
     public static final String TRACE_ID = "TRACE_ID";
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(LogUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogUtil.class);
 
     public static void returnOperate(JoinPoint joinPoint, int status, String message, HttpServletRequest request) {
         returnLog log = new returnLog();
@@ -42,7 +42,7 @@ public class LogUtil {
             log.setOperationResource(action.OperationResource());
         }
 
-        log.setFunc(String.format("%s.%s", joinPoint.getSignature().getDeclaringTypeName(),
+        log.setFunc(String.format(Locale.ROOT, "%s.%s", joinPoint.getSignature().getDeclaringTypeName(),
                 joinPoint.getSignature().getName()));
 
         log.setRequestUrl(request.getRequestURI());
@@ -62,10 +62,7 @@ public class LogUtil {
     }
 
     @Data
-    public static class returnLog implements Serializable {
-
-        @Serial
-        private static final long serialVersionUID = 1L;
+    public static class returnLog {
 
         private String traceId;
 

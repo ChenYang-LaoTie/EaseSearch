@@ -1,9 +1,14 @@
 package com.search.docsearch.service.impl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.elasticsearch.action.search.SearchRequest;
@@ -11,7 +16,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.text.Text;
-import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.core.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
@@ -32,10 +37,13 @@ import org.elasticsearch.search.suggest.SuggestionBuilder;
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.HtmlUtils;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.search.docsearch.config.MySystem;
 import com.search.docsearch.entity.vo.SearchCondition;
 import com.search.docsearch.entity.vo.SearchTags;
@@ -47,15 +55,27 @@ import com.search.docsearch.utils.General;
 public class SearchServiceImpl implements SearchService {
 
     @Autowired
-    @Qualifier("restHighLevelClient")
+    @Qualifier("elasticsearchClient")
     private RestHighLevelClient restHighLevelClient;
 
     @Autowired
     @Qualifier("setConfig")
-    private MySystem s;
+    private MySystem mySystem;
+
+    @Value("${api.allApi}")
+    private String allApi;
+
+    @Value("${api.sigNameApi}")
+    private String sigNameApi;
+
+    @Value("${api.sigReadmeApi}")
+    private String sigReadmeApi;
+
+    @Value("${api.repoInfoApi}")
+    private String repoInfoApi;
 
     public Map<String, Object> getSuggestion(String keyword, String lang) throws IOException {
-        String saveIndex = s.index + "_" + lang;
+        String saveIndex = mySystem.index + "_" + lang;
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         SuggestionBuilder<TermSuggestionBuilder> termSuggestionBuilder =
@@ -114,7 +134,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Map<String, Object> searchByCondition(SearchCondition condition) throws IOException {
-        String saveIndex = s.index + "_" + condition.getLang();
+        String saveIndex = mySystem.index + "_" + condition.getLang();
 
         Map<String, Object> result = new HashMap<>();
         result.put("keyword", HtmlUtils.htmlEscape(condition.getKeyword()));
@@ -236,7 +256,7 @@ public class SearchServiceImpl implements SearchService {
 
 
     public Map<String, Object> getCount(SearchCondition condition) throws IOException {
-        String saveIndex = s.index + "_" + condition.getLang();
+        String saveIndex = mySystem.index + "_" + condition.getLang();
         SearchRequest request = new SearchRequest(saveIndex);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -319,10 +339,10 @@ public class SearchServiceImpl implements SearchService {
         String saveIndex;
         String lang = search.get("lang");
         if (lang != null) {
-            saveIndex = s.index + "_" + lang;
+            saveIndex = mySystem.index + "_" + lang;
         } else {
             //在没有传语言时默认为zh
-            saveIndex = s.index + "_zh";
+            saveIndex = mySystem.index + "_zh";
         }
         SearchRequest request = new SearchRequest(saveIndex);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
@@ -393,7 +413,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Map<String, Object> getTags(SearchTags searchTags) throws Exception {
-        String saveIndex = s.index + "_" + searchTags.getLang();
+        String saveIndex = mySystem.index + "_" + searchTags.getLang();
 
         SearchRequest request = new SearchRequest(saveIndex);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
@@ -429,5 +449,58 @@ public class SearchServiceImpl implements SearchService {
         return result;
     }
 
+    @Override
+    public String querySigName(String lang) throws Exception {
+        String community = mySystem.getSystem();
+        String urlStr = String.format(Locale.ROOT, sigNameApi, community, lang);  
+        return httpRequest(urlStr);
+    }
 
+    @Override
+    public String queryAll() throws Exception {
+        String community = mySystem.getSystem();
+        String urlStr = String.format(Locale.ROOT, allApi, community);  
+        return httpRequest(urlStr);
+    }
+
+    @Override
+    public String querySigReadme(String sig, String lang) throws Exception {
+        String community = mySystem.getSystem();
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<String> sigName = new ArrayList<>();
+        JsonNode sigNameList = objectMapper.readTree(querySigName(lang));
+        if (sigNameList.get("data") != null && sigNameList.get("data").get("SIG_list") != null) {
+            for (JsonNode bucket : sigNameList.get("data").get("SIG_list")) {
+                sigName.add(bucket.get("name").asText());
+            }
+        }
+        if (!sigName.contains(sig)) {
+            throw new IllegalArgumentException("Invalid sig parameter");
+        }
+        sig = sig.replaceAll("\\+", "%20").replaceAll(" ", "%20");
+        String urlStr = String.format(Locale.ROOT, sigReadmeApi, community, sig, lang);
+        return httpRequest(urlStr);
+    }
+
+    @Override
+    public String getEcosystemRepoInfo(String ecosystemType, String sortType, String sortOrder,
+            String page, String pageSize, String lang) throws Exception {     
+        String community = mySystem.getSystem();
+        String urlStr = String.format(Locale.ROOT, repoInfoApi, community, ecosystemType, sortType, sortOrder, page, pageSize, lang);
+        return httpRequest(urlStr);
+    }
+
+    public String httpRequest(String urlStr) throws Exception {
+        URL url = new URL(urlStr);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+        String line;
+        StringBuilder response = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            response.append(line);
+        }
+        reader.close();
+        return response.toString();
+    }
 }
