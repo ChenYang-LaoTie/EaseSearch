@@ -1,20 +1,9 @@
 package com.search.docsearch.service.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-
+import com.search.docsearch.config.MySystem;
+import com.search.docsearch.constant.Constants;
+import com.search.docsearch.service.DataImportService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -31,29 +20,30 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.core.TimeValue;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.search.docsearch.config.MySystem;
-import com.search.docsearch.constant.Constants;
-import com.search.docsearch.service.DataImportService;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @Slf4j
 public class DataImportServiceImpl implements DataImportService {
     @Autowired
-    @Qualifier("restHighLevelClient")
+    @Qualifier("elasticsearchClient")
     private RestHighLevelClient restHighLevelClient;
 
     @Autowired
@@ -236,7 +226,7 @@ public class DataImportServiceImpl implements DataImportService {
         } catch (Exception e) {
             log.error("error: " + e.getMessage());
         }
-        
+
     }
 
     @Override

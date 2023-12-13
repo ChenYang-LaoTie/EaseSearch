@@ -1,17 +1,16 @@
 package com.search.docsearch.service.impl;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.search.docsearch.config.MySystem;
+import com.search.docsearch.entity.vo.SearchCondition;
+import com.search.docsearch.entity.vo.SearchTags;
+import com.search.docsearch.service.SearchService;
+import com.search.docsearch.utils.General;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.text.Text;
-import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.core.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
@@ -36,18 +35,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.HtmlUtils;
 
-import com.search.docsearch.config.MySystem;
-import com.search.docsearch.entity.vo.SearchCondition;
-import com.search.docsearch.entity.vo.SearchTags;
-import com.search.docsearch.service.SearchService;
-import com.search.docsearch.utils.General;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
 public class SearchServiceImpl implements SearchService {
 
     @Autowired
-    @Qualifier("restHighLevelClient")
+    @Qualifier("elasticsearchClient")
     private RestHighLevelClient restHighLevelClient;
 
     @Autowired
@@ -125,7 +124,7 @@ public class SearchServiceImpl implements SearchService {
 
         for (SearchHit hit : response.getHits().getHits()) {
             Map<String, Object> map = hit.getSourceAsMap();
-            String text = (String)map.getOrDefault("textContent", "");
+            String text = (String) map.getOrDefault("textContent", "");
             if (null != text && text.length() > 200) {
                 text = text.substring(0, 200) + "......";
             }
