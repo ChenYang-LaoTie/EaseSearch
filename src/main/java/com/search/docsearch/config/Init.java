@@ -46,12 +46,12 @@ public class Init implements ApplicationRunner{
             log.info("application path is null");
         }
         
-        try {
-            // 导入es数据
-            dataImportService.refreshDoc();
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
+//        try {
+//            // 导入es数据
+//            dataImportService.refreshDoc();
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//        }
 
     }
 }

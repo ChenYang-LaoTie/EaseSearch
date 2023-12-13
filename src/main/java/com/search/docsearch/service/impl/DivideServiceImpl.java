@@ -1,11 +1,9 @@
 package com.search.docsearch.service.impl;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.search.docsearch.config.MySystem;
+import com.search.docsearch.entity.vo.SearchDocs;
+import com.search.docsearch.service.DivideService;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -13,7 +11,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.common.text.Text;
-import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.core.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
@@ -28,17 +26,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.search.docsearch.config.MySystem;
-import com.search.docsearch.entity.vo.SearchDocs;
-import com.search.docsearch.service.DivideService;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class DivideServiceImpl implements DivideService {
 
     @Autowired
-    @Qualifier("restHighLevelClient")
+    @Qualifier("elasticsearchClient")
     private RestHighLevelClient restHighLevelClient;
 
     @Autowired
@@ -125,7 +124,7 @@ public class DivideServiceImpl implements DivideService {
                     trackerBoolQueryBuilder.must(QueryBuilders.termQuery("event", "pageview")).must(QueryBuilders.termQuery("properties.$url_path.keyword", url_path));
                     countRequest.query(trackerBoolQueryBuilder);
                     CountResponse countResponse = trackerClient.count(countRequest, RequestOptions.DEFAULT);
-    
+
                     map.put("views", countResponse.getCount());
                 } catch (Exception e) {
                     log.error("get tracker error : " + e.getMessage());
@@ -193,7 +192,7 @@ public class DivideServiceImpl implements DivideService {
 
         for (SearchHit hit : response.getHits().getHits()) {
             Map<String, Object> map = hit.getSourceAsMap();
-            String text = (String)map.getOrDefault("textContent", "");
+            String text = (String) map.getOrDefault("textContent", "");
             if (text.length() > 200) {
                 text = text.substring(0, 200) + "......";
             }
